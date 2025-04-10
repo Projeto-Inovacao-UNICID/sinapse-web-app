@@ -5,24 +5,24 @@ const inputStyle = {
     color: colors.white,
     backgroundColor: colors.darkGrey,
     borderRadius: '8px',
-    input: { color: colors.white}, // cor do texto digitado
+    input: { color: colors.white }, // cor do texto digitado
     '& .MuiFilledInput-root': {
-    backgroundColor: colors.darkGrey,
-    borderRadius: '8px',
+      backgroundColor: colors.darkGrey,
+      borderRadius: '8px',
     },
     '& .MuiInputLabel-root': {
-    color: '#888',
+      color: '#888',
     },
-    '& .Mui-focused': {
-    color: colors.primary, // cor da label quando foca
+    '& .MuiInputLabel-root.Mui-focused': {
+      color: colors.primary, // cor da label quando foca
     },
     '& .MuiFilledInput-underline:before': {
-    borderBottom: `2px solid ${colors.primary}`,
+      borderBottom: `2px solid ${colors.primary}`,
     },
     '& .MuiFilledInput-underline:after': {
-    borderBottom: `2px solid ${colors.primary}`,                   
+      borderBottom: `2px solid ${colors.primary}`,
     },
-};
+  };  
 
 export function CardLogin() {
     return (
