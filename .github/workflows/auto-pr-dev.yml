@@ -14,11 +14,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Generate GitHub App token
+        id: generate-token
+        uses: tibdex/github-app-token@v2
+        with:
+          app_id: ${{ secrets.GH_APP_ID }}
+          private_key: ${{ secrets.GH_APP_PRIVATE_KEY }}
+          github_api_url: https://api.github.com
+
       - name: Create Pull Request
         id: open-pr
         uses: diillson/auto-pull-request@v1.0.1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ steps.generate-token.outputs.token }}
           destination_branch: develop
           source_branch: ${{ github.ref_name }}
           pr_title: "Feature: ${{ github.ref_name }}"
