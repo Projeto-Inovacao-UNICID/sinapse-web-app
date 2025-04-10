@@ -17,13 +17,14 @@ export default function Home() {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          bgcolor: 'rgba(0, 0, 0, 0.2)',
           gap: 12,
           p: 3,
-          borderRadius: 8,
+          borderRadius: 4,
           width: "fit-content",
         }}
       >
-        <h1 style={{ color: '#FFDA00' }}>SINAPSE</h1>
+        <h1 style={{ color: '#FF6A00' }}>SINAPSE</h1>
         <div>
           <CardLogin />
         </div>

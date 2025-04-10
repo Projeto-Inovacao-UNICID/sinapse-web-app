@@ -1,32 +1,33 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
+import colors from "@/theme/colors";
 
 const inputStyle = {
-    color: '#fff',
-    backgroundColor: '#141414',
+    color: colors.white,
+    backgroundColor: colors.darkGrey,
     borderRadius: '8px',
-    input: { color: '#fff' }, // cor do texto digitado
+    input: { color: colors.white}, // cor do texto digitado
     '& .MuiFilledInput-root': {
-    backgroundColor: '#141414',
+    backgroundColor: colors.darkGrey,
     borderRadius: '8px',
     },
     '& .MuiInputLabel-root': {
     color: '#888',
     },
     '& .Mui-focused': {
-    color: '#FFDA00', // cor da label quando foca
+    color: colors.primary, // cor da label quando foca
     },
     '& .MuiFilledInput-underline:before': {
-    borderBottom: '2px solid #FFDA00',
+    borderBottom: `2px solid ${colors.primary}`,
     },
     '& .MuiFilledInput-underline:after': {
-    borderBottom: '2px solid #FFDA00',
+    borderBottom: `2px solid ${colors.primary}`,                   
     },
 };
 
 export function CardLogin() {
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2, bgcolor: "#141414", p: 3, borderRadius: 4, width: "fit-content", maxWidth: 400 }}>
-            <Typography sx={{ color: '#FFF', fontWeight: 'bold', fontSize: '1.5rem' }}>Login</Typography>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2, bgcolor: colors.darkGrey, p: 3, borderRadius: 4, width: "fit-content", maxWidth: 400 }}>
+            <Typography sx={{ color: colors.white, fontWeight: 'bold', fontSize: '1.5rem' }}>Login</Typography>
                 <TextField
                     id="filled-basic" type="text" label="Email" variant="filled"
                 sx={inputStyle}
@@ -35,7 +36,10 @@ export function CardLogin() {
                 id="filled-basic" type="password" label="Senha" autoComplete="current-password" variant="filled"
                 sx={inputStyle}
              />
-            <Button sx={{ bgcolor: "#FFDA00", ":hover": { bgcolor: "#dba904" } }} variant="contained">Enviar</Button>
+            <Box sx={{display: 'flex', flexDirection: 'row', gap: 2, justifyContent: 'center'}}>
+                <Button sx={{ bgcolor: colors.primary, ":hover": { bgcolor: colors.primaryDark } }} variant="contained">Enviar</Button>
+                <Button sx={{ bgcolor: colors.gray, ":hover": { bgcolor: colors.darkGrey } }} variant="contained">Registre-se</Button>
+            </Box>
         </Box>
     );
 }
