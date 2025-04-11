@@ -39,7 +39,7 @@ export function CardLogin() {
                 sx={inputStyle}
              />
             <Button sx={{ bgcolor: colors.primary, ":hover": { bgcolor: colors.primaryDark }, width: '100%' }} variant="contained"><b>Entrar</b></Button>
-            <Typography sx={{ whiteSpace: 'nowrap', fontSize: '0.9rem', color: colors.gray}}>Não tem uma conta? <Link href="/register" style={{color: colors.primary, textDecoration: 'none'}}>Registre-se</Link></Typography>
+            <Typography sx={{ whiteSpace: 'nowrap', fontSize: '0.9rem', color: colors.gray}}>Não tem uma conta? <Link href="/register" sx={{color: colors.primary, textDecoration: 'none', }}>Cadastre-se</Link></Typography>
         </Box>
     );
 }

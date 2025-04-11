@@ -1,11 +1,9 @@
-import { g } from "motion/react-client";
-
 const colors = {
     primary: '#ff6a00',
     primaryDark: '#783301',
-    darkGrey: '#141414',
-    gray: '#888',
-    lightGray: '#2b2b2b',
+    darkGrey: '#1b1b1b', // Backgroubd color dark
+    gray: '#2b2b2b',
+    lightGray: '#3b3b3b',
     white: '#fff',
     black: '#000',
     darkBlue: '#23566e',
