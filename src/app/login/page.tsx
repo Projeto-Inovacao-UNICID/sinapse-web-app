@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { CardLogin } from "@/components/card-login";
 import { RegistrationModal } from "@/components/registration-modal";

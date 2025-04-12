@@ -1,10 +1,11 @@
-"use client";
+'use client';
 
 import { bgColors, colors } from "@/theme/colors";
 import { buttonFormStyle, inputFormStyle, radioStyle } from "@/theme/components-styles";
 import { Button, FormControlLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { LoginService } from "../../../service/LoginService";
+import { useRouter } from "next/navigation";
 
 interface CardLoginProps {
   onOpenModal: () => void;
@@ -28,17 +29,24 @@ export function CardLogin({onOpenModal}: CardLoginProps) {
 
   const service = new LoginService();
 
+  const router = useRouter();
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
       const data = await service.loginService(type, username, password);
-      console.log('Login bem-sucedido:', data.token);
-    } catch (error) {
-      setUsername('');      // limpa o campo de email
+      // Redireciona conforme o tipo
+      if (type === 'usuario') {
+        router.push('/profile/me');
+      } else {
+        router.push('/empresa/me');
+      }
+    } catch (err: any) {
+      setUsername('');    // limpa o campo de email
       setPassword('');   // limpa o campo de senha
-      console.error('Erro ao fazer login:', error);
-    }    
+      alert(err.response?.data?.message || 'Erro ao autenticar');
+    }
   };
   
   return (

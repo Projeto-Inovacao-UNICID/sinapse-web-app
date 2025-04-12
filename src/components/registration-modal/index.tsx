@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { Box, Button, Fade, FormControlLabel, Modal, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import { useState } from "react";
