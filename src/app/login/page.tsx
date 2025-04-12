@@ -1,11 +1,17 @@
 "use client";
 
 import { CardLogin } from "@/components/card-login";
-import colors from "@/theme/colors"; 
+import { RegistrationModal } from "@/components/registration-modal";
+import { colors } from "@/theme/colors";
 import { Box } from "@mui/material";
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { useState } from "react";
+// import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+// import WorkIcon from '@mui/icons-material/Work';
+// import BusinessIcon from '@mui/icons-material/Business';
+// import FlagCircleIcon from '@mui/icons-material/FlagCircle';
 
 export default function Login() {
+  const [modalOpen, setModalOpen] = useState(false);
   return (
     <div className="h-screen flex justify-center items-center px-4">
         <Box
@@ -24,7 +30,8 @@ export default function Login() {
             <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta accusamus ipsum nam tempora consequatur ab.</p>
           </div>
           <div>
-            <CardLogin />
+            <CardLogin onOpenModal={() => setModalOpen(true)} />
+            <RegistrationModal open={modalOpen} handleClose={() => setModalOpen(false)} />
           </div>
         </Box>
     </div>
