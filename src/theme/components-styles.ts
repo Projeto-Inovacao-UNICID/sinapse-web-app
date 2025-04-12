@@ -10,7 +10,7 @@ export const inputFormStyle = {
       borderRadius: '8px',
     },
     '& .MuiInputLabel-root': {
-      color: colors.gray,
+      color: colors.lightGray,
     },
     '& .MuiInputLabel-root.Mui-focused': {
       color: colors.primary, // cor da label quando foca

@@ -4,7 +4,7 @@ import { Box, Button, Fade, FormControlLabel, Modal, Radio, RadioGroup, TextFiel
 import { useState } from "react";
 import { RegisterService } from "../../../service/RegisterService";
 import { buttonFormStyle, inputFormStyle, modalStyle, radioStyle } from "@/theme/components-styles";
-import { bgColors } from "@/theme/colors";
+import { bgColors, colors } from "@/theme/colors";
 
 interface RegistrationModalProps {
   open: boolean;
@@ -95,9 +95,6 @@ export function RegistrationModal({open, handleClose}: RegistrationModalProps) {
                 maxWidth: 400,
               }}
               >
-              <Typography sx={{ color: '#fff', fontWeight: 'bold', fontSize: '1.5rem' }}>
-                Cadastre-se
-              </Typography>
 
               <RadioGroup
                 row

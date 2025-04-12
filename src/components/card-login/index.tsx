@@ -1,6 +1,6 @@
 "use client";
 
-import { colors } from "@/theme/colors";
+import { bgColors, colors } from "@/theme/colors";
 import { buttonFormStyle, inputFormStyle, radioStyle } from "@/theme/components-styles";
 import { Button, FormControlLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import { useState } from "react";
@@ -50,16 +50,14 @@ export function CardLogin({onOpenModal}: CardLoginProps) {
         alignItems: "center",
         justifyContent: "center",
         gap: 16, 
-        backgroundColor: colors.darkGrey,
+        backgroundColor: bgColors.darkSecondary,
         padding: 24,
+        paddingTop:32,
         borderRadius: 32,
         width: 400,
       }}
     >
-    <Typography sx={{ color: colors.white, fontWeight: 'bold', fontSize: '1.5rem' }}>
-      Login
-    </Typography>
-  
+
     <TextField
       fullWidth
       id="email"
@@ -112,7 +110,7 @@ export function CardLogin({onOpenModal}: CardLoginProps) {
       <b>Entrar</b>
     </Button>
   
-    <Typography sx={{ whiteSpace: 'nowrap', fontSize: '0.9rem', color: colors.gray }}>
+    <Typography sx={{ whiteSpace: 'nowrap', fontSize: '0.9rem', color: colors.lightGray }}>
       Não tem uma conta?{' '}
       <Button
         variant='text'
