@@ -12,14 +12,14 @@ interface CardLoginProps {
 
 export function CardLogin({onOpenModal}: CardLoginProps) {
   const [type, setType] = useState("usuario");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const handleChangeType = (event: React.ChangeEvent<HTMLInputElement>) => {
     setType(event.target.value);
   };
 
-  const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
+  const handleChangeUsername = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value);
   };
 
   const handleChangePassword = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,10 +32,10 @@ export function CardLogin({onOpenModal}: CardLoginProps) {
     event.preventDefault();
 
     try {
-      const data = await service.loginService(type, email, password);
-      console.log('Login bem-sucedido:', data);
+      const data = await service.loginService(type, username, password);
+      console.log('Login bem-sucedido:', data.token);
     } catch (error) {
-      setEmail('');      // limpa o campo de email
+      setUsername('');      // limpa o campo de email
       setPassword('');   // limpa o campo de senha
       console.error('Erro ao fazer login:', error);
     }    
@@ -60,13 +60,13 @@ export function CardLogin({onOpenModal}: CardLoginProps) {
 
     <TextField
       fullWidth
-      id="email"
+      id="username"
       type="text"
-      label="Email"
+      label="Nome de usuário"
       variant="filled"
       sx={inputFormStyle}
-      value={email}
-      onChange={handleChangeEmail}
+      value={username}
+      onChange={handleChangeUsername}
     />
   
     <TextField

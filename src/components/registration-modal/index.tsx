@@ -124,7 +124,7 @@ export function RegistrationModal({open, handleClose}: RegistrationModalProps) {
                 label="Nome completo"
                 variant="filled"
                 sx={inputFormStyle}
-                value={email}
+                value={name}
                 onChange={handleChangeName}
                 />
 
@@ -135,7 +135,7 @@ export function RegistrationModal({open, handleClose}: RegistrationModalProps) {
                 label="Nome de usuário"
                 variant="filled"
                 sx={inputFormStyle}
-                value={email}
+                value={username}
                 onChange={handleChangeUsername}
                 />
 
@@ -157,7 +157,7 @@ export function RegistrationModal({open, handleClose}: RegistrationModalProps) {
                   label="Confirmar email"
                   variant="filled"
                   sx={inputFormStyle}
-                  value={email}
+                  value={emailConfirmation}
                   onChange={handleChangeEmailConfirmation}
                   />
               </div>
@@ -182,7 +182,7 @@ export function RegistrationModal({open, handleClose}: RegistrationModalProps) {
                   autoComplete="current-password"
                   variant="filled"
                   sx={inputFormStyle}
-                  value={password}
+                  value={passwordConfirmation}
                   onChange={handleChangePasswordConfirmation}
                   />
               </div>
