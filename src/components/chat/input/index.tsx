@@ -28,9 +28,9 @@ export function ChatInput({ onSend }: ChatInputProps) {
       sx={{
         display: 'flex',
         alignItems: 'center',
-        padding: '4px 8px',
+        padding: '8px',
         borderRadius: 4,
-        backgroundColor: bgColors.darkSecondary,
+        backgroundColor: colors.gray2,
       }}
     >
       <TextField

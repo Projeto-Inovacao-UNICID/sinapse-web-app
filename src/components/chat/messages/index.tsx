@@ -31,7 +31,7 @@ export function ChatMessages({ messages }: ChatMessagesProps) {
         flexDirection: 'column',
         padding: 2,
         gap: 1,
-        maxHeight: '70vh',
+        maxHeight: '80vh',
       }}
     >
       {messages.map((msg) => (

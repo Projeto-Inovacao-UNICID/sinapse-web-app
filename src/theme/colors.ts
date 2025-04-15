@@ -3,6 +3,7 @@ export const colors = {
     primaryDark: '#783301',
     darkGrey: '#1b1b1b', // Backgroubd page dark mode
     gray: '#2b2b2b',
+    gray2: '#3b3b3b',
     lightGray: '#949494',
     white: '#fff',
     black: '#000',

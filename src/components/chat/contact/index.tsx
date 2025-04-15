@@ -10,7 +10,7 @@ interface ContactProps {
 
 export function Contact({ name }: ContactProps) {
     return (
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, bgcolor: bgColors.darkSecondary, borderRadius: 4 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, bgcolor: bgColors.darkSecondary, borderRadius: 4, p:1, cursor: 'pointer' }}>
         <AccountCircleIcon sx={{ color: colors.primary }} />
         <p>{name}</p>
       </Box>
