@@ -2,9 +2,10 @@
 
 import { Box, Typography } from '@mui/material';
 import { Contact } from '@/components/chat/contact';
+import { User } from '@/types';
 
 interface ContactListProps {
-  contacts: [];
+  contacts: User[];
 }
 
 export function ContactList({ contacts }: ContactListProps) {
