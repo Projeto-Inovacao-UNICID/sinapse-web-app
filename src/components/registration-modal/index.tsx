@@ -1,10 +1,11 @@
 'use client';
 
+import { RegisterService } from "@/service/auth/RegisterService";
 import { bgColors } from "@/theme/colors";
 import { buttonFormStyle, inputFormStyle, modalStyle, radioStyle } from "@/theme/components-styles";
 import { Box, Button, Fade, FormControlLabel, Modal, Radio, RadioGroup, TextField } from "@mui/material";
 import { useState } from "react";
-import { RegisterService } from "../../../service/auth/RegisterService";
+
 
 interface RegistrationModalProps {
   open: boolean;
