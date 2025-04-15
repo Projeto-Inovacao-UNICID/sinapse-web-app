@@ -4,7 +4,7 @@ import { bgColors, colors } from "@/theme/colors";
 import { buttonFormStyle, inputFormStyle, radioStyle } from "@/theme/components-styles";
 import { Button, FormControlLabel, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { LoginService } from "../../../service/LoginService";
+import { LoginService } from "../../../service/auth/LoginService";
 import { useRouter } from "next/navigation";
 
 interface CardLoginProps {

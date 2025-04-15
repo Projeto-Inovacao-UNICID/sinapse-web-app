@@ -1,4 +1,4 @@
-import { axiosInstance } from "./api";
+import { axiosInstance } from "../api";
 
 export class PostMessage {
     async postMessage(conversaId: number, conteudo: string) {

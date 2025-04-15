@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import { axiosInstance } from "./api";
+import { axiosInstance } from "../api";
 
 export class PostCreateAdministrator {
     async postCreateAdministrator(nome: string, email: string, senha: string) {

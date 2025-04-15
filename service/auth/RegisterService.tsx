@@ -1,4 +1,4 @@
-import { axiosInstance } from "./api";
+import { axiosInstance } from "../api";
 
 export class RegisterService {
     async registerService(tipo: string, nome: string, username: string, email: string, senha: string) {

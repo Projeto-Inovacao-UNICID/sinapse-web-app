@@ -1,5 +1,5 @@
 import { UUID } from "crypto";
-import { axiosInstance } from "./api";
+import { axiosInstance } from "../api";
 
 export class PostFriendship {
     async postFriendship(destinatarioId: UUID) {
