@@ -1,8 +1,8 @@
 export interface Post {
     id: string;
     repostId?: string;
-    content: string;
+    conteudo: string;
     createdAt: string;
     updatedAt: string;
-    files?: any[];
+    arquivos?: any[];
 }

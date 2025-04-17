@@ -1,13 +1,9 @@
 import { User } from "@/types";
 import { axiosInstance } from "../api";
 
-interface GetUserResponse {
-    data: User[];
-}
-
-export class GetUsers {
+export class UsersService {
     async getUsers() {
-        const response = await axiosInstance.get<GetUserResponse>(`/usuarios`, { withCredentials: true });
+        const response = await axiosInstance.get<User[]>(`/usuarios`, { withCredentials: true });
         return response.data;
     }
 }

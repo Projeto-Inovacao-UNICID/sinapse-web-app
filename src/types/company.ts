@@ -1,8 +1,8 @@
 export interface Company {
     id: string;
-    name: string;
+    nome: string;
     username: string;
     email: string;
-    description?: string;
+    descricao?: string;
     website?: string;
 }
