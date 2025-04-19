@@ -1,9 +1,8 @@
-import { UUID } from "crypto";
 import { axiosInstance } from "../api";
 import { User } from "@/types";
 
 export class FriendshipService {
-    async postFriendship(destinatarioId: UUID) {
+    async postFriendship(destinatarioId: string) {
         const response = await axiosInstance.post(`/amizades`, { destinatarioId }, { withCredentials: true });
         return response.data;
     }

@@ -1,26 +1,49 @@
 'use client';
 
+import { useMessages } from '@/hooks/chat/useMessages';
 import { colors } from '@/theme/colors';
-import { Box, Typography, Paper } from '@mui/material';
-import { useEffect, useRef } from 'react';
-
-interface Message {
-  id: number;
-  text: string;
-  sender: 'me' | 'other';
-}
+import { Message } from '@/types';
+import { Box, CircularProgress, Paper, Typography } from '@mui/material';
+import { useEffect, useMemo, useRef } from 'react';
 
 interface ChatMessagesProps {
-  messages: Message[];
+  newMessages: Message[];
+  contactId: string;
+  conversaId: number;
 }
 
-export function ChatMessages({ messages }: ChatMessagesProps) {
+export function ChatMessages({ newMessages, contactId, conversaId }: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const { messages, loading, error } = useMessages({ conversaId });
 
-  // Scrolla automaticamente para a última mensagem
+  // Scroll automático quando mensagens mudam
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, newMessages]);
+
+  // Combinar mensagens e remover duplicadas por ID
+  const allMessages = useMemo(() => {
+    const all = [...messages, ...newMessages];
+    const uniqueMap = new Map<number, Message>();
+    all.forEach((msg) => uniqueMap.set(msg.id, msg));
+    return Array.from(uniqueMap.values()).sort((a, b) => a.id - b.id); // ordena por ID 
+  }, [messages, newMessages]);
+
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box sx={{ padding: 2 }}>
+        <Typography color="error">{error}</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -34,12 +57,12 @@ export function ChatMessages({ messages }: ChatMessagesProps) {
         maxHeight: '80vh',
       }}
     >
-      {messages.map((msg) => (
+      {allMessages.map((msg) => (
         <Box
           key={msg.id}
           sx={{
             display: 'flex',
-            justifyContent: msg.sender === 'me' ? 'flex-end' : 'flex-start',
+            justifyContent: msg.remetenteId === contactId ? 'flex-start' : 'flex-end',
           }}
         >
           <Paper
@@ -47,15 +70,15 @@ export function ChatMessages({ messages }: ChatMessagesProps) {
             sx={{
               p: 1.5,
               px: 2,
-              bgcolor: msg.sender === 'me' ? colors.primary : colors.green,
+              bgcolor: msg.remetenteId === contactId ? colors.green : colors.primary,
               color: colors.white,
               maxWidth: '70%',
               borderRadius: 3,
-              borderBottomRightRadius: msg.sender === 'me' ? 0 : 3,
-              borderBottomLeftRadius: msg.sender === 'me' ? 3 : 0,
+              borderBottomRightRadius: msg.remetenteId === contactId ? 3 : 0,
+              borderBottomLeftRadius: msg.remetenteId === contactId ? 0 : 3,
             }}
           >
-            <Typography variant="body1">{msg.text}</Typography>
+            <Typography variant="body1">{msg.conteudo}</Typography>
           </Paper>
         </Box>
       ))}

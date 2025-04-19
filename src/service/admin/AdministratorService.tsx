@@ -1,4 +1,3 @@
-import { UUID } from "crypto";
 import { axiosInstance } from "../api";
 
 export class AdminService {
@@ -28,7 +27,7 @@ export class AdminService {
         return response.data;
     }
 
-    async postArppoveCompany(empresaId: UUID, aprovada: boolean, anotacoesAprovacao: string) {
+    async postArppoveCompany(empresaId: string, aprovada: boolean, anotacoesAprovacao: string) {
         const response = await axiosInstance.post(`/empresas/aprovar`, {
             empresaId,
             aprovada,

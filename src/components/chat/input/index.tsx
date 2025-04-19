@@ -1,22 +1,41 @@
 'use client';
 
-import { TextField, IconButton, Paper } from '@mui/material';
+import { MessageService } from '@/service/chat/MessageService';
+import { colors } from '@/theme/colors';
 import SendIcon from '@mui/icons-material/Send';
-import { useState } from 'react';
-import { bgColors, colors } from '@/theme/colors';
+import { IconButton, Paper, TextField } from '@mui/material';
+import { useRef, useEffect, useState } from 'react';
 
 interface ChatInputProps {
+  conversasId: number;
+  message: string;
+  setMessage: (msg: string) => void;
   onSend: (message: string) => void;
 }
 
-export function ChatInput({ onSend }: ChatInputProps) {
-  const [message, setMessage] = useState('');
+export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInputProps) {
+  const [isSending, setIsSending] = useState(false);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+  const service = new MessageService();
 
-  const handleSend = () => {
-    if (!message.trim()) return;
-    onSend(message);
-    setMessage('');
+  const handleSend = async () => {
+    if (!message.trim() || isSending) return;
+
+    try {
+      setIsSending(true);
+      onSend(message); // Atualiza UI local
+      await service.postMessage(conversasId, message); // Envia para o backend
+      setMessage(''); // Limpa o input
+    } catch (err) {
+      console.error('Erro ao enviar mensagem:', err);
+    } finally {
+      setIsSending(false);
+    }
   };
+
+  useEffect(() => {
+    inputRef.current?.focus(); // Foca automaticamente sempre que o input é limpo/trocado
+  }, [message, conversasId]);
 
   return (
     <Paper
@@ -34,27 +53,28 @@ export function ChatInput({ onSend }: ChatInputProps) {
       }}
     >
       <TextField
-          fullWidth
-          variant="standard"
-          placeholder="Digite sua mensagem..."
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          sx={{
-            input: { color: colors.white }, // cor do texto digitado
-            '& .MuiInput-underline:before': {
-              borderBottom: `2px solid ${colors.black}`, // normal
-            },
-            '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-              borderBottom: `2px solid ${colors.primary}`, // hover
-            },
-            '& .MuiInput-underline:after': {
-              borderBottom: `2px solid ${colors.primary}`, // focused
-            },
-          }}
-        />
+        fullWidth
+        variant="standard"
+        placeholder="Digite sua mensagem..."
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+        inputRef={inputRef}
+        sx={{
+          input: { color: colors.white },
+          '& .MuiInput-underline:before': {
+            borderBottom: `2px solid ${colors.black}`,
+          },
+          '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+            borderBottom: `2px solid ${colors.primary}`,
+          },
+          '& .MuiInput-underline:after': {
+            borderBottom: `2px solid ${colors.primary}`,
+          },
+        }}
+        disabled={isSending}
+      />
 
-      <IconButton type="submit" sx={{ color: colors.primary }}> 
-
+      <IconButton type="submit" sx={{ color: colors.primary }} disabled={isSending}>
         <SendIcon />
       </IconButton>
     </Paper>

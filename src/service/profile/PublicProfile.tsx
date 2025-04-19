@@ -1,8 +1,7 @@
-import { UUID } from "crypto";
 import { axiosInstance } from "../api";
 
 export class PublicProfileService {
-    async getPrivateProfile(userId: UUID) {
+    async getPrivateProfile(userId: string) {
         const response = await axiosInstance.get(`/profile/user/${userId}`, { withCredentials: true });
         return response.data;
     }

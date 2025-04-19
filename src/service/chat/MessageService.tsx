@@ -6,7 +6,7 @@ export class MessageService {
         return response.data;
     }
 
-    async getMessage(conversaId: number) {
+    async getMessages(conversaId: number) {
         const response = await axiosInstance.get(`/conversas/${conversaId}/mensagens`, { withCredentials: true });
         return response.data;
     }
