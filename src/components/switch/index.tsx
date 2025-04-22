@@ -6,13 +6,16 @@ import { Switch } from '@mui/material';
 import { useTheme } from 'next-themes';
 
 export function ThemeSwitch() {
-  const { resolvedTheme, setTheme } = useTheme();
-  console.log(resolvedTheme);
+  const { theme, setTheme } = useTheme();
+
+  const handleChange = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
 
   return (
     <Switch
-      checked={resolvedTheme === 'dark'}
-      onChange={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+      checked={theme === 'dark'}
+      onChange={handleChange}
       inputProps={{ 'aria-label': 'Switch between dark and light mode' }}
       icon={<DarkModeIcon />}
       checkedIcon={<LightModeIcon />}

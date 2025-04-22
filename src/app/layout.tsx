@@ -8,9 +8,9 @@ export default function RootLayout({
 }) {
 
   return (
-    <html lang="pt-br">
-      <body className="antialiased" style={{ margin: 0 }}>
-        <ThemeProvider attribute={'class'} defaultTheme='system' enableSystem>
+    <html lang="pt-br" className="h-full">
+      <body className="antialiased h-full" style={{ margin: 0 }}>
+        <ThemeProvider attribute={'class'} defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
       </body>
