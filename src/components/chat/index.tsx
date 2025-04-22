@@ -1,12 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Box } from '@mui/material';
+import { useState } from 'react';
 import { useChatSocket } from '@/hooks/chat/useChatSocket'; // Certifique-se de importar o hook corretamente
 import { ChatMessages } from './messages';
 import { ChatInput } from './input';
 import { Message } from '@/types';
-import { bgColors } from '@/theme/colors';
 
 interface ChatProps {
   conversaId: number | null;
@@ -34,16 +32,8 @@ export function Chat({ conversaId, messages, selectedId, handleSend }: ChatProps
   };
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        p: 2,
-        bgcolor: bgColors.darkSecondary,
-      }}
-    >
-      <Box sx={{ flexGrow: 1, overflowY: 'auto', mb: 2 }}>
+    <div className="flex flex-col h-full p-4 bg-background dark:bg-dark">
+      <div className="flex-grow overflow-y-auto mb-4">
         {conversaId ? (
           <ChatMessages
             newMessages={messages}
@@ -51,20 +41,20 @@ export function Chat({ conversaId, messages, selectedId, handleSend }: ChatProps
             conversaId={conversaId}
           />
         ) : (
-          <Box sx={{ color: 'white' }}>Selecione uma conversa</Box>
+          <div className="text-white">Selecione uma conversa</div>
         )}
-      </Box>
+      </div>
 
       {conversaId && (
-        <Box>
+        <div>
           <ChatInput
             conversasId={conversaId}
             message={drafts[conversaId] || ''}
             setMessage={(msg) => setDrafts((prev) => ({ ...prev, [conversaId]: msg }))}
             onSend={onSendMessage}  // Passa a função de envio de mensagens
           />
-        </Box>
+        </div>
       )}
-    </Box>
+    </div>
   );
 }

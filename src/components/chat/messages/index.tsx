@@ -1,9 +1,8 @@
 'use client';
 
 import { useMessages } from '@/hooks/chat/useMessages';
-import { colors } from '@/theme/colors';
 import { Message } from '@/types';
-import { Box, CircularProgress, Paper, Typography } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
 import { useEffect, useMemo, useRef } from 'react';
 
 interface ChatMessagesProps {
@@ -31,59 +30,44 @@ export function ChatMessages({ newMessages, contactId, conversaId }: ChatMessage
 
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
+      <div className="flex justify-center p-2">
         <CircularProgress />
-      </Box>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Box sx={{ padding: 2 }}>
+      <div className="p-2">
         <Typography color="error">{error}</Typography>
-      </Box>
+      </div>
     );
   }
 
   return (
-    <Box
-      sx={{
-        flex: 1,
-        overflowY: 'auto',
-        display: 'flex',
-        flexDirection: 'column',
-        padding: 2,
-        gap: 1,
-        // Defina o maxHeight considerando a altura do header e o input
+    <div
+      className="flex-1 overflow-y-auto flex flex-col p-2 gap-1"
+      style={{
         maxHeight: `calc(100vh - 65px - 80px)`, // Ajuste a altura total conforme a altura do seu header e input
       }}
     >
       {allMessages.map((msg) => (
-        <Box
+        <div
           key={msg.id}
-          sx={{
-            display: 'flex',
-            justifyContent: msg.remetenteId === contactId ? 'flex-start' : 'flex-end',
-          }}
+          className={`flex justify-${msg.remetenteId === contactId ? 'start' : 'end'}`}
         >
-          <Paper
-            elevation={1}
-            sx={{
-              p: 1.5,
-              px: 2,
-              bgcolor: msg.remetenteId === contactId ? colors.green : colors.primary,
-              color: colors.white,
-              maxWidth: '70%',
-              borderRadius: 3,
-              borderBottomRightRadius: msg.remetenteId === contactId ? 3 : 0,
-              borderBottomLeftRadius: msg.remetenteId === contactId ? 0 : 3,
-            }}
+          <div
+            className={`p-2 max-w-[70%] rounded-lg ${
+              msg.remetenteId === contactId
+                ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                : 'bg-primary text-primary-foreground'
+            }`}
           >
             <Typography variant="body1">{msg.conteudo}</Typography>
-          </Paper>
-        </Box>
+          </div>
+        </div>
       ))}
       <div ref={bottomRef} />
-    </Box>
+    </div>
   );
 }

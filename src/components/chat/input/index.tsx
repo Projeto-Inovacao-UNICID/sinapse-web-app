@@ -1,7 +1,6 @@
 'use client';
 
 import { MessageService } from '@/service/chat/MessageService';
-import { colors } from '@/theme/colors';
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, Paper, TextField } from '@mui/material';
 import { useRef, useEffect, useState } from 'react';
@@ -44,16 +43,7 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
         e.preventDefault();
         handleSend();
       }}
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        padding: '8px',
-        borderRadius: 4,
-        backgroundColor: colors.gray2,
-        position: 'sticky',
-        bottom: 0,
-        zIndex: 10,
-      }}
+      className="flex items-center p-2 rounded-lg bg-input"
     >
       <TextField
         fullWidth
@@ -62,22 +52,18 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
         value={message}
         onChange={(e) => setMessage(e.target.value)}
         inputRef={inputRef}
-        sx={{
-          input: { color: colors.white },
-          '& .MuiInput-underline:before': {
-            borderBottom: `2px solid ${colors.black}`,
-          },
-          '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-            borderBottom: `2px solid ${colors.primary}`,
-          },
-          '& .MuiInput-underline:after': {
-            borderBottom: `2px solid ${colors.primary}`,
-          },
+        className="text-white focus:outline-none bg-transparent"
+        inputProps={{
+          className: 'border-b-2 border-black focus:border-primary',
         }}
         disabled={isSending}
       />
 
-      <IconButton type="submit" sx={{ color: colors.primary }} disabled={isSending}>
+      <IconButton
+        type="submit"
+        className="text-primary"
+        disabled={isSending}
+      >
         <SendIcon />
       </IconButton>
     </Paper>
