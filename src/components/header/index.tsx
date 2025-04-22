@@ -31,7 +31,7 @@ export function Header() {
   const router = useRouter();
 
   const navClick = (route: string) => {
-    router.push(`/${route}`);
+    router.push(`${route}`);
   };
 
   return (
@@ -56,7 +56,7 @@ export function Header() {
           src="/assets/logo.png"
           alt="Logo"
           style={{ height: '2.5rem', cursor: 'pointer' }}
-          onClick={() => navClick('')}
+          onClick={() => navClick('/')}
           whileHover={{
             scale: 1.3,
             rotate: 360,
@@ -114,11 +114,11 @@ export function Header() {
         {/* Ícones do menu */}
         <div style={{ display: 'flex', gap: 16 }}>
           {[
-            { icon: <HomeIcon sx={iconStyles} />, route: '' },
+            { icon: <HomeIcon sx={iconStyles} />, route: '/' },
             { icon: <NotificationsIcon sx={iconStyles} /> },
             { icon: <EmojiEventsIcon sx={iconStyles} /> },
-            { icon: <ChatIcon sx={iconStyles} />, route: 'conversas' },
-            { icon: <PersonIcon sx={iconStyles} />, route: 'profile/me' },
+            { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
+            { icon: <PersonIcon sx={iconStyles} />, route: '/profile/me' },
             { icon: <SettingsIcon sx={iconStyles} /> },
           ].map(({ icon, route }, index) => (
             <motion.button
