@@ -32,7 +32,7 @@ export function Chat({ conversaId, messages, selectedId, handleSend }: ChatProps
   };
 
   return (
-    <div className="flex flex-col h-full p-4 bg-background dark:bg-dark">
+    <div className="flex flex-col h-full p-4 background">
       <div className="flex-grow overflow-y-auto mb-4">
         {conversaId ? (
           <ChatMessages

@@ -55,7 +55,8 @@ export function ChatMessages({ newMessages, contactId, conversaId }: ChatMessage
         padding: 2,
         gap: 1,
         // Defina o maxHeight considerando a altura do header e o input
-        maxHeight: `calc(100vh - 65px - 80px)`, // Ajuste a altura total conforme a altura do seu header e input
+        height: `calc(100vh - 65px - 80px)`, // Ajuste a altura total conforme a altura do seu header e input
+        backgroundColor: 'var(--bgSecondary)',
       }}
     >
       {allMessages.map((msg) => (

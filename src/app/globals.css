@@ -15,7 +15,7 @@
   --bgSecondary: #f2f2f2;
   --foreground: #000000;
 
-  --card: #ffffff;
+  --card: #f2f2f2;
   --card-foreground: #000000;
 
   --popover: #ffffff;
@@ -36,7 +36,7 @@
   --destructive: #783301;
   --destructive-foreground: #ffffff;
 
-  --border: #2b2b2b;
+  --border: #d0d0d0;
   --input: #f3f3f3;
   --ring: #ff6a00;
 
@@ -75,7 +75,7 @@
   --destructive: #783301;
   --destructive-foreground: #ffffff;
 
-  --border: #3b3b3b;
+  --border: #1b1b1b;
   --input: #3b3b3b;
   --ring: #ff6a00;
 
