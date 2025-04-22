@@ -9,16 +9,17 @@ export function ThemeSwitch() {
   const { theme, setTheme } = useTheme();
 
   const handleChange = () => {
+    // Alterna entre 'light' e 'dark' conforme o tema atual
     setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   return (
     <Switch
-      checked={theme === 'dark'}
+      checked={theme === 'dark'}  // Se o tema for 'dark', o switch será marcado
       onChange={handleChange}
       inputProps={{ 'aria-label': 'Switch between dark and light mode' }}
-      icon={<DarkModeIcon />}
-      checkedIcon={<LightModeIcon />}
+      icon={<LightModeIcon />}  // Ícone do Sol (Light Mode)
+      checkedIcon={<DarkModeIcon />}  // Ícone da Lua (Dark Mode)
     />
   );
 }
