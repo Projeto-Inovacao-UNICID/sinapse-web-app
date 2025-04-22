@@ -83,7 +83,7 @@ export function Header() {
             placeholder="Buscar..."
             size="small"
             sx={{
-              backgroundColor: 'var(--bg)',
+              backgroundColor: 'var(--input)',
               borderRadius: 2,
               input: { color: 'var(--foreground)' },
               '& .MuiOutlinedInput-root': {

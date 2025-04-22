@@ -12,6 +12,7 @@
   --radius: 0.5rem;
 
   --background: #ffffff;
+  --bgSecondary: #f2f2f2;
   --foreground: #000000;
 
   --card: #ffffff;
@@ -36,7 +37,7 @@
   --destructive-foreground: #ffffff;
 
   --border: #2b2b2b;
-  --input: #2b2b2b;
+  --input: #f3f3f3;
   --ring: #ff6a00;
 
   --sidebar: #f2f2f2;
@@ -50,6 +51,7 @@
 /* Tema escuro */
 .dark {
   --background: #1b1b1b;
+  --bgSecondary: #2b2b2b;
   --foreground: #ffffff;
 
   --card: #2b2b2b;
