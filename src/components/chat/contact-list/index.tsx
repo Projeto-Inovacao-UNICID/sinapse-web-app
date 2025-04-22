@@ -1,10 +1,10 @@
 'use client';
 
-import { Box, Typography } from '@mui/material';
-import { Contact } from '@/types';
 import { useState } from 'react';
 import { ChatService } from '@/service/chat/ChatService';
 import { ContactCard } from '../contact';
+import { Contact } from '@/types';
+import { Typography, Box } from '@mui/material';
 
 interface ContactListProps {
   contacts: Contact[];
@@ -40,28 +40,30 @@ export function ContactList({ contacts, onSelect }: ContactListProps) {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, p: 2 }}>
-      <Typography variant="h6" sx={{ color: 'white' }}>
+    <Box className="flex flex-col gap-2 p-4">
+      <Typography className="text-primary text-xl font-semibold">
         Contatos
       </Typography>
 
       {error && (
-        <Typography variant="body2" sx={{ color: 'red' }}>
+        <Typography className="text-destructive text-sm">
           {error}
         </Typography>
       )}
 
       {contacts.map((contact) => (
-        <ContactCard
-          key={contact.participanteId}
-          name={contact.nome}
-          isSelected={selectedId === contact.participanteId}
-          onClick={() => handleSelect(contact.participanteId)}
-        />
+        <Box key={contact.participanteId} sx={{ display: 'flex', padding: 0.5 }}>
+          <ContactCard
+            key={contact.participanteId}
+            name={contact.nome}
+            isSelected={selectedId === contact.participanteId}
+            onClick={() => handleSelect(contact.participanteId)}
+          />
+        </Box>
       ))}
 
       {loading && (
-        <Typography variant="body2" sx={{ color: 'grey' }}>
+        <Typography className="text-muted text-sm">
           Carregando...
         </Typography>
       )}

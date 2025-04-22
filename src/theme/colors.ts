@@ -1,7 +1,7 @@
 export const colors = {
     primary: '#ff6a00',
     primaryDark: '#783301',
-    darkGrey: '#1b1b1b', // Backgroubd page dark mode
+    darkGrey: '#1b1b1b', 
     gray: '#2b2b2b',
     gray2: '#3b3b3b',
     lightGray: '#949494',
@@ -12,13 +12,6 @@ export const colors = {
     darkGreen: '#1d4a26',
     green: '#4ec366',
 }
-
-export const bgColors = {
-    dark: '#1b1b1b',
-    light: '#fff',
-    darkSecondary: '#2b2b2b',
-}
-
 export const dark = {
     bg: '#1b1b1b',
     text: '#fff',

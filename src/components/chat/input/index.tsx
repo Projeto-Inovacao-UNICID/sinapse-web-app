@@ -1,7 +1,6 @@
 'use client';
 
 import { MessageService } from '@/service/chat/MessageService';
-import { colors } from '@/theme/colors';
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, Paper, TextField } from '@mui/material';
 import { useRef, useEffect, useState } from 'react';
@@ -23,9 +22,9 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
 
     try {
       setIsSending(true);
-      onSend(message); // Atualiza UI local
-      await service.postMessage(conversasId, message); // Envia para o backend
-      setMessage(''); // Limpa o input
+      onSend(message);
+      await service.postMessage(conversasId, message);
+      setMessage('');
     } catch (err) {
       console.error('Erro ao enviar mensagem:', err);
     } finally {
@@ -34,7 +33,7 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
   };
 
   useEffect(() => {
-    inputRef.current?.focus(); // Foca automaticamente sempre que o input é limpo/trocado
+    inputRef.current?.focus();
   }, [message, conversasId]);
 
   return (
@@ -48,12 +47,14 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
         display: 'flex',
         alignItems: 'center',
         padding: '8px',
-        borderRadius: 4,
-        backgroundColor: colors.gray2,
+        marginTop: '8px',
+        borderRadius: 'var(--radius)',
+        backgroundColor: 'var(--input)',
         position: 'sticky',
         bottom: 0,
         zIndex: 10,
       }}
+      elevation={0}
     >
       <TextField
         fullWidth
@@ -63,21 +64,32 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
         onChange={(e) => setMessage(e.target.value)}
         inputRef={inputRef}
         sx={{
-          input: { color: colors.white },
+          input: {
+            color: 'var(--foreground)',
+          },
           '& .MuiInput-underline:before': {
-            borderBottom: `2px solid ${colors.black}`,
+            borderBottom: `2px solid var(--border)`,
           },
           '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-            borderBottom: `2px solid ${colors.primary}`,
+            borderBottom: `2px solid var(--primary)`,
           },
           '& .MuiInput-underline:after': {
-            borderBottom: `2px solid ${colors.primary}`,
+            borderBottom: `2px solid var(--primary)`,
           },
         }}
         disabled={isSending}
       />
 
-      <IconButton type="submit" sx={{ color: colors.primary }} disabled={isSending}>
+      <IconButton
+        type="submit"
+        sx={{
+          color: 'var(--primary)',
+          '&:disabled': {
+            opacity: 0.5,
+          },
+        }}
+        disabled={isSending}
+      >
         <SendIcon />
       </IconButton>
     </Paper>

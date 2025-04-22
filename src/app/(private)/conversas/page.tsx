@@ -31,7 +31,7 @@ export default function Conversas() {
   };
 
   return (
-    <Grid container spacing={1} sx={{ height: '100vh' }}>
+    <Grid container spacing={1}>
       <Grid size={3}>
         {loading ? (
           <CircularProgress />

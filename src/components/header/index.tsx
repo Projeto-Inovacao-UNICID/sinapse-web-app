@@ -4,16 +4,16 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-import { bgColors, colors } from '@/theme/colors';
 import ChatIcon from '@mui/icons-material/Chat';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import HomeIcon from '@mui/icons-material/Home';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
+import { ThemeSwitch } from '../switch';
 
 const iconStyles = {
-  color: colors.primary,
+  color: 'var(--primary)',
   fontSize: '2rem',
 };
 
@@ -43,7 +43,7 @@ export function Header() {
         width: '100%',
         height: '65px',
         zIndex: 1000,
-        backgroundColor: bgColors.darkSecondary,
+        backgroundColor: 'var(--bgSecondary)',
         boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
         display: 'grid',
         gridTemplateColumns: '1fr minmax(0, 10fr) 1fr',
@@ -83,28 +83,25 @@ export function Header() {
             placeholder="Buscar..."
             size="small"
             sx={{
-              backgroundColor: colors.gray2,
-              border: 'none',
+              backgroundColor: 'var(--input)',
               borderRadius: 2,
-              input: { color: colors.white },
+              input: { color: 'var(--foreground)' },
               '& .MuiOutlinedInput-root': {
                 '& fieldset': {
                   borderColor: 'transparent',
                 },
                 '&:hover fieldset': {
-                  borderRadius: 2,
-                  borderColor: colors.primary,
+                  borderColor: 'var(--primary)',
                 },
                 '&.Mui-focused fieldset': {
-                  borderRadius: 2,
-                  borderColor: colors.primary,
+                  borderColor: 'var(--primary)',
                 },
               },
             }}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: colors.primary }} />
+                  <SearchIcon sx={{ color: 'var(--primary)' }} />
                 </InputAdornment>
               ),
             }}
@@ -132,6 +129,7 @@ export function Header() {
               {icon}
             </motion.button>
           ))}
+          <ThemeSwitch />
         </div>
       </div>
     </header>
