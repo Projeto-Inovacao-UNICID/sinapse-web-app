@@ -1,6 +1,6 @@
 import { axiosInstance } from "../api";
 
-export class GetCompanies {
+export class CompanyService {
     async getCompanies() {
         const response = await axiosInstance.get(`/empresas`, { withCredentials: true });
         return response.data;
