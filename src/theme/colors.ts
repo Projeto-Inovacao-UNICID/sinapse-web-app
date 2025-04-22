@@ -18,3 +18,15 @@ export const bgColors = {
     light: '#fff',
     darkSecondary: '#2b2b2b',
 }
+
+export const dark = {
+    bg: '#1b1b1b',
+    text: '#fff',
+    bgSecondary: '#2b2b2b',
+}
+
+export const light = {
+    bg: '#fff',
+    text: '#000',
+    bgSecondary: '#f2f2f2',
+}
