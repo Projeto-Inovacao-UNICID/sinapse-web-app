@@ -52,12 +52,14 @@ export function ContactList({ contacts, onSelect }: ContactListProps) {
       )}
 
       {contacts.map((contact) => (
-        <ContactCard
-          key={contact.participanteId}
-          name={contact.nome}
-          isSelected={selectedId === contact.participanteId}
-          onClick={() => handleSelect(contact.participanteId)}
-        />
+        <Box key={contact.participanteId} sx={{ display: 'flex', padding: 0.5 }}>
+          <ContactCard
+            key={contact.participanteId}
+            name={contact.nome}
+            isSelected={selectedId === contact.participanteId}
+            onClick={() => handleSelect(contact.participanteId)}
+          />
+        </Box>
       ))}
 
       {loading && (
