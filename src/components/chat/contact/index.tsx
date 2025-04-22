@@ -3,35 +3,48 @@
 import { bgColors, colors } from "@/theme/colors";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Box } from "@mui/material";
+import { motion } from 'framer-motion';
 
 interface ContactCardProps {
-    name: string;
-    isSelected: boolean;
-    onClick: () => void;
+  name: string;
+  isSelected: boolean;
+  onClick: () => void;
 }
 
 export function ContactCard({ name, isSelected, onClick }: ContactCardProps) {
   return (
-    <Box
+    <motion.div
       onClick={onClick}
-      sx={{
+      style={{
         display: 'flex',
         alignItems: 'center',
-        gap: 1,
-        bgcolor: bgColors.darkSecondary,
-        borderRadius: 4,
-        p: 1,
-        cursor: 'pointer',
-        border: isSelected ? `2px solid ${colors.primary}` : '2px solid transparent',
-        '&:hover': {
-          borderColor: isSelected ? colors.primary : colors.gray,
-        },
-        transition: 'border-color 0.2s ease',
+        gap: '8px',
+        width: '100%' 
       }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: 'spring', stiffness: 300 }}
     >
-      <AccountCircleIcon sx={{ color: colors.primary }} />
-      <p>{name}</p>
-
-    </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 1,
+          bgcolor: bgColors.darkSecondary,
+          borderRadius: 4,
+          p: 1,
+          cursor: 'pointer',
+          width: '100%',
+          border: isSelected ? `2px solid ${colors.primary}` : '2px solid transparent',
+          '&:hover': {
+            borderColor: colors.primary,
+          },
+          transition: 'border-color 0.2s ease',
+        }}
+      >
+        <AccountCircleIcon sx={{ color: colors.primary }} />
+        <p>{name}</p>
+      </Box>
+    </motion.div>
   );
 }

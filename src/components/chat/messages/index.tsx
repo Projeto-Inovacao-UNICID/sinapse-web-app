@@ -54,7 +54,8 @@ export function ChatMessages({ newMessages, contactId, conversaId }: ChatMessage
         flexDirection: 'column',
         padding: 2,
         gap: 1,
-        maxHeight: '80vh',
+        // Defina o maxHeight considerando a altura do header e o input
+        maxHeight: `calc(100vh - 65px - 80px)`, // Ajuste a altura total conforme a altura do seu header e input
       }}
     >
       {allMessages.map((msg) => (

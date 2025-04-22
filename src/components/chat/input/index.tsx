@@ -50,6 +50,9 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
         padding: '8px',
         borderRadius: 4,
         backgroundColor: colors.gray2,
+        position: 'sticky',
+        bottom: 0,
+        zIndex: 10,
       }}
     >
       <TextField

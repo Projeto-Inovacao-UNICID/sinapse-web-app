@@ -1,15 +1,12 @@
 'use client';
 
+import { CircularProgress, Grid } from '@mui/material';
 import { useState } from 'react';
-import { Box, CircularProgress, Grid } from '@mui/material';
 
-import { ContactList } from '@/components/chat/contact-list';
-import { ChatInput } from '@/components/chat/input';
-import { ChatMessages } from '@/components/chat/messages';
-import { useChatContacts } from '@/hooks/chat/useChat';
-import { bgColors } from '@/theme/colors';
-import { Message } from '@/types';
 import { Chat } from '@/components/chat';
+import { ContactList } from '@/components/chat/contact-list';
+import { useChatContacts } from '@/hooks/chat/useChat';
+import { Message } from '@/types';
 
 export default function Conversas() {
   const [messages, setMessages] = useState<Message[]>([]);
