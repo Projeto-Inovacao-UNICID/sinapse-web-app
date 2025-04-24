@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useChatSocket } from '@/hooks/chat/useChatSocket';
 import { ChatMessages } from './messages';
 import { ChatInput } from './input';
@@ -14,19 +14,41 @@ interface ChatProps {
   handleReceive: (message: Message) => void;
 }
 
-export function Chat({ conversaId, messages, selectedId, handleSend, handleReceive }: ChatProps) {
+export function Chat({
+  conversaId,
+  messages,
+  selectedId,
+  handleSend,
+  handleReceive,
+}: ChatProps) {
   const [drafts, setDrafts] = useState<{ [key: number]: string }>({});
 
-  useChatSocket({
-    destId: selectedId,
-    onMessage: (novaMensagem: Message) => {
-      handleReceive(novaMensagem);
-    },
-  });
+  const { sendMessage, isConnected } = useChatSocket(
+    useMemo(() => ({
+      destId: selectedId,
+      onMessage: (novaMensagem: Message) => {
+        handleReceive(novaMensagem);
+      },
+    }), [selectedId, handleReceive])
+  );
 
   const onSendMessage = (conteudo: string) => {
-    handleSend(conteudo);
-    setDrafts((prev) => ({ ...prev, [conversaId!]: '' }));
+    if (!conversaId) return;
+
+    const novaMensagem: Message = {
+      id: Date.now(), // Temporário – idealmente vem do backend
+      conteudo,
+      conversaId,
+      remetenteId: '', // Pode ser preenchido pelo backend
+      remetenteTipo: 'USER', // ou outro tipo conforme necessário
+      createdAt: new Date().toISOString(),
+      editada: false,
+      removida: false,
+    };
+
+    sendMessage(novaMensagem);
+    handleSend(conteudo); // Ainda útil para tracking/local update
+    setDrafts((prev) => ({ ...prev, [conversaId]: '' }));
   };
 
   return (
@@ -39,7 +61,7 @@ export function Chat({ conversaId, messages, selectedId, handleSend, handleRecei
             conversaId={conversaId}
           />
         ) : (
-          <div className="text-white">Selecione uma conversa</div>
+          <div className="text-white">🔌 Nenhuma conversa ativa</div>
         )}
       </div>
 

@@ -10,7 +10,7 @@ export default function PrivateLayout({
       <Header />
       <div
         style={{
-          paddingTop: '65px',
+          paddingTop: 'calc(65px + 1rem)',
           display: 'grid',
           gridTemplateColumns: '1fr minmax(0, 10fr) 1fr',
           minHeight: '100vh',
