@@ -48,9 +48,11 @@ export const useChatSocket = ({ destId, onMessage }: UseChatSocketProps) => {
       }
     };
 
-    socket.onerror = (err) => {
-      console.error('❌ Erro no WebSocket:', err);
+    socket.onerror = (event) => {
+      console.error('❌ Erro no WebSocket:', event);
+      console.error('ℹ️ Verifique se o servidor WebSocket está ativo e a URL está correta:', socket.url);
     };
+    
 
     socket.onclose = (event) => {
       console.log('🔌 WebSocket desconectado:', event.reason);

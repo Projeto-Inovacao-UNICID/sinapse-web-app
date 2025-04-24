@@ -6,7 +6,7 @@ if (!WEBSOCKET_URL) {
 
 export const WebSocketService = {
   connect(destId: string): WebSocket {
-    const socket = new WebSocket(`${WEBSOCKET_URL}/ws?destId=${destId}`);
+    const socket = new WebSocket(`${WEBSOCKET_URL}/destId=${destId}`);
 
     socket.onopen = () => {
       console.log("✅ Conectado ao WebSocket");
