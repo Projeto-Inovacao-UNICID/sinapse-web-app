@@ -1,27 +1,46 @@
+import { useSession } from '@/hooks/session/useSession';
 import { FriendshipService } from '@/service/friendship/FriendshipService';
 import { FriendshipContent } from '@/types';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import { Box, Button, ListItemButton } from '@mui/material';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface FriendshipInvitationNotificationProps {
   friendshipContent: FriendshipContent;
 }
 
 export function FriendshipInvitationNotification({ friendshipContent }: FriendshipInvitationNotificationProps) {
+  const { session } = useSession();
   const username = friendshipContent.username;
   const amizadeId = friendshipContent.amizadeId;
   const service = new FriendshipService();
+  const queryClient = useQueryClient();
 
   const handleAccept = async () => {
-    const res = await service.patchFriendship(amizadeId, 'aceito');
-    console.log('Convite de amizade aceito com sucesso:', res);
+    try {
+      const res = await service.patchFriendship(amizadeId, 'aceito');
+      console.log('Convite de amizade aceito com sucesso:', res);
+
+      // Invalida as notificações
+      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
+
+    } catch (error) {
+      console.error('Erro ao aceitar convite de amizade:', error);
+    }
   };
 
   const handleDecline = async () => {
-    const res = await service.patchFriendship(amizadeId, 'rejeitado');
-    console.log('Convite de amizade recusado com sucesso:', res);
+    try {
+      const res = await service.patchFriendship(amizadeId, 'rejeitado');
+      console.log('Convite de amizade recusado com sucesso:', res);
+
+      // Invalida as notificações
+      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
+    } catch (error) {
+      console.error('Erro ao recusar convite de amizade:', error);
+    }
   };
 
   return (
@@ -35,6 +54,5 @@ export function FriendshipInvitationNotification({ friendshipContent }: Friendsh
         <Button sx={{ bgcolor: 'var(--bgSecondary)', color: 'var(--foreground)', ":hover": { opacity: 0.8 } }} onClick={handleDecline}><CloseIcon /></Button>
       </Box>
     </ListItemButton>
-
   );
 }
