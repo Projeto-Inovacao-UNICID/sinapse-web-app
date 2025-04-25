@@ -1,27 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import { FriendshipService } from '@/service/friendship/FriendshipService';
 import { User } from '@/types';
 
 export function useFriendship() {
-  const [friends, setFriends] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchFriends = async () => {
-      try {
-        const service = new FriendshipService();
-        const result = await service.getFriendship();
-        setFriends(result);
-      } catch (err: any) {
-        setError(err.message ?? 'Erro ao carregar amizades');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchFriends();
-  }, []);
-
-  return { friends, loading, error };
+  return useQuery<User[], Error>({
+    queryKey: ['friendship'],
+    queryFn: async () => {
+      const service = new FriendshipService();
+      return service.getFriendship();
+    },
+    staleTime: 1000 * 60 * 5, // cache por 5 minutos
+    refetchOnWindowFocus: false,
+  });
 }

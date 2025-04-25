@@ -1,65 +1,30 @@
-import { useEffect, useState } from 'react';
-import { Chat, Contact } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 import { ChatService } from '@/service/chat/ChatService';
-
-/**
- * Hook para buscar a lista de contatos e conversas.
- */
-export function useChatContacts() {
-  const [contacts, setContacts] = useState<Contact[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const fetchContacts = async () => {
-      try {
-        const service = new ChatService();
-        const result = await service.getChatsAndFriends();
-        setContacts(result);
-      } catch (err: any) {
-        setError(err.message ?? 'Erro ao carregar contatos');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchContacts();
-  }, []);
-
-  return { contacts, loading, error };
-}
+import { Chat } from '@/types';
+import { Contact } from '@/types';
 
 interface UseChatProps {
   conversaId: number;
 }
 
-/**
- * Hook para buscar informações da conversa.
- */
 export function useChat({ conversaId }: UseChatProps) {
-  const [chat, setChat] = useState<Chat | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  return useQuery<Chat>({
+    queryKey: ['chat', conversaId],
+    queryFn: async () => {
+      const service = new ChatService();
+      return await service.getChat(conversaId);
+    },
+    enabled: !!conversaId,
+  });
+}
 
-  useEffect(() => {
-    const fetchChat = async () => {
-      setLoading(true);
-      setError(null); // limpa erro anterior antes de nova tentativa
-
-      try {
-        const service = new ChatService();
-        const result = await service.getChat(conversaId);
-        setChat(result);
-      } catch (err: any) {
-        setError(err.message ?? 'Erro ao carregar conversa');
-        setChat(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchChat();
-  }, [conversaId]);
-
-  return { chat, loading, error };
+export function useChatContacts() {
+  return useQuery<Contact[]>({
+    queryKey: ['chat-contacts'],
+    queryFn: async () => {
+      const service = new ChatService();
+      return await service.getChatsAndFriends();
+    },
+    staleTime: 1000 * 60, 
+  });
 }

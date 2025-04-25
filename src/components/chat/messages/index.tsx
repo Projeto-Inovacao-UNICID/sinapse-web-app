@@ -14,7 +14,7 @@ interface ChatMessagesProps {
 
 export function ChatMessages({ newMessages, contactId, conversaId }: ChatMessagesProps) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const { messages, loading, error } = useMessages({ conversaId });
+  const { data: messages = [], isLoading, isError, error } = useMessages({ conversaId });
 
   // Scroll automático quando mensagens mudam
   useEffect(() => {
@@ -29,7 +29,7 @@ export function ChatMessages({ newMessages, contactId, conversaId }: ChatMessage
     return Array.from(uniqueMap.values()).sort((a, b) => a.id - b.id); // ordena por ID 
   }, [messages, newMessages]);
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
         <CircularProgress />
@@ -37,10 +37,12 @@ export function ChatMessages({ newMessages, contactId, conversaId }: ChatMessage
     );
   }
 
-  if (error) {
+  if (isError) {
     return (
       <Box sx={{ padding: 2 }}>
-        <Typography color="error">{error}</Typography>
+        <Typography color="error">
+          {(error as Error).message ?? 'Erro ao carregar mensagens'}
+        </Typography>
       </Box>
     );
   }
@@ -54,8 +56,7 @@ export function ChatMessages({ newMessages, contactId, conversaId }: ChatMessage
         flexDirection: 'column',
         padding: 2,
         gap: 1,
-        // Defina o maxHeight considerando a altura do header e o input
-        height: `calc(100vh - 65px - 80px)`, // Ajuste a altura total conforme a altura do seu header e input
+        height: `calc(100vh - 65px - 80px)`,
         backgroundColor: 'var(--bgSecondary)',
       }}
     >

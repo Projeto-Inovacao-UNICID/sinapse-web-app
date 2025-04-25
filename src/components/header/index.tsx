@@ -11,6 +11,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { ThemeSwitch } from '../switch';
+import { useSession } from '@/hooks/session/useSession';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -29,6 +30,8 @@ const iconButtonStyles = {
 
 export function Header() {
   const router = useRouter();
+  const { session } = useSession(); 
+  const userId = session?.id;
 
   const navClick = (route: string) => {
     router.push(`${route}`);
@@ -115,7 +118,7 @@ export function Header() {
             { icon: <NotificationsIcon sx={iconStyles} /> },
             { icon: <EmojiEventsIcon sx={iconStyles} /> },
             { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
-            { icon: <PersonIcon sx={iconStyles} />, route: '/profile/me' },
+            { icon: <PersonIcon sx={iconStyles} />, route: `/profile/me/${userId}` },
             { icon: <SettingsIcon sx={iconStyles} /> },
           ].map(({ icon, route }, index) => (
             <motion.button

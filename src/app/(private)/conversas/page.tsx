@@ -18,7 +18,7 @@ export default function Conversas() {
   const [conversaId, setConversaId] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
-  const { contacts, loading, error } = useChatContacts();
+  const { data: contacts = [], isLoading, isError, error } = useChatContacts();
 
   const handleSend = (conteudo: string) => {
     const newMsg: Message = {
@@ -51,9 +51,6 @@ export default function Conversas() {
       if (contatoSelecionado) {
         const convId = contatoSelecionado.conversaId;
         setConversaId(convId);
-
-        // Aqui você pode buscar mensagens reais da conversa
-        // Exemplo: fetchMensagens(convId).then(setMessages);
         setMessages([]); // Por enquanto zera
       }
     }
@@ -62,10 +59,10 @@ export default function Conversas() {
   return (
     <Grid container spacing={1}>
       <Grid size={3}>
-        {loading ? (
+        {isLoading ? (
           <CircularProgress />
-        ) : error ? (
-          <div>Erro ao carregar amizades</div>
+        ) : isError ? (
+          <div>Erro ao carregar amizades: {(error as Error).message}</div>
         ) : (
           <ContactList contacts={contacts} onSelect={handleSelect} />
         )}
