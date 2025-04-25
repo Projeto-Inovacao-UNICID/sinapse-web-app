@@ -1,6 +1,6 @@
 'use client';
 
-import { useFriendship } from "@/hooks/friendship/useFriendship";
+import { useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
 import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
 import { Avatar, Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
@@ -11,11 +11,22 @@ interface UserProfileCardProps {
 
 export function UserProfileCard({ userId }: UserProfileCardProps) {
   const { data: userProfile, isLoading, isError, error } = useUserProfile(userId);
-  const { data: friendship, isLoading: isFriendshipLoading, isError: isFriendshipError, error: friendshipError } = useFriendship();
+  const { data: friendship, isLoading: isFriendshipLoading } = useFriendship();
   const { session } = useSession();
+  const { mutateAsync: sendFriendRequest, isPending: isPostFriendshipLoading } = usePostFriendship();
+  const {
+    data: friendshipInvitations,
+    isLoading: isFriendshipInvitationsLoading,
+    isError: isFriendshipInvitationsError,
+    error: friendshipInvitationsError,
+  } = useGetFriendshipInvitations('enviados');
 
   const isProfileOwner = session?.id === userId;
   const isUser = session ? session.roles.includes('ROLE_USER') : false;
+
+  const isActiveFriendshipInvitation = !isProfileOwner && friendshipInvitations?.content.some(
+    (invitation) => invitation.usuarioId === userId
+  );
 
   if (isLoading) {
     return (
@@ -34,9 +45,32 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     );
   }
 
-  const { nome, username, criadoEm, temImagem, ativo, amigos, totalPostagens, totalReacoes, podeAdicionarAmigo, atualizadoEm } = userProfile ?? {};
+  const {
+    nome,
+    username,
+    criadoEm,
+    temImagem,
+    ativo,
+    amigos,
+    totalPostagens,
+    totalReacoes,
+    podeAdicionarAmigo,
+    atualizadoEm
+  } = userProfile ?? {};
 
   let imagemSrc = "";
+  if (temImagem) {
+    imagemSrc = `/api/imagem/perfil/${userId}`; // ajuste se necessário
+  }
+
+  const handleAddFriendship = async () => {
+    try {
+      const res = await sendFriendRequest(userId);
+      console.log('Pedido de amizade enviado com sucesso:', res);
+    } catch (err) {
+      console.error('Erro ao adicionar amizade:', err);
+    }
+  };
 
   return (
     <Box
@@ -61,23 +95,31 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
           <Box 
             sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%", alignItems: "center", justifyContent: "center" }}
           >
-            <Typography variant="h6" color="var(--foreground)">{isProfileOwner ? (friendship ? friendship.length : 0) : (amigos ? amigos.length : 0)} Amigos</Typography>
+            <Typography variant="h6" color="var(--foreground)">
+              {isProfileOwner ? (friendship ? friendship.length : 0) : (amigos ? amigos.length : 0)} Amigos
+            </Typography>
           </Box>
         </Grid>
         <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
           {!isProfileOwner && isUser && (
             <Button 
+              onClick={podeAdicionarAmigo && !isActiveFriendshipInvitation ? handleAddFriendship : undefined}
               variant="contained" 
               sx={{ 
-                backgroundColor: podeAdicionarAmigo ? "var(--primary)" : "var(--muted)", 
+                backgroundColor: podeAdicionarAmigo && !isActiveFriendshipInvitation ? "var(--primary)" : "var(--muted)",
                 fontWeight: "bold",
                 ':hover': {
                   opacity: 0.8,
                 }
               }}
-
+              disabled={isPostFriendshipLoading}
             >
-              {podeAdicionarAmigo ? "Adicionar amigo" : "Amigo já adicionado"}
+              {isPostFriendshipLoading ? (
+                <CircularProgress size={20} sx={{ color: "white" }} />
+              ) : isActiveFriendshipInvitation ? "Convite já enviado"
+                : podeAdicionarAmigo ? "Adicionar amigo"
+                : "Amigo já adicionado"
+              }
             </Button>
           )}
         </Grid>

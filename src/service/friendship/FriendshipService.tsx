@@ -1,10 +1,10 @@
 import { axiosInstance } from "../api";
-import { User } from "@/types";
+import { FriendshipInvitation, FriendshipInvitationsResponse, User } from "@/types";
 
 export class FriendshipService {
     async postFriendship(destinatarioId: string) {
-        const response = await axiosInstance.post(`/amizades`, { destinatarioId }, { withCredentials: true });
-        return response.status;
+        const response = await axiosInstance.post<FriendshipInvitation>(`/amizades`, { destinatarioId }, { withCredentials: true });
+        return response.data;
     }
 
     async getFriendship() {
@@ -12,8 +12,10 @@ export class FriendshipService {
         return response.data;
     }
 
-    async getInvitations() {
-        const response = await axiosInstance.get(`/amizades/convites`, { withCredentials: true });
+    async getInvitations(tipo: string, page: number = 0, size: number = 10) {
+        const response = await axiosInstance.get<FriendshipInvitationsResponse>(`/amizades/convites?tipo=${tipo}&page=${page}&size=${size}`, {
+            withCredentials: true
+        });
         return response.data;
     }
 
