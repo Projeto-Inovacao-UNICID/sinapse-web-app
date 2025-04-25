@@ -4,7 +4,7 @@ import { User } from "@/types";
 export class FriendshipService {
     async postFriendship(destinatarioId: string) {
         const response = await axiosInstance.post(`/amizades`, { destinatarioId }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async getFriendship() {
@@ -24,7 +24,7 @@ export class FriendshipService {
 
     async patchFriendship(amizadeId: string, status: string) {
         const response = await axiosInstance.patch(`/amizades/atualizar`, { amizadeId, status }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async deleteFriendship(amizadeId: string) {
@@ -32,6 +32,6 @@ export class FriendshipService {
             data: { amizadeId },
             withCredentials: true
         });
-        return response.data;
+        return response.status;
     }
 }

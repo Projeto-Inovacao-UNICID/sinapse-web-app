@@ -3,7 +3,7 @@ import { axiosInstance } from "../api";
 export class FollowersService {
     async postFollowers(empresaId: string) {
         const response = await axiosInstance.post(`/seguidores`, { empresaId }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async getFollowedCompanies() {
@@ -26,6 +26,6 @@ export class FollowersService {
             data: { empresaId },
             withCredentials: true
         });
-        return response.data;
+        return response.status;
     }
 }

@@ -4,7 +4,7 @@ import { axiosInstance } from "../api";
 export class ChatService {
     async postChat(participanteId: string) {
         const response = await axiosInstance.post(`/conversas`, { participanteId }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async getChat(conversaId: number) {
