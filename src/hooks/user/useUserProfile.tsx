@@ -14,7 +14,7 @@ export function useUserProfile(userId: string) {
   });
 }
 
-export const useUserProfileImage = (userId: string) => {
+export const useUserProfileImage = (userId: string, enabled: boolean = true) => {
   return useQuery({
     queryKey: ["user-profile-image", userId],
     queryFn: async () => {
@@ -23,5 +23,6 @@ export const useUserProfileImage = (userId: string) => {
     },
     staleTime: 1000 * 60 * 5, // cache por 5 minutos
     refetchOnWindowFocus: false,
+    enabled,
   });
 };

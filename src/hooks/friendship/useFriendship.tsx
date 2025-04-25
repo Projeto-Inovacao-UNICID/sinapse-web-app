@@ -25,7 +25,7 @@ export function usePostFriendship() {
 
 export function useGetFriendshipInvitations(tipo: FriendshipInviteType, page?: number, size?: number) {
   return useQuery<FriendshipInvitationsResponse, Error>({
-    queryKey: ['friendship-invitations'],
+    queryKey: ['friendship-invitations', tipo],
     queryFn: async () => {
       const service = new FriendshipService();
       return service.getInvitations(tipo, page, size);

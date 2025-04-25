@@ -9,7 +9,6 @@ interface NotificationsProps {
 
 export function Notifications({ friendshipInvitations} : NotificationsProps) {
   const isFriendshipInvitationsEmpty = friendshipInvitations ? friendshipInvitations.content.length === 0 : true;
-  console.log(friendshipInvitations);
 
   return (
   <List

@@ -12,16 +12,13 @@ interface UserProfileCardProps {
 
 export function UserProfileCard({ userId }: UserProfileCardProps) {
   const { data: userProfile, isLoading, isError, error } = useUserProfile(userId);
-  const { data: userProfileImage, isLoading: isUserProfileImageLoading } = useUserProfileImage(userId);
-  const { data: friendship, isLoading: isFriendshipLoading } = useFriendship();
   const { session } = useSession();
+  const { data: friendship } = useFriendship();
   const { mutateAsync: sendFriendRequest, isPending: isPostFriendshipLoading } = usePostFriendship();
-  const {
-    data: friendshipInvitations,
-    isLoading: isFriendshipInvitationsLoading,
-    isError: isFriendshipInvitationsError,
-    error: friendshipInvitationsError,
-  } = useGetFriendshipInvitations("enviados");
+  const { data: friendshipInvitations } = useGetFriendshipInvitations("enviados");
+
+  const temImagem = userProfile?.temImagem ?? false;
+  const { data: userProfileImage } = useUserProfileImage(userId, temImagem); // <- controle de carregamento
 
   const queryClient = useQueryClient();
 
@@ -52,74 +49,48 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   const {
     nome,
     username,
-    criadoEm,
-    temImagem,
-    ativo,
     amigos,
-    totalPostagens,
-    totalReacoes,
     podeAdicionarAmigo,
-    atualizadoEm
   } = userProfile ?? {};
 
-  let imagemSrc = "";
-  if (temImagem) {
-    imagemSrc = userProfileImage ?? "";
-  }
+  const imagemSrc = temImagem ? userProfileImage ?? "" : "";
 
   const handleAddFriendship = async () => {
     try {
       const res = await sendFriendRequest(userId);
       console.log('Pedido de amizade enviado com sucesso:', res);
-  
-      // Refaz a query de convites enviados
       await queryClient.invalidateQueries({ queryKey: ['friendship-invitations'] });
-  
     } catch (err) {
       console.error('Erro ao adicionar amizade:', err);
     }
   };
-  
 
   return (
-    <Box
-      className="flex flex-col gap-2 p-4"
-      sx={{ backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}
-    >
+    <Box className="flex flex-col gap-2 p-4" sx={{ backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}>
       <Grid container spacing={2}>
         <Grid size={10}>
           <Box sx={{ display: "flex", alignItems: "flex-start", flexDirection: "column", gap: 2 }}>
-            <Avatar
-              src={imagemSrc}
-              alt={nome}
-              sx={{ width: 100, height: 100 }}
-            />
+            <Avatar src={imagemSrc} alt={nome} sx={{ width: 100, height: 100 }} />
             <Box sx={{ ml: 2 }}>
               <Typography variant="h5" color="var(--foreground)" className="font-bold">{nome}</Typography>
               <Typography variant="body1" color="var(--muted)">{username}</Typography>
             </Box>
           </Box>
         </Grid>
-        <Grid size={2} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-          <Box 
-            sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%", alignItems: "center", justifyContent: "center" }}
-          >
-            <Typography variant="h6" color="var(--foreground)">
-              {isProfileOwner ? (friendship ? friendship.length : 0) : (amigos ? amigos.length : 0)} Amigos
-            </Typography>
-          </Box>
+        <Grid size={2} sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+          <Typography variant="h6" color="var(--foreground)">
+            {isProfileOwner ? (friendship ? friendship.length : 0) : (amigos ? amigos.length : 0)} Amigos
+          </Typography>
         </Grid>
         <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
           {!isProfileOwner && isUser && (
             <Button 
               onClick={podeAdicionarAmigo && !isActiveFriendshipInvitation ? handleAddFriendship : undefined}
-              variant="contained" 
+              variant="contained"
               sx={{ 
                 backgroundColor: podeAdicionarAmigo && !isActiveFriendshipInvitation ? "var(--primary)" : "var(--muted)",
                 fontWeight: "bold",
-                ':hover': {
-                  opacity: 0.8,
-                }
+                ':hover': { opacity: 0.8 },
               }}
               disabled={isPostFriendshipLoading}
             >
