@@ -8,6 +8,7 @@ export * from './friend';
 export * from './profileComment';
 export * from './friendshipInvitation';
 export * from './friendshipContent';
+export * from './friendshipInviteType';
 
 export * from './responses/sessionResponse';
 export * from './responses/userProfileResponse';

@@ -1,10 +1,9 @@
-import { FriendshipContent } from '@/types';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import { Button, ListItemButton } from '@mui/material';
-import DoneIcon from '@mui/icons-material/Done';
-import CloseIcon from '@mui/icons-material/Close';
 import { FriendshipService } from '@/service/friendship/FriendshipService';
-import { a } from 'motion/react-client';
+import { FriendshipContent } from '@/types';
+import CloseIcon from '@mui/icons-material/Close';
+import DoneIcon from '@mui/icons-material/Done';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import { Box, Button, ListItemButton } from '@mui/material';
 
 interface FriendshipInvitationNotificationProps {
   friendshipContent: FriendshipContent;
@@ -26,15 +25,16 @@ export function FriendshipInvitationNotification({ friendshipContent }: Friendsh
   };
 
   return (
-    <ListItemButton sx={{ display: 'flex', alignItems: 'center', gap: 2, flexDirection: 'row', padding: 0.5 }}>
-      <div>
-        <PersonAddIcon sx={{ color: 'var(--primary)' }} />
-        <span>Convite de amizade recebido de {username}</span>
-      </div>
-      <div>
-        <Button sx={{ color: 'var(--primary)' }} onClick={handleAccept}><DoneIcon /></Button>
-        <Button sx={{ color: 'var(--card)' }} onClick={handleDecline}><CloseIcon /></Button>
-      </div>
+    <ListItemButton sx={{ display: 'flex', alignItems: 'center', flexDirection: 'row', padding: 1, backgroundColor: 'var(--cardSecondary)', gap: 2, width: '100%' }}>
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+        <PersonAddIcon sx={{ color: 'var(--primary)', fontSize: '1.5rem' }} />
+        <span style={{ color: 'var(--foreground)', fontSize: '0.8rem' }}>Convite de amizade recebido de {username}</span>
+      </Box>
+      <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+        <Button sx={{ bgcolor: 'var(--primary)', color: 'var(--primary-foreground)', ":hover": { opacity: 0.8 } }} onClick={handleAccept}><DoneIcon /></Button>
+        <Button sx={{ bgcolor: 'var(--bgSecondary)', color: 'var(--foreground)', ":hover": { opacity: 0.8 } }} onClick={handleDecline}><CloseIcon /></Button>
+      </Box>
     </ListItemButton>
+
   );
 }

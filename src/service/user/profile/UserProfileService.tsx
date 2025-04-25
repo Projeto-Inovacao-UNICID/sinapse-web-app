@@ -38,7 +38,14 @@ export class UserProfileService {
   }
 
   async getUserProfileImage(userId: string) {
-    const response = await axiosInstance.get(`/profile/user/${userId}/imagem`, { withCredentials: true });
-    return response.data;
-  }
+  const response = await axiosInstance.get(`/profile/user/${userId}/imagem`, {
+    responseType: 'blob', // importante para receber como arquivo binário
+    withCredentials: true,
+  });
+
+  const imageBlob = response.data;
+  const imageUrl = URL.createObjectURL(imageBlob); // cria uma URL utilizável
+
+  return imageUrl;
+}
 }

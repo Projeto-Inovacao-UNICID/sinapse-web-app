@@ -2,7 +2,7 @@
 
 import { useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
 import { useSession } from "@/hooks/session/useSession";
-import { useUserProfile } from "@/hooks/user/useUserProfile";
+import { useUserProfile, useUserProfileImage } from "@/hooks/user/useUserProfile";
 import { Avatar, Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -12,6 +12,7 @@ interface UserProfileCardProps {
 
 export function UserProfileCard({ userId }: UserProfileCardProps) {
   const { data: userProfile, isLoading, isError, error } = useUserProfile(userId);
+  const { data: userProfileImage, isLoading: isUserProfileImageLoading } = useUserProfileImage(userId);
   const { data: friendship, isLoading: isFriendshipLoading } = useFriendship();
   const { session } = useSession();
   const { mutateAsync: sendFriendRequest, isPending: isPostFriendshipLoading } = usePostFriendship();
@@ -20,7 +21,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     isLoading: isFriendshipInvitationsLoading,
     isError: isFriendshipInvitationsError,
     error: friendshipInvitationsError,
-  } = useGetFriendshipInvitations('enviados');
+  } = useGetFriendshipInvitations("enviados");
 
   const queryClient = useQueryClient();
 
@@ -63,7 +64,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
 
   let imagemSrc = "";
   if (temImagem) {
-    imagemSrc = `/api/imagem/perfil/${userId}`; // ajuste se necessário
+    imagemSrc = userProfileImage ?? "";
   }
 
   const handleAddFriendship = async () => {

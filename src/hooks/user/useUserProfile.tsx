@@ -15,7 +15,7 @@ export function useUserProfile(userId: string) {
 }
 
 export const useUserProfileImage = (userId: string) => {
-  return useQuery<File>({
+  return useQuery({
     queryKey: ["user-profile-image", userId],
     queryFn: async () => {
       const service = new UserProfileService();

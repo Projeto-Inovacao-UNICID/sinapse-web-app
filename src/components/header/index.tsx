@@ -2,16 +2,17 @@
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { TextField, InputAdornment, Badge } from '@mui/material';
+import { TextField, InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ChatIcon from '@mui/icons-material/Chat';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import HomeIcon from '@mui/icons-material/Home';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
+
 import { ThemeSwitch } from '../switch';
 import { useSession } from '@/hooks/session/useSession';
+import { NotificationButton } from './notification-button';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -36,8 +37,6 @@ export function Header() {
   const navClick = (route: string) => {
     router.push(`${route}`);
   };
-
-  const hasUnreadNotifications = true;
 
   return (
     <header
@@ -118,7 +117,6 @@ export function Header() {
         <div style={{ display: 'flex', gap: 16 }}>
           {[
             { icon: <HomeIcon sx={iconStyles} />, route: '/' },
-            { icon: <Badge badgeContent={4} color='error' overlap='circular' invisible={!hasUnreadNotifications}><NotificationsIcon sx={iconStyles} /></Badge> },
             { icon: <EmojiEventsIcon sx={iconStyles} /> },
             { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
             { icon: <PersonIcon sx={iconStyles} />, route: `/profile/me/${userId}` },
@@ -135,6 +133,11 @@ export function Header() {
               {icon}
             </motion.button>
           ))}
+
+          {/* Botão de notificações separado */}
+          <NotificationButton />
+
+          {/* Switch de tema */}
           <ThemeSwitch />
         </div>
       </div>

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { FriendshipService } from '@/service/friendship/FriendshipService';
-import { FriendshipInvitation, FriendshipInvitationsResponse, User } from '@/types';
+import { FriendshipInvitation, FriendshipInvitationsResponse, FriendshipInviteType, User } from '@/types';
 
 export function useFriendship() {
   return useQuery<User[], Error>({
@@ -23,7 +23,7 @@ export function usePostFriendship() {
   });
 }
 
-export function useGetFriendshipInvitations(tipo: string, page?: number, size?: number) {
+export function useGetFriendshipInvitations(tipo: FriendshipInviteType, page?: number, size?: number) {
   return useQuery<FriendshipInvitationsResponse, Error>({
     queryKey: ['friendship-invitations'],
     queryFn: async () => {
