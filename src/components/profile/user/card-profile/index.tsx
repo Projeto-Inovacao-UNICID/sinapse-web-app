@@ -3,7 +3,7 @@
 import { useFriendship } from "@/hooks/friendship/useFriendship";
 import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
-import { Avatar, Box, CircularProgress, Grid, Typography } from "@mui/material";
+import { Avatar, Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 
 interface UserProfileCardProps {
   userId: string;
@@ -15,6 +15,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   const { session } = useSession();
 
   const isProfileOwner = session?.id === userId;
+  const isUser = session ? session.roles.includes('ROLE_USER') : false;
 
   if (isLoading) {
     return (
@@ -33,7 +34,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     );
   }
 
-  const { nome, username, criadoEm, temImagem, ativo, amigos, totalPostagens, totalReacoes, atualizadoEm } = userProfile ?? {};
+  const { nome, username, criadoEm, temImagem, ativo, amigos, totalPostagens, totalReacoes, podeAdicionarAmigo, atualizadoEm } = userProfile ?? {};
 
   let imagemSrc = "";
 
@@ -62,6 +63,23 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
           >
             <Typography variant="h6" color="var(--foreground)">{isProfileOwner ? (friendship ? friendship.length : 0) : (amigos ? amigos.length : 0)} Amigos</Typography>
           </Box>
+        </Grid>
+        <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+          {!isProfileOwner && isUser && (
+            <Button 
+              variant="contained" 
+              sx={{ 
+                backgroundColor: podeAdicionarAmigo ? "var(--primary)" : "var(--muted)", 
+                fontWeight: "bold",
+                ':hover': {
+                  opacity: 0.8,
+                }
+              }}
+
+            >
+              {podeAdicionarAmigo ? "Adicionar amigo" : "Amigo já adicionado"}
+            </Button>
+          )}
         </Grid>
       </Grid>
     </Box>
