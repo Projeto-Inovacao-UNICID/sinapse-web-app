@@ -1,10 +1,8 @@
 'use client';
 
-import { useUserProfile, useUserProfileImage } from "@/hooks/user/useUserProfile";
-import { UserProfileService } from "@/service/user/profile/UserProfileService";
-import { Avatar, Box, Grid, Typography, CircularProgress } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { use } from "react";
+import { useFriendship } from "@/hooks/friendship/useFriendship";
+import { useUserProfile } from "@/hooks/user/useUserProfile";
+import { Avatar, Box, CircularProgress, Grid, Typography } from "@mui/material";
 
 interface UserProfileCardProps {
   userId: string;
@@ -12,6 +10,7 @@ interface UserProfileCardProps {
 
 export function UserProfileCard({ userId }: UserProfileCardProps) {
   const { data: userProfile, isLoading, isError, error } = useUserProfile(userId);
+  const { data: friendship, isLoading: isFriendshipLoading, isError: isFriendshipError, error: friendshipError } = useFriendship();
 
   if (isLoading) {
     return (
@@ -30,34 +29,34 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     );
   }
 
-  const { nome, username, criadoEm, temImagem, amigos, totalPostagens, totalReacoes } = userProfile ?? {};
+  const { nome, username, criadoEm, temImagem, ativo, amigos, totalPostagens, totalReacoes, atualizadoEm } = userProfile ?? {};
 
   let imagemSrc = "";
 
   return (
-    <Box>
+    <Box
+      className="flex flex-col gap-2 p-4"
+      sx={{ backgroundColor: "var(--bgSecondary)", borderRadius: 2, padding: 4 }}
+    >
       <Grid container spacing={2}>
-        <Grid size={8}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Grid size={10}>
+          <Box sx={{ display: "flex", alignItems: "flex-start", flexDirection: "column", gap: 2 }}>
             <Avatar
               src={imagemSrc}
               alt={nome}
               sx={{ width: 100, height: 100 }}
             />
             <Box sx={{ ml: 2 }}>
-              <Typography variant="h5">{nome}</Typography>
-              <Typography variant="body1" color="textSecondary">{username}</Typography>
+              <Typography variant="h5" color="var(--foreground)" className="font-bold">{nome}</Typography>
+              <Typography variant="body1" color="var(--muted)">{username}</Typography>
             </Box>
           </Box>
         </Grid>
-        <Grid size={4}>
-          <Box>
-            <Typography variant="h6">{amigos ? amigos.length : 0}</Typography>
-            <Typography variant="body1" color="textSecondary">Amigos</Typography>
-          </Box>
-          <Box>
-            <Typography variant="h6">{totalPostagens}</Typography>
-            <Typography variant="body1" color="textSecondary">Postagens</Typography>
+        <Grid size={2} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+          <Box 
+            sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%", alignItems: "center", justifyContent: "center" }}
+          >
+            <Typography variant="h6" color="var(--foreground)">{amigos ? amigos.length : friendship ? friendship.length : 0} Amigos</Typography>
           </Box>
         </Grid>
       </Grid>

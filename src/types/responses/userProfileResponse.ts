@@ -6,8 +6,10 @@ export interface UserProfileResponse {
   username: string;
   temImagem: boolean;
   criadoEm: string;
-  amigos: Friend[];
+  ativo?: boolean;
+  amigos?: Friend[]
   totalPostagens: number;
   totalReacoes: number;
-  podeAdicionarAmigo: boolean;
+  podeAdicionarAmigo?: boolean;
+  atualizadoEm?: string;
 }
