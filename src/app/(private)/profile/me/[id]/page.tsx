@@ -1,9 +1,18 @@
+'use client';
+
+import { UserProfileCard } from "@/components/profile/user/card-profile";
+import { use } from "react"; 
+
 interface UserProfileProps {
-  params: {
-    id: string
-  }
+  params: Promise<{
+    id: string;
+  }>;
 }
 
 export default function UserProfile ({ params }: UserProfileProps) {
-  return <div>User Profile</div>
+  const resolvedParams = use(params); 
+
+  return (
+    <UserProfileCard userId={resolvedParams.id} />
+  );
 }
