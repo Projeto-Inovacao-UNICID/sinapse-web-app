@@ -24,7 +24,7 @@ export class FriendshipService {
         return response.data;
     }
 
-    async patchFriendship(amizadeId: string, status: string) {
+    async patchFriendship(amizadeId: number, status: string) {
         const response = await axiosInstance.patch(`/amizades/atualizar`, { amizadeId, status }, { withCredentials: true });
         return response.status;
     }

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { TextField, InputAdornment } from '@mui/material';
+import { TextField, InputAdornment, Badge } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import ChatIcon from '@mui/icons-material/Chat';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
@@ -36,6 +36,8 @@ export function Header() {
   const navClick = (route: string) => {
     router.push(`${route}`);
   };
+
+  const hasUnreadNotifications = true;
 
   return (
     <header
@@ -116,7 +118,7 @@ export function Header() {
         <div style={{ display: 'flex', gap: 16 }}>
           {[
             { icon: <HomeIcon sx={iconStyles} />, route: '/' },
-            { icon: <NotificationsIcon sx={iconStyles} /> },
+            { icon: <Badge badgeContent={4} color='error' overlap='circular' invisible={!hasUnreadNotifications}><NotificationsIcon sx={iconStyles} /></Badge> },
             { icon: <EmojiEventsIcon sx={iconStyles} /> },
             { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
             { icon: <PersonIcon sx={iconStyles} />, route: `/profile/me/${userId}` },
