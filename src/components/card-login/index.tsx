@@ -88,7 +88,7 @@ export function CardLogin({ onOpenModal }: CardLoginProps) {
           alignItems: "center",
           justifyContent: "center",
           gap: 16,
-          backgroundColor: 'var(--bgSecondary)',
+          backgroundColor: 'var(--card)',
           padding: 24,
           paddingTop: 32,
           borderRadius: 32,

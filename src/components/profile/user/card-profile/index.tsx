@@ -1,6 +1,7 @@
 'use client';
 
 import { useFriendship } from "@/hooks/friendship/useFriendship";
+import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
 import { Avatar, Box, CircularProgress, Grid, Typography } from "@mui/material";
 
@@ -11,11 +12,14 @@ interface UserProfileCardProps {
 export function UserProfileCard({ userId }: UserProfileCardProps) {
   const { data: userProfile, isLoading, isError, error } = useUserProfile(userId);
   const { data: friendship, isLoading: isFriendshipLoading, isError: isFriendshipError, error: friendshipError } = useFriendship();
+  const { session } = useSession();
+
+  const isProfileOwner = session?.id === userId;
 
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-        <CircularProgress />
+        <CircularProgress sx={{ color: "var(--muted)" }} />
       </Box>
     );
   }
@@ -36,7 +40,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   return (
     <Box
       className="flex flex-col gap-2 p-4"
-      sx={{ backgroundColor: "var(--bgSecondary)", borderRadius: 2, padding: 4 }}
+      sx={{ backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}
     >
       <Grid container spacing={2}>
         <Grid size={10}>
@@ -56,7 +60,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
           <Box 
             sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%", alignItems: "center", justifyContent: "center" }}
           >
-            <Typography variant="h6" color="var(--foreground)">{amigos ? amigos.length : friendship ? friendship.length : 0} Amigos</Typography>
+            <Typography variant="h6" color="var(--foreground)">{isProfileOwner ? (friendship ? friendship.length : 0) : (amigos ? amigos.length : 0)} Amigos</Typography>
           </Box>
         </Grid>
       </Grid>

@@ -14,6 +14,7 @@
   
   --background: #ffffff;
   --bgSecondary: #f2f2f2;
+  --bgTertiary: #f3f3f3;
   --foreground: #000000;
 
   --card: #f2f2f2;
@@ -38,7 +39,7 @@
   --destructive-foreground: #ffffff;
 
   --border: #d0d0d0;
-  --input: #f3f3f3;
+  --input: #e3e2e2;
   --ring: #ff6a00;
 
   --sidebar: #f2f2f2;
@@ -52,7 +53,8 @@
 /* Tema escuro */
 .dark {
   --background: #1b1b1b;
-  --bgSecondary: #2b2b2b;
+  --bgSecondary: #1d1d1d;
+  --bgTertiary: #1e1e1e;
   --foreground: #ffffff;
 
   --card: #2b2b2b;
@@ -77,7 +79,7 @@
   --destructive-foreground: #ffffff;
 
   --border: #1b1b1b;
-  --input: #3b3b3b;
+  --input: #202020;
   --ring: #ff6a00;
 
   --sidebar: #2b2b2b;

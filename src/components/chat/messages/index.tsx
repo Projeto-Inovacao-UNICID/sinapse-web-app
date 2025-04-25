@@ -57,7 +57,7 @@ export function ChatMessages({ newMessages, contactId, conversaId }: ChatMessage
         padding: 2,
         gap: 1,
         height: `calc(100vh - 65px - 80px)`,
-        backgroundColor: 'var(--bgSecondary)',
+        backgroundColor: 'var(--card)',
       }}
     >
       {allMessages.map((msg) => (

@@ -49,7 +49,7 @@ export function Header() {
         backgroundColor: 'var(--bgSecondary)',
         boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
         display: 'grid',
-        gridTemplateColumns: '1fr minmax(0, 10fr) 1fr',
+        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
         alignItems: 'center',
       }}
     >
@@ -86,6 +86,7 @@ export function Header() {
             placeholder="Buscar..."
             size="small"
             sx={{
+              width: '75%',
               backgroundColor: 'var(--input)',
               borderRadius: 2,
               input: { color: 'var(--foreground)' },
@@ -104,7 +105,7 @@ export function Header() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'var(--primary)' }} />
+                  <SearchIcon sx={{ color: 'var(--muted)' }} />
                 </InputAdornment>
               ),
             }}
