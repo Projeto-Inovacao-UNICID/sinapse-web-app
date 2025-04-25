@@ -1,20 +1,23 @@
 'use client';
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import {
-  TextField, Button, RadioGroup, FormControlLabel,
-  Radio, Typography
+  Button,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography
 } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import { LoginService } from "@/service/auth/LoginService";
 import { SessionService } from "@/service/session/SessionService";
-import { ModalError } from "../modal-error";
 import {
   buttonFormStyle, inputFormStyle, radioStyle
 } from "@/theme/components-styles";
-import { useSession } from "@/hooks/session/useSession";
 import { useQueryClient } from "@tanstack/react-query";
+import { ModalError } from "../modal-error";
 
 interface CardLoginProps {
   onOpenModal: () => void;
