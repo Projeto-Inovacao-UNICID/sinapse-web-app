@@ -4,6 +4,7 @@ import { useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@
 import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
 import { Avatar, Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface UserProfileCardProps {
   userId: string;
@@ -20,6 +21,8 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     isError: isFriendshipInvitationsError,
     error: friendshipInvitationsError,
   } = useGetFriendshipInvitations('enviados');
+
+  const queryClient = useQueryClient();
 
   const isProfileOwner = session?.id === userId;
   const isUser = session ? session.roles.includes('ROLE_USER') : false;
@@ -67,10 +70,15 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     try {
       const res = await sendFriendRequest(userId);
       console.log('Pedido de amizade enviado com sucesso:', res);
+  
+      // Refaz a query de convites enviados
+      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations'] });
+  
     } catch (err) {
       console.error('Erro ao adicionar amizade:', err);
     }
   };
+  
 
   return (
     <Box
@@ -116,7 +124,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
             >
               {isPostFriendshipLoading ? (
                 <CircularProgress size={20} sx={{ color: "white" }} />
-              ) : isActiveFriendshipInvitation ? "Convite já enviado"
+              ) : isActiveFriendshipInvitation ? "Convite enviado"
                 : podeAdicionarAmigo ? "Adicionar amigo"
                 : "Amigo já adicionado"
               }
