@@ -1,12 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Button, Divider, Popover, Typography } from '@mui/material';
+import { Box, Divider, Popover, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useRouter } from 'next/navigation';
-import { color, motion } from 'framer-motion';
+import { motion } from 'framer-motion';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { ThemeSwitch } from '@/components/switch';
+import { usePostLogout } from '@/hooks/logout/useLogout';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -25,6 +26,12 @@ const iconButtonStyles = {
 
 export function SettingsButton() {
   const router = useRouter();
+  const {
+    mutate: postLogout,
+    status, // usado para definir o estado de carregamento
+  } = usePostLogout();
+
+  const isPending = status === 'pending';
 
   const [settingsAnchorEl, setSettingsAnchorEl] = useState<null | HTMLElement>(null);
   const openSettings = Boolean(settingsAnchorEl);
@@ -38,15 +45,19 @@ export function SettingsButton() {
   };
 
   const handleLogout = () => {
-    // Remover o cookie de token para fazer o logout
-    document.cookie = 'token=; path=/; max-age=0';
-    // Redirecionar para a página de login
-    router.push('/login');
+    postLogout(undefined, {
+      onSuccess: () => {
+        document.cookie = 'token=; path=/; max-age=0';
+        router.push('/login');
+      },
+      onError: (error) => {
+        console.error('Erro ao fazer logout:', error);
+      },
+    });
   };
 
   return (
     <>
-      {/* Botão de Configurações */}
       <motion.button
         style={iconButtonStyles}
         whileHover={{ scale: 1.3 }}
@@ -57,7 +68,6 @@ export function SettingsButton() {
         <SettingsIcon sx={iconStyles} />
       </motion.button>
 
-      {/* Popover de Configurações */}
       <Popover
         open={openSettings}
         anchorEl={settingsAnchorEl}
@@ -124,12 +134,15 @@ export function SettingsButton() {
               border: 'none',
               cursor: 'pointer',
               borderRadius: '0.5rem',
+              opacity: isPending ? 0.7 : 1,
+              pointerEvents: isPending ? 'none' : 'auto',
             }}
+            disabled={isPending}
           >
             <LogoutIcon sx={{ color: 'var(--primary)', fontSize: '2rem' }} />
-              <Typography variant="button" color="var(--foreground)">
-                Sair
-              </Typography>
+            <Typography variant="button" color="var(--foreground)">
+              {isPending ? 'Saindo...' : 'Sair'}
+            </Typography>
           </motion.button>
         </Box>
       </Popover>
