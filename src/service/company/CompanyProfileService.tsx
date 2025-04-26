@@ -24,9 +24,20 @@ export class CompanyProfileService {
     return response.status;
   }
   
-
   async deleteCompanyProfileImage(companyId: string) {
     const response = await axiosInstance.delete(`/profile/company/${companyId}/imagem`, { withCredentials: true });
     return response.status;
+  }
+
+  async getCompanyProfileImage(companyId: string) {
+    const response = await axiosInstance.get(`/profile/company/${companyId}/imagem`, {
+      responseType: 'blob', // importante para receber como arquivo binário
+      withCredentials: true,
+    });
+
+    const imageBlob = response.data;
+    const imageUrl = URL.createObjectURL(imageBlob); // cria uma URL utilizável
+
+    return imageUrl;
   }
 }

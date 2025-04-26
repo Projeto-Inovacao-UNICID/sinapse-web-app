@@ -31,7 +31,10 @@ const iconButtonStyles = {
 export function Header() {
   const router = useRouter();
   const { session } = useSession(); 
-  const userId = session?.id;
+  const id = session?.id;
+  const roles = session?.roles;
+
+  const profileRoute = roles?.includes("ROLE_USER") ? `/profile/me/${id}` : `/empresa/me/${id}`;
 
   const navClick = (route: string) => {
     router.push(`${route}`);
@@ -118,7 +121,7 @@ export function Header() {
             { icon: <HomeIcon sx={iconStyles} />, route: '/' },
             { icon: <EmojiEventsIcon sx={iconStyles} />, route: '/desafios' },
             { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
-            { icon: <PersonIcon sx={iconStyles} />, route: `/profile/me/${userId}` },
+            { icon: <PersonIcon sx={iconStyles} />, route: profileRoute },
           ].map(({ icon, route }, index) => (
             <motion.button
               key={index}

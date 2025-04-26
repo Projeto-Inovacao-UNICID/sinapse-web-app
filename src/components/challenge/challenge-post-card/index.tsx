@@ -1,4 +1,4 @@
-import { useGetCompanyProfile } from "@/hooks/company/useGetCompanyProfile";
+import { useGetCompanyProfile } from "@/hooks/company/useCompanyProfile";
 import { Challenge } from "@/types";
 import { Avatar, Box, Divider, Typography } from "@mui/material";
 

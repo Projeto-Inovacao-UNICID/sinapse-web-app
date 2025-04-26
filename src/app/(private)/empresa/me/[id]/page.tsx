@@ -1,5 +1,6 @@
 'use client';
 
+import { CompanyProfileCard } from "@/components/profile/company/card-profile";
 import { use } from "react";
 
 interface CompanyProfileProps {
@@ -10,10 +11,8 @@ interface CompanyProfileProps {
 
 export default function UserProfile ({ params }: CompanyProfileProps) {
   const resolvedParams = use(params); 
-  const companyId = resolvedParams.id;
 
   return (
-    <>
-    </>
+    <CompanyProfileCard companyId={resolvedParams.id} />
   );
 }
