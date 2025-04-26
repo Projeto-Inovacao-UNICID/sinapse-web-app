@@ -14,6 +14,9 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
     return <div>Carregando...</div>;
   }
 
+  console.log(company);
+  console.log(empresaId);
+
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 2, backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
