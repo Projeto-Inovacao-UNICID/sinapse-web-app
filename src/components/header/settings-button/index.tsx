@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Button, Popover } from '@mui/material';
+import { Box, Button, Divider, Popover, Typography } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import { color, motion } from 'framer-motion';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { ThemeSwitch } from '@/components/switch';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -75,13 +77,61 @@ export function SettingsButton() {
             boxShadow: 3,
             width: 200,
             backgroundColor: 'var(--card)',
-            color: 'var(--card-foreground)',
+            color: 'var(--foreground)',
           },
         }}
       >
-        <Button onClick={handleLogout} sx={{ width: '100%' }}>
-          Logout
-        </Button>
+        <Box
+          sx={{
+            width: '100%',
+            backgroundColor: 'var(--cardSecondary)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            p: 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <ThemeSwitch />
+        </Box>
+        <Divider />
+        <Box
+          sx={{
+            width: '100%',
+            backgroundColor: 'var(--cardSecondary)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: 1,
+            p: 2,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <motion.button
+            onClick={handleLogout}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            style={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '0.5rem',
+              padding: '0.5rem 1rem',
+              color: 'var(--foreground)',
+              backgroundColor: 'var(--cardSecondary)',
+              border: 'none',
+              cursor: 'pointer',
+              borderRadius: '0.5rem',
+            }}
+          >
+            <LogoutIcon sx={{ color: 'var(--primary)', fontSize: '2rem' }} />
+              <Typography variant="button" color="var(--foreground)">
+                Sair
+              </Typography>
+          </motion.button>
+        </Box>
       </Popover>
     </>
   );

@@ -10,7 +10,6 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
 import { useSession } from '@/hooks/session/useSession';
-import { ThemeSwitch } from '../switch';
 import { NotificationButton } from './notification-button';
 import { SettingsButton } from './settings-button';
 
@@ -117,7 +116,7 @@ export function Header() {
         <div style={{ display: 'flex', gap: 16 }}>
           {[
             { icon: <HomeIcon sx={iconStyles} />, route: '/' },
-            { icon: <EmojiEventsIcon sx={iconStyles} /> },
+            { icon: <EmojiEventsIcon sx={iconStyles} />, route: '/desafios' },
             { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
             { icon: <PersonIcon sx={iconStyles} />, route: `/profile/me/${userId}` },
           ].map(({ icon, route }, index) => (
@@ -138,9 +137,7 @@ export function Header() {
 
           {/* Botão de configurações */}
           <SettingsButton />
-
-          {/* Switch de tema */}
-          <ThemeSwitch />
+          
         </div>
       </div>
     </header>

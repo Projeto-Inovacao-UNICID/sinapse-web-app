@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import { useTheme } from 'next-themes';
+import { Typography } from '@mui/material';
 
 export function ThemeSwitch() {
   const { theme, setTheme } = useTheme();
@@ -18,46 +19,62 @@ export function ThemeSwitch() {
   if (!mounted) return null;
 
   const isDark = theme === 'dark';
+  const showDark = (isDark && !hovered) || (!isDark && hovered);
+  const showLight = !showDark;
 
-  const showDarkIcon = (isDark && !hovered) || (!isDark && hovered);
-  const showLightIcon = (!isDark && !hovered) || (isDark && hovered);
+  const iconSize = '2rem';
 
   return (
     <motion.button
       onClick={() => setTheme(isDark ? 'light' : 'dark')}
-      className="relative flex items-center justify-center rounded-full transition-colors duration-300"
-      aria-label="Alternar tema"
-      initial={{ scale: 0 }}
-      animate={{ scale: 1 }}
-      transition={{ duration: 0.3 }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      whileHover={{ scale: 1.05 }}
+      className="flex items-center gap-2 px-3 py-1 rounded-full transition-colors duration-300"
       style={{
         backgroundColor: 'transparent',
         border: 'none',
         cursor: 'pointer',
-        height: '2rem',
-        width: '2rem',
+        color: 'var(--foreground)',
       }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      whileHover={{ scale: 1.1 }}
     >
-      {/* Ícone da lua (modo escuro) */}
-      <motion.div
-        animate={{ opacity: showDarkIcon ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-        style={{ position: 'absolute', top: 0, left: 0 }}
-      >
-        <DarkModeIcon sx={{ fontSize: '2rem', color: 'var(--primary)' }} />
-      </motion.div>
+      <AnimatePresence mode="wait">
+        {showDark && (
+          <motion.div
+            key="dark"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            transition={{ duration: 0.2 }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+          >
+            <DarkModeIcon sx={{ fontSize: iconSize, color: 'var(--primary)' }} />
+            <span> 
+              <Typography variant="button" color="var(--foreground)">
+                Tema escuro
+              </Typography>
+            </span>
+          </motion.div>
+        )}
 
-      {/* Ícone do sol (modo claro) */}
-      <motion.div
-        animate={{ opacity: showLightIcon ? 1 : 0 }}
-        transition={{ duration: 0.3 }}
-        style={{ position: 'absolute', top: 0, left: 0 }}
-      >
-        <LightModeIcon sx={{ fontSize: '2rem', color: 'var(--primary)' }} />
-      </motion.div>
+        {showLight && (
+          <motion.div
+            key="light"
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 10 }}
+            transition={{ duration: 0.2 }}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}
+          >
+            <LightModeIcon sx={{ fontSize: iconSize, color: 'var(--primary)' }} />
+            <span>
+              <Typography variant="button" color="var(--foreground)">
+                Tema claro
+              </Typography>
+            </span>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.button>
   );
 }
