@@ -273,10 +273,10 @@ export function CreationChallengeCard({ empresaId }: Props) {
                     onChange={handleSwitch}
                     sx={{
                       '& .MuiSwitch-switchBase.Mui-checked': {
-                        color: 'var(--primary)', // Cor do Switch quando checked
+                        color: 'var(--primary)', 
                       },
                       '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                        backgroundColor: 'var(--primary)', // Cor do track quando checked
+                        backgroundColor: 'var(--primary)', 
                       },
                     }}
                   />
