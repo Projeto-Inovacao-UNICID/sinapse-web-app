@@ -1,3 +1,4 @@
+import { CompanyProfileImage } from "@/components/profile/company/avatar";
 import { useGetCompanyProfile } from "@/hooks/company/useCompanyProfile";
 import { Challenge } from "@/types";
 import { Avatar, Box, Divider, Typography } from "@mui/material";
@@ -20,7 +21,7 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 2, backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <Avatar src="/assets/logo.png" alt="Logo" sx={{ width: 100, height: 100 }} />
+        <CompanyProfileImage companyId={empresaId} temImagem={company?.temImagem ?? false} />
         <Typography variant="h5" color="var(--foreground)" className="font-bold">
           {company?.username}
         </Typography>
