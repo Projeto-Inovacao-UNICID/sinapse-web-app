@@ -14,7 +14,6 @@ export function useMessages({ conversaId }: UseMessagesProps) {
       return await service.getMessages(conversaId);
     },
     enabled: !!conversaId,
-    refetchOnWindowFocus: true, // útil para manter atualizado
-    staleTime: 1000 * 10, // 10 segundos de "freshness"
+    refetchOnWindowFocus: true,
   });
 }

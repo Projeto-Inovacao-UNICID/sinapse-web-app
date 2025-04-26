@@ -1,80 +1,84 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useChatSocket } from '@/hooks/chat/useChatSocket';
-import { ChatMessages } from './messages';
-import { ChatInput } from './input';
+import React, { useEffect, useRef, useState } from 'react';
+import { Box, Divider, Paper, Typography } from '@mui/material';
 import { Message } from '@/types';
+import { ChatInput } from '@/components/chat/input';
 
-interface ChatProps {
+export interface ChatProps {
   conversaId: number | null;
-  messages: Message[];
   selectedId: string;
-  handleSend: (message: string) => void;
-  handleReceive: (message: Message) => void;
+  messages: Message[];
+  handleSend: (conteudo: string) => void;
 }
 
 export function Chat({
   conversaId,
-  messages,
   selectedId,
-  handleSend,
-  handleReceive,
+  messages,
+  handleSend
 }: ChatProps) {
-  const [drafts, setDrafts] = useState<{ [key: number]: string }>({});
+  const [message, setMessage] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const { sendMessage, isConnected } = useChatSocket(
-    useMemo(() => ({
-      destId: selectedId,
-      onMessage: (novaMensagem: Message) => {
-        handleReceive(novaMensagem);
-      },
-    }), [selectedId, handleReceive])
-  );
-
-  const onSendMessage = (conteudo: string) => {
-    if (!conversaId) return;
-
-    const novaMensagem: Message = {
-      id: Date.now(), // Temporário – idealmente vem do backend
-      conteudo,
-      conversaId,
-      remetenteId: '', // Pode ser preenchido pelo backend
-      remetenteTipo: 'USER', // ou outro tipo conforme necessário
-      createdAt: new Date().toISOString(),
-      editada: false,
-      removida: false,
-    };
-
-    sendMessage(novaMensagem);
-    handleSend(conteudo); // Ainda útil para tracking/local update
-    setDrafts((prev) => ({ ...prev, [conversaId]: '' }));
-  };
+  // Scroll automático
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   return (
-    <div className="flex flex-col h-full p-4 background">
-      <div className="flex-grow overflow-y-auto mb-4">
-        {conversaId ? (
-          <ChatMessages
-            newMessages={messages}
-            contactId={selectedId}
-            conversaId={conversaId}
-          />
-        ) : (
-          <div className="text-white">🔌 Nenhuma conversa ativa</div>
-        )}
-      </div>
+    <Box display="flex" flexDirection="column" height="100%">
+      {/* Lista de mensagens */}
+      <Box
+        flex={1}
+        p={2}
+        sx={{
+          overflowY: 'auto',
+          backgroundColor: 'var(--card)',
+          borderRadius: 2
+        }}
+      >
+        {messages.map(msg => {
+          const isOther = msg.remetenteId === selectedId;
+          const justify = isOther ? 'flex-start' : 'flex-end';
+          const bgcolor = isOther ? 'var(--cardSecondary)' : 'var(--primary)';
+          const color  = isOther ? 'var(--foreground)' : 'white';
 
-      {conversaId && (
+          return (
+            <Box key={msg.id} display="flex" justifyContent={justify} mb={1}>
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 1.5,
+                  bgcolor,
+                  color,
+                  maxWidth: '70%',
+                  borderRadius: 2
+                }}
+              >
+                <Typography variant="body2" mb={0.5} sx={{ fontSize: '1rem' }}>{msg.conteudo}</Typography>
+                <Divider/>
+                <Typography
+                  variant="caption"
+                  sx={{ display: 'block', textAlign: 'right', fontSize: '0.5rem' }}
+                >
+                  {new Date(msg.createdAt).toLocaleTimeString()}
+                </Typography>
+              </Paper>
+            </Box>
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </Box>
+
+      {conversaId !== null && (
         <ChatInput
           conversasId={conversaId}
-          message={drafts[conversaId] || ''}
-          setMessage={(msg) =>
-            setDrafts((prev) => ({ ...prev, [conversaId]: msg }))
-          }
-          onSend={onSendMessage}
+          message={message}
+          setMessage={setMessage}
+          onSend={handleSend}
         />
       )}
-    </div>
+    </Box>
   );
 }

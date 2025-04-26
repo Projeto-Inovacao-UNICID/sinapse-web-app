@@ -10,9 +10,16 @@ interface ChatInputProps {
   message: string;
   setMessage: (msg: string) => void;
   onSend: (message: string) => void;
+  disabled?: boolean; // nova prop opcional
 }
 
-export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInputProps) {
+export function ChatInput({
+  conversasId,
+  message,
+  setMessage,
+  onSend,
+  disabled = false
+}: ChatInputProps) {
   const [isSending, setIsSending] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const service = new MessageService();
@@ -33,8 +40,12 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
   };
 
   useEffect(() => {
-    inputRef.current?.focus();
-  }, [message, conversasId]);
+    if (!disabled) {
+      inputRef.current?.focus();
+    }
+  }, [message, conversasId, disabled]);
+
+  if (disabled) return null;
 
   return (
     <Paper
@@ -77,7 +88,7 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
             borderBottom: `2px solid var(--primary)`,
           },
         }}
-        disabled={isSending}
+        disabled={isSending || disabled}
       />
 
       <IconButton
@@ -88,7 +99,7 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
             opacity: 0.5,
           },
         }}
-        disabled={isSending}
+        disabled={isSending || disabled}
       >
         <SendIcon />
       </IconButton>
