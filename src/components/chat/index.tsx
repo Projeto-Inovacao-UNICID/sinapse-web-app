@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Divider, Paper, Typography } from '@mui/material';
 import { Message } from '@/types';
 import { ChatInput } from '@/components/chat/input';
 
@@ -56,10 +56,11 @@ export function Chat({
                   borderRadius: 2
                 }}
               >
-                <Typography variant="body2">{msg.conteudo}</Typography>
+                <Typography variant="body2" mb={0.5} sx={{ fontSize: '1rem' }}>{msg.conteudo}</Typography>
+                <Divider/>
                 <Typography
                   variant="caption"
-                  sx={{ display: 'block', textAlign: 'right', mt: 0.5 }}
+                  sx={{ display: 'block', textAlign: 'right', fontSize: '0.5rem' }}
                 >
                   {new Date(msg.createdAt).toLocaleTimeString()}
                 </Typography>

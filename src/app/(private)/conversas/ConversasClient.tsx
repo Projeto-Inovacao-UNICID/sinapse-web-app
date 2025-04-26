@@ -1,7 +1,6 @@
-// src/app/(private)/conversas/ConversasClient.tsx
 'use client';
 
-import { Box, CircularProgress, Grid } from '@mui/material';
+import { Box, CircularProgress, Grid, Typography } from '@mui/material';
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -12,6 +11,7 @@ import { useSSE } from '@/hooks/useSSE';          // << seu hook SSE
 import { NotificationDto } from '@/types/notification';
 import { Message } from '@/types';
 import { Chat } from '@/components/chat';
+import { motion } from 'framer-motion';
 
 export default function ConversasClient() {
   const router = useRouter();
@@ -99,14 +99,31 @@ export default function ConversasClient() {
           WS: {isConnected ? '🔵 Conectado' : '⚪ Desconectado'}
         </div>
           */}
-        {selectedId && 
+        {selectedId ?
           <Chat
             conversaId={conversaId}
             selectedId={selectedId}
             messages={messages}
             handleSend={handleSend}
           />
-}
+          : <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 2, borderRadius: 2, gap: 2 }}>
+              <motion.img
+                src="/assets/logo.png"
+                alt="Logo"
+                style={{ height: '4rem' }}
+                animate={{
+                  rotate: 360,
+                }}
+                transition={{
+                  repeat: Infinity,
+                  repeatType: 'loop',
+                  duration: 10,
+                  ease: 'linear',
+                }}
+              />
+              <Typography color="var(--foreground)" variant="h5" sx={{ fontWeigh: 'bold' }}>Selecione um contato para conversar</Typography>
+          </Box>
+        }
       </Grid>
     </Grid>
   );
