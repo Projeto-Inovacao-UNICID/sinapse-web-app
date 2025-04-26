@@ -58,6 +58,10 @@ export function CompanyProfileCard({ companyId }: CompanyProfileCardProps) {
     router.push(`/conversas?companyId=${companyId}`);
   };
 
+  const handleCreateChallenge = () => {
+    router.push(`/desafios/criar`);
+  };
+
   const handleOpenModal = () => {
     setDefaultValues({
       nome: nome || "",
@@ -91,12 +95,20 @@ export function CompanyProfileCard({ companyId }: CompanyProfileCardProps) {
         </Grid>
         <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
           {isProfileOwner && isCompany && (
-            <Button
-              onClick={handleOpenModal}
-              sx={{ border: "1px solid var(--muted)", borderRadius: 2, color: "var(--foreground)", textTransform: "none" }}
-            >
-              Editar Perfil
-            </Button>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button
+                onClick={handleCreateChallenge}
+                sx={{ backgroundColor: "var(--primary)", color: "var(--primary-foreground)", ":hover": { opacity: 0.8 } }}
+              >
+                Criar Desafio
+              </Button>
+              <Button
+                onClick={handleOpenModal}
+                sx={{ border: "1px solid var(--muted)", borderRadius: 2, color: "var(--foreground)", textTransform: "none" }}
+              >
+                Editar Perfil
+              </Button>
+            </Box>
           )}
           {!isProfileOwner && (
             <Button
