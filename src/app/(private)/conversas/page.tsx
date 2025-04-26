@@ -1,81 +1,10 @@
-'use client';
+import { Suspense } from 'react';
+import ConversasClient from './ConversasClient';
 
-import { CircularProgress, Grid } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
-
-import { Chat } from '@/components/chat';
-import { ContactList } from '@/components/chat/contact-list';
-import { useChatContacts } from '@/hooks/chat/useChat';
-import { Message } from '@/types';
-
-export default function Conversas() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const initialUserId = searchParams.get('userId') || '';
-
-  const [selectedId, setSelectedId] = useState<string>(initialUserId);
-  const [conversaId, setConversaId] = useState<number | null>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
-
-  const { data: contacts = [], isLoading, isError, error } = useChatContacts();
-
-  const handleSend = (conteudo: string) => {
-    const newMsg: Message = {
-      id: Date.now(),
-      conversaId: conversaId ?? 0,
-      remetenteTipo: 'usuario',
-      remetenteId: '', // Pode adicionar seu ID de usuário aqui se tiver
-      conteudo,
-      createdAt: new Date().toISOString(),
-      editada: false,
-      removida: false,
-    };
-    setMessages((prev) => [...prev, newMsg]);
-  };
-
-  const handleReceive = (novaMensagem: Message) => {
-    setMessages((prev) => [...prev, novaMensagem]);
-  };
-
-  const handleSelect = (id: string, convId: number) => {
-    setSelectedId(id);
-    setConversaId(convId);
-    setMessages([]);
-    router.push(`?userId=${id}`);
-  };
-
-  useEffect(() => {
-    if (selectedId && contacts.length > 0) {
-      const contatoSelecionado = contacts.find((c) => c.participanteId === selectedId);
-      if (contatoSelecionado) {
-        const convId = contatoSelecionado.conversaId;
-        setConversaId(convId);
-        setMessages([]); // Por enquanto zera
-      }
-    }
-  }, [selectedId, contacts]);
-
+export default function Page() {
   return (
-    <Grid container spacing={1}>
-      <Grid size={3}>
-        {isLoading ? (
-          <CircularProgress />
-        ) : isError ? (
-          <div>Erro ao carregar amizades: {(error as Error).message}</div>
-        ) : (
-          <ContactList contacts={contacts} onSelect={handleSelect} />
-        )}
-      </Grid>
-      <Grid size={9}>
-        <Chat
-          conversaId={conversaId}
-          messages={messages}
-          selectedId={selectedId}
-          handleSend={handleSend}
-          handleReceive={handleReceive}
-        />
-      </Grid>
-    </Grid>
+    <Suspense fallback={<div>Carregando conversas...</div>}>
+      <ConversasClient />
+    </Suspense>
   );
 }
