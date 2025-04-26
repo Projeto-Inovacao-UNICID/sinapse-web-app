@@ -1,7 +1,7 @@
 import { CompanyProfileImage } from "@/components/profile/company/avatar";
 import { useGetCompanyProfile } from "@/hooks/company/useCompanyProfile";
 import { Challenge } from "@/types";
-import { Avatar, Box, Divider, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 
 interface ChallengePostCardProps {
   desafio: Challenge;
@@ -14,10 +14,7 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
   if (isLoading) {
     return <div>Carregando...</div>;
   }
-
-  console.log(company);
   console.log(empresaId);
-
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 2, backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>

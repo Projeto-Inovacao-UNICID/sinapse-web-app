@@ -9,6 +9,7 @@ export const useGetCompanyProfile = (empresaId: string) => {
   return useQuery<CompanyInfo>({
     queryKey: ["company-profile", empresaId],
     queryFn: () => companyProfileService.getCompanyProfile(empresaId),
+    enabled: empresaId ? true : false,
   });
 };
 
