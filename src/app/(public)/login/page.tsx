@@ -39,7 +39,7 @@ export default function Login() {
 
           <div style={{maxWidth: 400}}>
             <h1>Connect<b style={{color: colors.primary}}>Z</b></h1>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta accusamus ipsum nam tempora consequatur ab.</p>
+            <p>Conecte, desafie, surpreenda — portfólios vivos, soluções reais, oportunidades que mudam destinos.</p>
           </div>
           <div>
             <CardLogin onOpenModal={() => setModalOpen(true)} />

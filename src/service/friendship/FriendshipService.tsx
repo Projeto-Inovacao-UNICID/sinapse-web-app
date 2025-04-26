@@ -1,9 +1,9 @@
 import { axiosInstance } from "../api";
-import { User } from "@/types";
+import { FriendshipInvitation, FriendshipInvitationsResponse, FriendshipInviteType, User } from "@/types";
 
 export class FriendshipService {
     async postFriendship(destinatarioId: string) {
-        const response = await axiosInstance.post(`/amizades`, { destinatarioId }, { withCredentials: true });
+        const response = await axiosInstance.post<FriendshipInvitation>(`/amizades`, { destinatarioId }, { withCredentials: true });
         return response.data;
     }
 
@@ -12,8 +12,10 @@ export class FriendshipService {
         return response.data;
     }
 
-    async getInvitations() {
-        const response = await axiosInstance.get(`/amizades/convites`, { withCredentials: true });
+    async getInvitations(tipo: "enviados" | "recebidos", page: number = 0, size: number = 10) {
+        const response = await axiosInstance.get<FriendshipInvitationsResponse>(`/amizades/convites?tipo=${tipo}&page=${page}&size=${size}`, {
+            withCredentials: true
+        });
         return response.data;
     }
 
@@ -22,9 +24,9 @@ export class FriendshipService {
         return response.data;
     }
 
-    async patchFriendship(amizadeId: string, status: string) {
+    async patchFriendship(amizadeId: number, status: string) {
         const response = await axiosInstance.patch(`/amizades/atualizar`, { amizadeId, status }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async deleteFriendship(amizadeId: string) {
@@ -32,6 +34,6 @@ export class FriendshipService {
             data: { amizadeId },
             withCredentials: true
         });
-        return response.data;
+        return response.status;
     }
 }

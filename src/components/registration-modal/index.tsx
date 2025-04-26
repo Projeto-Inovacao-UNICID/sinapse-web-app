@@ -54,7 +54,7 @@ export function RegistrationModal({ open, handleClose }: RegistrationModalProps)
               alignItems: "center",
               justifyContent: "center",
               gap: 16,
-              backgroundColor: "var(--bgSecondary)",
+              backgroundColor: "var(--card)",
               padding: 24,
               borderRadius: 32,
               width: "fit-content",

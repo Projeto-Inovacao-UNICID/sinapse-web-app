@@ -1,3 +1,5 @@
+import { Opacity } from "@mui/icons-material";
+
 export const inputFormStyle = {
   color: 'var(--foreground)',
   backgroundColor: 'var(--input)',
@@ -24,7 +26,7 @@ export const inputFormStyle = {
 export const buttonFormStyle = {
   bgcolor: 'var(--primary)',
   ':hover': {
-    bgcolor: 'var(--primary-foreground)',
+    opacity: 0.8,
   },
   color: 'var(--primary-foreground)',
   width: '100%',

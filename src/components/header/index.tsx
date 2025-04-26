@@ -7,10 +7,12 @@ import SearchIcon from '@mui/icons-material/Search';
 import ChatIcon from '@mui/icons-material/Chat';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import HomeIcon from '@mui/icons-material/Home';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import PersonIcon from '@mui/icons-material/Person';
 import SettingsIcon from '@mui/icons-material/Settings';
+
 import { ThemeSwitch } from '../switch';
+import { useSession } from '@/hooks/session/useSession';
+import { NotificationButton } from './notification-button';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -29,6 +31,8 @@ const iconButtonStyles = {
 
 export function Header() {
   const router = useRouter();
+  const { session } = useSession(); 
+  const userId = session?.id;
 
   const navClick = (route: string) => {
     router.push(`${route}`);
@@ -46,7 +50,7 @@ export function Header() {
         backgroundColor: 'var(--bgSecondary)',
         boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
         display: 'grid',
-        gridTemplateColumns: '1fr minmax(0, 10fr) 1fr',
+        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
         alignItems: 'center',
       }}
     >
@@ -83,6 +87,7 @@ export function Header() {
             placeholder="Buscar..."
             size="small"
             sx={{
+              width: '75%',
               backgroundColor: 'var(--input)',
               borderRadius: 2,
               input: { color: 'var(--foreground)' },
@@ -101,7 +106,7 @@ export function Header() {
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <SearchIcon sx={{ color: 'var(--primary)' }} />
+                  <SearchIcon sx={{ color: 'var(--muted)' }} />
                 </InputAdornment>
               ),
             }}
@@ -112,10 +117,9 @@ export function Header() {
         <div style={{ display: 'flex', gap: 16 }}>
           {[
             { icon: <HomeIcon sx={iconStyles} />, route: '/' },
-            { icon: <NotificationsIcon sx={iconStyles} /> },
             { icon: <EmojiEventsIcon sx={iconStyles} /> },
             { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
-            { icon: <PersonIcon sx={iconStyles} />, route: '/profile/me' },
+            { icon: <PersonIcon sx={iconStyles} />, route: `/profile/me/${userId}` },
             { icon: <SettingsIcon sx={iconStyles} /> },
           ].map(({ icon, route }, index) => (
             <motion.button
@@ -129,6 +133,11 @@ export function Header() {
               {icon}
             </motion.button>
           ))}
+
+          {/* Botão de notificações separado */}
+          <NotificationButton />
+
+          {/* Switch de tema */}
           <ThemeSwitch />
         </div>
       </div>

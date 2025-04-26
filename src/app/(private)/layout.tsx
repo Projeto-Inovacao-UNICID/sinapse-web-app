@@ -12,7 +12,7 @@ export default function PrivateLayout({
         style={{
           paddingTop: 'calc(65px + 1rem)',
           display: 'grid',
-          gridTemplateColumns: '1fr minmax(0, 10fr) 1fr',
+          gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
           minHeight: '100vh',
         }}
       >

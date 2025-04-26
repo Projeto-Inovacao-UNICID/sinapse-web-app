@@ -1,27 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { FriendshipService } from '@/service/friendship/FriendshipService';
-import { User } from '@/types';
+import { FriendshipInvitation, FriendshipInvitationsResponse, FriendshipInviteType, User } from '@/types';
 
 export function useFriendship() {
-  const [friends, setFriends] = useState<User[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  return useQuery<User[], Error>({
+    queryKey: ['friendship'],
+    queryFn: async () => {
+      const service = new FriendshipService();
+      return service.getFriendship();
+    },
+    staleTime: 1000 * 60 * 5, // cache por 5 minutos
+    refetchOnWindowFocus: false,
+  });
+}
 
-  useEffect(() => {
-    const fetchFriends = async () => {
-      try {
-        const service = new FriendshipService();
-        const result = await service.getFriendship();
-        setFriends(result);
-      } catch (err: any) {
-        setError(err.message ?? 'Erro ao carregar amizades');
-      } finally {
-        setLoading(false);
-      }
-    };
+export function usePostFriendship() {
+  return useMutation<FriendshipInvitation, Error, string>({
+    mutationFn: async (destinatarioId: string) => {
+      const service = new FriendshipService();
+      return service.postFriendship(destinatarioId);
+    },
+  });
+}
 
-    fetchFriends();
-  }, []);
-
-  return { friends, loading, error };
+export function useGetFriendshipInvitations(tipo: FriendshipInviteType, page?: number, size?: number) {
+  return useQuery<FriendshipInvitationsResponse, Error>({
+    queryKey: ['friendship-invitations', tipo],
+    queryFn: async () => {
+      const service = new FriendshipService();
+      return service.getInvitations(tipo, page, size);
+    },
+    staleTime: 1000 * 60 * 5, // cache por 5 minutos
+    refetchOnWindowFocus: false,
+  });
 }
