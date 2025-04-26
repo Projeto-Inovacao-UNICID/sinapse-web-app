@@ -1,18 +1,18 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { TextField, InputAdornment } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import ChatIcon from '@mui/icons-material/Chat';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
+import SearchIcon from '@mui/icons-material/Search';
+import { InputAdornment, TextField } from '@mui/material';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
-import { ThemeSwitch } from '../switch';
 import { useSession } from '@/hooks/session/useSession';
+import { ThemeSwitch } from '../switch';
 import { NotificationButton } from './notification-button';
+import { SettingsButton } from './settings-button';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -120,7 +120,6 @@ export function Header() {
             { icon: <EmojiEventsIcon sx={iconStyles} /> },
             { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
             { icon: <PersonIcon sx={iconStyles} />, route: `/profile/me/${userId}` },
-            { icon: <SettingsIcon sx={iconStyles} /> },
           ].map(({ icon, route }, index) => (
             <motion.button
               key={index}
@@ -136,6 +135,9 @@ export function Header() {
 
           {/* Botão de notificações separado */}
           <NotificationButton />
+
+          {/* Botão de configurações */}
+          <SettingsButton />
 
           {/* Switch de tema */}
           <ThemeSwitch />
