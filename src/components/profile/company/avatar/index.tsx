@@ -21,7 +21,15 @@ export function CompanyProfileImage({ companyId, temImagem }: CompanyProfileProp
   }
 
   return (
-    <Avatar src={temImagem ? companyProfileImage : ""} alt="Imagem do usuário" sx={{ width: 100, height: 100 }} />
+    <Avatar
+      src={temImagem ? companyProfileImage : ""}
+      alt="Imagem da empresa"
+      sx={{
+        width: "100%",
+        height: "100%",
+        objectFit: "cover",
+      }}
+    />
   );;
 }
 

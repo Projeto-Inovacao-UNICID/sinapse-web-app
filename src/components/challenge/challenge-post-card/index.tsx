@@ -18,13 +18,19 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
   return (
     <Box sx={{ display: "flex", alignItems: "center", gap: 2, backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}>
       <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-        <CompanyProfileImage companyId={empresaId} temImagem={company?.temImagem ?? false} />
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "3rem", height: "3rem" }}>
+          <CompanyProfileImage companyId={empresaId} temImagem={company?.temImagem ?? false} />
+        </Box>
+
         <Typography variant="h5" color="var(--foreground)" className="font-bold">
           {company?.username}
         </Typography>
+
         <Typography variant="body1" color="var(--muted)">
           {company?.nome}
         </Typography>
+        
       </Box>
       <Divider/>
       <Box sx={{ display: "flex", flexDirection: "column", gap: 2, bgcolor: "var(--cardSecondary)", borderRadius: 2, padding: 4 }}>
