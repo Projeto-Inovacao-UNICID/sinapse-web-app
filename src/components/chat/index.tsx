@@ -1,80 +1,102 @@
+// src/components/chat/Chat.tsx
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useChatSocket } from '@/hooks/chat/useChatSocket';
-import { ChatMessages } from './messages';
-import { ChatInput } from './input';
+import React, { useState, FormEvent } from 'react';
+import {
+  Box,
+  Paper,
+  Typography,
+  TextField,
+  IconButton
+} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import { Message } from '@/types';
 
-interface ChatProps {
+export interface ChatProps {
   conversaId: number | null;
+  selectedId: string;         // ID do outro usuário
   messages: Message[];
-  selectedId: string;
-  handleSend: (message: string) => void;
-  handleReceive: (message: Message) => void;
+  handleSend: (conteudo: string) => void;
 }
 
 export function Chat({
   conversaId,
-  messages,
   selectedId,
-  handleSend,
-  handleReceive,
+  messages,
+  handleSend
 }: ChatProps) {
-  const [drafts, setDrafts] = useState<{ [key: number]: string }>({});
+  const [input, setInput] = useState('');
 
-  const { sendMessage, isConnected } = useChatSocket(
-    useMemo(() => ({
-      destId: selectedId,
-      onMessage: (novaMensagem: Message) => {
-        handleReceive(novaMensagem);
-      },
-    }), [selectedId, handleReceive])
-  );
-
-  const onSendMessage = (conteudo: string) => {
-    if (!conversaId) return;
-
-    const novaMensagem: Message = {
-      id: Date.now(), // Temporário – idealmente vem do backend
-      conteudo,
-      conversaId,
-      remetenteId: '', // Pode ser preenchido pelo backend
-      remetenteTipo: 'USER', // ou outro tipo conforme necessário
-      createdAt: new Date().toISOString(),
-      editada: false,
-      removida: false,
-    };
-
-    sendMessage(novaMensagem);
-    handleSend(conteudo); // Ainda útil para tracking/local update
-    setDrafts((prev) => ({ ...prev, [conversaId]: '' }));
+  const onSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    const texto = input.trim();
+    if (!texto || conversaId === null) return;
+    handleSend(texto);
+    setInput('');
   };
 
   return (
-    <div className="flex flex-col h-full p-4 background">
-      <div className="flex-grow overflow-y-auto mb-4">
-        {conversaId ? (
-          <ChatMessages
-            newMessages={messages}
-            contactId={selectedId}
-            conversaId={conversaId}
-          />
-        ) : (
-          <div className="text-white">🔌 Nenhuma conversa ativa</div>
-        )}
-      </div>
+    <Box display="flex" flexDirection="column" height="100%">
+      {/* Lista de mensagens */}
+      <Box flex={1} overflow="auto" p={2} sx={{ backgroundColor: 'background.paper' }}>
+        {messages.map(msg => {
+          const isOther = msg.remetenteId === selectedId;
+          const justify = isOther ? 'flex-start' : 'flex-end';
+          const bgcolor = isOther ? 'grey.300' : 'primary.main';
+          const color  = isOther ? 'text.primary' : 'common.white';
 
-      {conversaId && (
-        <ChatInput
-          conversasId={conversaId}
-          message={drafts[conversaId] || ''}
-          setMessage={(msg) =>
-            setDrafts((prev) => ({ ...prev, [conversaId]: msg }))
-          }
-          onSend={onSendMessage}
+          return (
+            <Box key={msg.id} display="flex" justifyContent={justify} mb={1}>
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 1.5,
+                  bgcolor,
+                  color,
+                  maxWidth: '70%',
+                  borderRadius: 2
+                }}
+              >
+                <Typography variant="body2">{msg.conteudo}</Typography>
+                <Typography
+                  variant="caption"
+                  sx={{ display: 'block', textAlign: 'right', mt: 0.5 }}
+                >
+                  {new Date(msg.createdAt).toLocaleTimeString()}
+                </Typography>
+              </Paper>
+            </Box>
+          );
+        })}
+      </Box>
+
+      {/* Input */}
+      <Box
+        component="form"
+        onSubmit={onSubmit}
+        display="flex"
+        alignItems="center"
+        p={1}
+        sx={{ borderTop: '1px solid', borderColor: 'divider' }}
+      >
+        <TextField
+          fullWidth
+          variant="outlined"
+          size="small"
+          placeholder="Digite sua mensagem..."
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          disabled={conversaId === null}
         />
-      )}
-    </div>
+        <IconButton
+          type="submit"
+          color="primary"
+          disabled={!input.trim() || conversaId === null}
+          sx={{ ml: 1 }}
+        >
+          <SendIcon />
+        </IconButton>
+      </Box>
+    </Box>
   );
 }

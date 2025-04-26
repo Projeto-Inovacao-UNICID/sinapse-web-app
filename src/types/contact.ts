@@ -1,4 +1,6 @@
 export interface Contact {
+    name: string | undefined;
+    avatarUrl: string | Blob | undefined;
     conversaId: number;
     participanteId: string;
     imagemPerfil: string;
