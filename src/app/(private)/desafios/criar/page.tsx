@@ -1,6 +1,7 @@
 'use client';
 
 import { CreationChallengeCard } from "@/components/challenge/creation-challenge-card";
+import { useGetCompanyProfile } from "@/hooks/company/useCompanyProfile";
 import { useSession } from "@/hooks/session/useSession";
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
@@ -9,12 +10,15 @@ export default function CriarDesafio() {
   const { session, loading } = useSession();
   const role = session?.roles;
   const empresaId = session ? session.id : '';
+  const { data: company, isLoading } = useGetCompanyProfile(empresaId);
   const isCompany = role ? role.includes('ROLE_COMPANY') : false;
+  
+  const isCompanyApproved = company?.aprovadaPelaAdministracao ?? false;
 
   if (loading) return <div>Carregando...</div>;
 
   return (
-    isCompany 
+    isCompany && isCompanyApproved
       ? <CreationChallengeCard empresaId={empresaId} />
       : <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 2, borderRadius: 2, gap: 2 }}>
           <motion.img
