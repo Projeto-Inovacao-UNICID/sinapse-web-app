@@ -1,7 +1,7 @@
 // src/app/(private)/conversas/ConversasClient.tsx
 'use client';
 
-import { CircularProgress, Grid } from '@mui/material';
+import { Box, CircularProgress, Grid } from '@mui/material';
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -60,25 +60,11 @@ export default function ConversasClient() {
   const handleSend = useCallback(
     (conteudo: string) => {
       if (conversaId === null) return;
-      // renderiza local
-      setMessages(prev => [
-        ...prev,
-        {
-          id: Date.now(),
-          conversaId,
-          remetenteTipo: 'USUARIO',
-          remetenteId: '', // seu próprio ID, se tiver
-          conteudo,
-          createdAt: new Date().toISOString(),
-          editada: false,
-          removida: false,
-        },
-      ]);
-      // envia apenas o conteúdo
       sendMessage({ conteudo });
     },
     [conversaId, sendMessage]
   );
+  
 
   const handleSelect = useCallback(
     (id: string, convId: number) => {
@@ -108,16 +94,19 @@ export default function ConversasClient() {
         )}
       </Grid>
 
-      <Grid size={9}>
-        <div style={{ marginBottom: 8 }}>
+      <Grid size={9} sx={{ height: 'calc(100vh - 65px - 1rem  )' }}>
+         {/* <div style={{ marginBottom: 8 }}>
           WS: {isConnected ? '🔵 Conectado' : '⚪ Desconectado'}
         </div>
-        <Chat
-          conversaId={conversaId}
-          selectedId={selectedId}
-          messages={messages}
-          handleSend={handleSend}
-        />
+          */}
+        {selectedId && 
+          <Chat
+            conversaId={conversaId}
+            selectedId={selectedId}
+            messages={messages}
+            handleSend={handleSend}
+          />
+}
       </Grid>
     </Grid>
   );

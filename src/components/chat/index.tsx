@@ -1,20 +1,13 @@
-// src/components/chat/Chat.tsx
 'use client';
 
-import React, { useState, FormEvent } from 'react';
-import {
-  Box,
-  Paper,
-  Typography,
-  TextField,
-  IconButton
-} from '@mui/material';
-import SendIcon from '@mui/icons-material/Send';
+import React, { useEffect, useRef, useState } from 'react';
+import { Box, Paper, Typography } from '@mui/material';
 import { Message } from '@/types';
+import { ChatInput } from '@/components/chat/input';
 
 export interface ChatProps {
   conversaId: number | null;
-  selectedId: string;         // ID do outro usuário
+  selectedId: string;
   messages: Message[];
   handleSend: (conteudo: string) => void;
 }
@@ -25,25 +18,31 @@ export function Chat({
   messages,
   handleSend
 }: ChatProps) {
-  const [input, setInput] = useState('');
+  const [message, setMessage] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const texto = input.trim();
-    if (!texto || conversaId === null) return;
-    handleSend(texto);
-    setInput('');
-  };
+  // Scroll automático
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   return (
     <Box display="flex" flexDirection="column" height="100%">
       {/* Lista de mensagens */}
-      <Box flex={1} overflow="auto" p={2} sx={{ backgroundColor: 'background.paper' }}>
+      <Box
+        flex={1}
+        p={2}
+        sx={{
+          overflowY: 'auto',
+          backgroundColor: 'var(--card)',
+          borderRadius: 2
+        }}
+      >
         {messages.map(msg => {
           const isOther = msg.remetenteId === selectedId;
           const justify = isOther ? 'flex-start' : 'flex-end';
-          const bgcolor = isOther ? 'grey.300' : 'primary.main';
-          const color  = isOther ? 'text.primary' : 'common.white';
+          const bgcolor = isOther ? 'var(--cardSecondary)' : 'var(--primary)';
+          const color  = isOther ? 'var(--foreground)' : 'white';
 
           return (
             <Box key={msg.id} display="flex" justifyContent={justify} mb={1}>
@@ -68,35 +67,17 @@ export function Chat({
             </Box>
           );
         })}
+        <div ref={messagesEndRef} />
       </Box>
 
-      {/* Input */}
-      <Box
-        component="form"
-        onSubmit={onSubmit}
-        display="flex"
-        alignItems="center"
-        p={1}
-        sx={{ borderTop: '1px solid', borderColor: 'divider' }}
-      >
-        <TextField
-          fullWidth
-          variant="outlined"
-          size="small"
-          placeholder="Digite sua mensagem..."
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          disabled={conversaId === null}
+      {conversaId !== null && (
+        <ChatInput
+          conversasId={conversaId}
+          message={message}
+          setMessage={setMessage}
+          onSend={handleSend}
         />
-        <IconButton
-          type="submit"
-          color="primary"
-          disabled={!input.trim() || conversaId === null}
-          sx={{ ml: 1 }}
-        >
-          <SendIcon />
-        </IconButton>
-      </Box>
+      )}
     </Box>
   );
 }
