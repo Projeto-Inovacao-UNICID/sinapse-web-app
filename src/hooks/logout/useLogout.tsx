@@ -5,7 +5,7 @@ export function usePostLogout() {
   return useMutation({
     mutationFn: async () => {
       const response = await axiosInstance.post(
-        `/logout`, 
+        `auth/logout`,
         null, 
         { withCredentials: true } 
       );
