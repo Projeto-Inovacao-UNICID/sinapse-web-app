@@ -1,14 +1,14 @@
 import { axiosInstance } from "@/service/api";
-import { Challenge, ChallengeStage } from "@/types";
+import { Challenge, ChallengeStage, ChallengeToPost } from "@/types";
 
 
 export class ChallengeService {
   async getChallenges() {
-    const response = await axiosInstance.get(`/desafios`, { withCredentials: true });
+    const response = await axiosInstance.get<Challenge[]>(`/desafios`, { withCredentials: true });
     return response.data;
   }
 
-  async postChallenge(empresaId: string, desafio: Challenge) {
+  async postChallenge(empresaId: string, desafio: ChallengeToPost) {
     const response = await axiosInstance.post(`/desafios/${empresaId}/criar`, desafio, { withCredentials: true });
     return response.data;
   }

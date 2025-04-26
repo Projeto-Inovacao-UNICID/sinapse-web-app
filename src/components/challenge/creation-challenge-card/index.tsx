@@ -1,30 +1,30 @@
 'use client';
 
-import { useState } from 'react';
+import { usePostChallenge } from '@/hooks/challenge/usePostChallenge';
+import { ChallengeToPost } from '@/types/challenge';
+import { challengeTypesLabels } from '@/types/challengeTypes';
 import {
-  TextField,
-  MenuItem,
+  Alert,
   Button,
   Card,
   CardContent,
-  Typography,
-  Stack,
   CircularProgress,
-  Alert,
   FormControlLabel,
+  MenuItem,
+  Stack,
   Switch,
+  TextField,
+  Typography,
 } from '@mui/material';
 import { motion } from 'framer-motion';
-import { usePostChallenge } from '@/hooks/challenge/usePostChallenge';
-import { challengeTypesLabels, ChallengeTypes } from '@/types/challengeTypes';
-import { Challenge } from '@/types/challenge';
+import { useState } from 'react';
 
 type Props = {
   empresaId: string;
 };
 
 export function CreationChallengeCard({ empresaId }: Props) {
-  const [form, setForm] = useState<Challenge>({
+  const [form, setForm] = useState<ChallengeToPost>({
     titulo: '',
     descricao: '',
     dataInicio: '',

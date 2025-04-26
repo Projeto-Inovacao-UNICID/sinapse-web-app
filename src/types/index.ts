@@ -12,6 +12,7 @@ export * from './friendshipInviteType';
 export * from './challenge';
 export * from './challengeStage';
 export * from './challengeTypes';
+export * from './companyInfo';
 
 export * from './responses/sessionResponse';
 export * from './responses/userProfileResponse';

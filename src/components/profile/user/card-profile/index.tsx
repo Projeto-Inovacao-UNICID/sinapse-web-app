@@ -2,9 +2,10 @@
 
 import { useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
 import { useSession } from "@/hooks/session/useSession";
-import { useUserProfile, useUserProfileImage } from "@/hooks/user/useUserProfile";
-import { Avatar, Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
+import { useUserProfile } from "@/hooks/user/useUserProfile";
+import { Box, Button, CircularProgress, Grid, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
+import { UserProfileImage } from "@/components/profile/user/avatar";
 
 interface UserProfileCardProps {
   userId: string;
@@ -16,9 +17,6 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   const { data: friendship } = useFriendship();
   const { mutateAsync: sendFriendRequest, isPending: isPostFriendshipLoading } = usePostFriendship();
   const { data: friendshipInvitations } = useGetFriendshipInvitations("enviados");
-
-  const temImagem = userProfile?.temImagem ?? false;
-  const { data: userProfileImage } = useUserProfileImage(userId, temImagem); // <- controle de carregamento
 
   const queryClient = useQueryClient();
 
@@ -53,8 +51,6 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     podeAdicionarAmigo,
   } = userProfile ?? {};
 
-  const imagemSrc = temImagem ? userProfileImage ?? "" : "";
-
   const handleAddFriendship = async () => {
     try {
       const res = await sendFriendRequest(userId);
@@ -70,7 +66,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
       <Grid container spacing={2}>
         <Grid size={10}>
           <Box sx={{ display: "flex", alignItems: "flex-start", flexDirection: "column", gap: 2 }}>
-            <Avatar src={imagemSrc} alt={nome} sx={{ width: 100, height: 100 }} />
+            <UserProfileImage userId={userId} temImagem={userProfile?.temImagem ?? false} /> {/* Usando o componente de imagem */}
             <Box sx={{ ml: 2 }}>
               <Typography variant="h5" color="var(--foreground)" className="font-bold">{nome}</Typography>
               <Typography variant="body1" color="var(--muted)">{username}</Typography>
