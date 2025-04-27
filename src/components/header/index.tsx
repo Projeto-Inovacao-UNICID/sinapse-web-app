@@ -1,18 +1,17 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import { TextField, InputAdornment } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import ChatIcon from '@mui/icons-material/Chat';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
+import SearchIcon from '@mui/icons-material/Search';
+import { InputAdornment, TextField } from '@mui/material';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
-import { ThemeSwitch } from '../switch';
 import { useSession } from '@/hooks/session/useSession';
 import { NotificationButton } from './notification-button';
+import { SettingsButton } from './settings-button';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -32,7 +31,10 @@ const iconButtonStyles = {
 export function Header() {
   const router = useRouter();
   const { session } = useSession(); 
-  const userId = session?.id;
+  const id = session?.id;
+  const roles = session?.roles;
+
+  const profileRoute = roles?.includes("ROLE_USER") ? `/profile/me/${id}` : `/empresa/me/${id}`;
 
   const navClick = (route: string) => {
     router.push(`${route}`);
@@ -117,10 +119,9 @@ export function Header() {
         <div style={{ display: 'flex', gap: 16 }}>
           {[
             { icon: <HomeIcon sx={iconStyles} />, route: '/' },
-            { icon: <EmojiEventsIcon sx={iconStyles} /> },
+            { icon: <EmojiEventsIcon sx={iconStyles} />, route: '/desafios' },
             { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
-            { icon: <PersonIcon sx={iconStyles} />, route: `/profile/me/${userId}` },
-            { icon: <SettingsIcon sx={iconStyles} /> },
+            { icon: <PersonIcon sx={iconStyles} />, route: profileRoute },
           ].map(({ icon, route }, index) => (
             <motion.button
               key={index}
@@ -137,8 +138,9 @@ export function Header() {
           {/* Botão de notificações separado */}
           <NotificationButton />
 
-          {/* Switch de tema */}
-          <ThemeSwitch />
+          {/* Botão de configurações */}
+          <SettingsButton />
+          
         </div>
       </div>
     </header>
