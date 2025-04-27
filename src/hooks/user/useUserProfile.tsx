@@ -14,12 +14,12 @@ export function useUserProfile(userId: string) {
 }
 
 export function useUserProfileImage(userId: string, enabled: boolean = true) {
-  return useQuery<string>({
-    queryKey: ["user-profile-image", userId],
+  return useQuery<string, Error>({
+    queryKey: ['user-profile-image', userId],
     queryFn: () => userProfileService.getUserProfileImage(userId),
-    staleTime: 1000 * 60 * 5, 
-    refetchOnWindowFocus: false,
     enabled,
+    staleTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
   });
 }
 

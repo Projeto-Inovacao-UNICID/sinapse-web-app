@@ -13,11 +13,11 @@ export function CompanyProfileImage({ companyId, temImagem }: CompanyProfileProp
   const { data: companyProfileImage, isLoading, isError } = useGetCompanyProfileImage(companyId, temImagem);
 
   if (isLoading) {
-    return <CircularProgress size={20} sx={{ color: "var(--muted)" }} />;
+    return <Avatar sx={{ width: "100%", height: "100%" }}></Avatar>;
   }
 
   if (isError) {
-    return <div>Erro ao carregar imagem</div>; // Pode personalizar o erro
+    return <div>Erro ao carregar imagem</div>;
   }
 
   return (
