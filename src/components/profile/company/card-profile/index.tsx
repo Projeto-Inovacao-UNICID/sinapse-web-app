@@ -40,7 +40,7 @@ interface CompanyProfileCardProps {
 export function CompanyProfileCard({ companyId }: CompanyProfileCardProps) {
   const { data: company, isLoading, isError } = useGetCompanyProfile(companyId);
   const { data: counts, isLoading: loadingCounts } = useChallengesCount(companyId);
-  const { data: followersCount, isLoading: loadingFollowers } = useGetFollowersCount();
+  const { data: followersCount, isLoading: loadingFollowers } = useGetFollowersCount(companyId);
   const { session } = useSession();
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);

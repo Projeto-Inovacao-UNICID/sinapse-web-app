@@ -13,11 +13,13 @@ export const useGetCompanyFollowers = () =>
     queryFn: () => followersService.getFollowersOfCompany(),
   });
 
-export const useGetFollowersCount = () =>
-  useQuery({
-    queryKey: ["followers-count"],
-    queryFn: () => followersService.getFollowersCount(),
-  });
+  export const useGetFollowersCount = (empresaId: string) =>
+    useQuery({
+      queryKey: ["followers-count", empresaId],
+      queryFn: () => followersService.getFollowersCount(empresaId),
+      enabled: !!empresaId,
+    });
+  
 
 export const useCheckFollowing = (empresaId: string, enabled = true) =>
   useQuery({
