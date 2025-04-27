@@ -181,7 +181,6 @@ export function Header() {
 
           <NotificationButton />
           <SettingsButton />
-          <ThemeSwitch />
         </div>
       </div>
     </header>
