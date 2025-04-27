@@ -13,7 +13,7 @@ export function UserProfileImage({ userId, temImagem }: UserProfileImageProps) {
   const { data: userProfileImage, isLoading, isError } = useUserProfileImage(userId, temImagem);
 
   if (isLoading) {
-    return <CircularProgress size={20} sx={{ color: "var(--muted)" }} />;
+    return <Avatar sx={{ width: "100%", height: "100%" }}></Avatar>;
   }
 
   if (isError) {

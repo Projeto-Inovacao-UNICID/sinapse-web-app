@@ -15,12 +15,12 @@ export const useGetCompanyProfile = (empresaId: string) => {
 
 // Buscar imagem de perfil da empresa
 export function useGetCompanyProfileImage(companyId: string, enabled: boolean = true) {
-  return useQuery<string>({
-    queryKey: ["company-profile-image", companyId],
+  return useQuery<string, Error>({
+    queryKey: ['company-profile-image', companyId],
     queryFn: () => companyProfileService.getCompanyProfileImage(companyId),
-    staleTime: 1000 * 60 * 5, // 5 minutos
-    refetchOnWindowFocus: false,
     enabled,
+    staleTime: 1000 * 60 * 60,
+    refetchOnWindowFocus: false,
   });
 }
 
