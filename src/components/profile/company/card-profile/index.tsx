@@ -82,8 +82,10 @@ export function CompanyProfileCard({ companyId }: CompanyProfileCardProps) {
       <Grid container spacing={2}>
         <Grid size={10}>
           <Box sx={{ display: "flex", alignItems: "flex-start", flexDirection: "column", gap: 2 }}>
-            <CompanyProfileImage companyId={companyId} temImagem={companyProfile?.temImagem ?? false} />
-            <Box sx={{ ml: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "8rem", height: "8rem" }}>
+              <CompanyProfileImage companyId={companyId} temImagem={companyProfile?.temImagem ?? false} />
+            </Box>
+              <Box sx={{ ml: 2 }}>
               <Typography variant="h5" color="var(--foreground)" className="font-bold">{nome}</Typography>
               <Typography variant="body1" color="var(--muted)">@{username}</Typography>
             </Box>
