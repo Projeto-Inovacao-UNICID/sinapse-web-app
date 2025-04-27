@@ -12,16 +12,17 @@ import {
   ListItemText,
   TextField
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import ChatIcon from '@mui/icons-material/Chat';
 import PersonIcon from '@mui/icons-material/Person';
-import SettingsIcon from '@mui/icons-material/Settings';
+import SearchIcon from '@mui/icons-material/Search';
+
 import { ThemeSwitch } from '../switch';
 import { useSession } from '@/hooks/session/useSession';
 import { NotificationButton } from './notification-button';
-import { useSearch, SearchOption } from '@/hooks/header/useSearch';
+import { SettingsButton } from './settings-button';
+import { useSearch } from '@/hooks/header/useSearch';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -42,7 +43,13 @@ export function Header() {
   const router = useRouter();
   const { session } = useSession();
   const userId = session?.id!;
+  const roles = session?.roles;
+
   const { open, setOpen, options, loading, inputValue, setInputValue } = useSearch();
+
+  const profileRoute = roles?.includes("ROLE_USER")
+    ? `/profile/me/${userId}`
+    : `/empresa/me/${userId}`;
 
   const navClick = (route: string) => {
     router.push(route);
@@ -154,22 +161,26 @@ export function Header() {
         </motion.div>
 
         <div style={{ display: 'flex', gap: 16 }}>
-          <motion.button style={iconButtonStyles} whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.9 }} onClick={() => navClick('/')}>
-            <HomeIcon sx={iconStyles} />
-          </motion.button>
-          <motion.button style={iconButtonStyles} whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.9 }}>
-            <EmojiEventsIcon sx={iconStyles} />
-          </motion.button>
-          <motion.button style={iconButtonStyles} whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.9 }} onClick={() => navClick('/conversas')}>
-            <ChatIcon sx={iconStyles} />
-          </motion.button>
-          <motion.button style={iconButtonStyles} whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.9 }} onClick={() => navClick(`/profile/me/${userId}`)}>
-            <PersonIcon sx={iconStyles} />
-          </motion.button>
-          <motion.button style={iconButtonStyles} whileHover={{ scale: 1.3 }} whileTap={{ scale: 0.9 }}>
-            <SettingsIcon sx={iconStyles} />
-          </motion.button>
+          {[
+            { icon: <HomeIcon sx={iconStyles} />, route: '/' },
+            { icon: <EmojiEventsIcon sx={iconStyles} />, route: '/desafios' },
+            { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
+            { icon: <PersonIcon sx={iconStyles} />, route: profileRoute },
+          ].map(({ icon, route }, index) => (
+            <motion.button
+              key={index}
+              style={iconButtonStyles}
+              whileHover={{ scale: 1.3 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+              onClick={() => navClick(route)}
+            >
+              {icon}
+            </motion.button>
+          ))}
+
           <NotificationButton />
+          <SettingsButton />
           <ThemeSwitch />
         </div>
       </div>

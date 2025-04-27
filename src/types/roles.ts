@@ -1,0 +1,1 @@
+export type Roles = 'ROLE_USER' | 'ROLE_COMPANY' | 'ROLE_ADMIN';
