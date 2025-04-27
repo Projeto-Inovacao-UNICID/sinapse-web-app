@@ -1,31 +1,52 @@
+// src/service/FollowersService.ts
 import { axiosInstance } from "../api";
 
 export class FollowersService {
-    async postFollowers(empresaId: string) {
-        const response = await axiosInstance.post(`/seguidores`, { empresaId }, { withCredentials: true });
-        return response.status;
-    }
+  async postFollow(empresaId: string) {
+    const response = await axiosInstance.post(
+      `/seguidores`,
+      { empresaId },
+      { withCredentials: true }
+    );
+    return response.status;
+  }
 
-    async getFollowedCompanies() {
-        const response = await axiosInstance.get(`/seguidores/empresas`, { withCredentials: true });
-        return response.data;
-    }
+  async deleteFollow(empresaId: string) {
+    const response = await axiosInstance.delete(
+      `/seguidores`,
+      { data: { empresaId }, withCredentials: true }
+    );
+    return response.status;
+  }
 
-    async getFollowedUsers(empresaId: string) {
-        const response = await axiosInstance.get(`/seguidores/usuarios/${empresaId}`, { withCredentials: true });
-        return response.data;
-    }
+  async getFollowedCompanies() {
+    const response = await axiosInstance.get(`/seguidores/empresas`, {
+      withCredentials: true,
+    });
+    return response.data;
+  }
 
-    async getCountFollowers(empresaId: string) {
-        const response = await axiosInstance.get(`/seguidores/contagem/${empresaId}`, { withCredentials: true });
-        return response.data;
-    }
+  async getFollowersOfCompany() {
+    const response = await axiosInstance.get(`/seguidores/usuarios`, {
+      withCredentials: true,
+    });
+    return response.data;
+  }
 
-    async deleteFollowers(empresaId: string) {
-        const response = await axiosInstance.delete(`/seguidores`, {
-            data: { empresaId },
-            withCredentials: true
-        });
-        return response.status;
-    }
+  async getFollowersCount() {
+    const response = await axiosInstance.get(`/seguidores/contagem`, {
+      withCredentials: true,
+    });
+    return response.data.totalSeguidores as number;
+  }
+
+  async checkFollowing(empresaId: string) {
+    const response = await axiosInstance.get(
+      `/seguidores/check?empresaId=${empresaId}`,
+      { withCredentials: true }
+    );
+    return response.data.following as boolean;
+  }
 }
+
+export const followersService = new FollowersService();
