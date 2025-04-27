@@ -16,25 +16,24 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
   }
   console.log(empresaId);
   return (
-    <Box sx={{ display: "flex", alignItems: "center", gap: 2, backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}>
-      <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+    <Box sx={{ display: "flex", gap: 1, backgroundColor: "var(--card)", borderRadius: 2, padding: 4, flexDirection: "column" }}>
+      <Box sx={{ display: "flex", gap: 2 }}>
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, width: "3rem", height: "3rem" }}>
           <CompanyProfileImage companyId={empresaId} temImagem={company?.temImagem ?? false} />
         </Box>
+        <Box sx={{ display: "flex", flexDirection: "column" }}>
+          <Typography variant="h5" color="var(--foreground)" className="font-bold">
+            {company?.username}
+          </Typography>
 
-        <Typography variant="h5" color="var(--foreground)" className="font-bold">
-          {company?.username}
-        </Typography>
-
-        <Typography variant="body1" color="var(--muted)">
-          {company?.nome}
-        </Typography>
-        
+          <Typography variant="body1" color="var(--muted)">
+            {company?.nome}
+          </Typography>
+        </Box>
       </Box>
-      <Divider/>
-      <Box sx={{ display: "flex", flexDirection: "column", gap: 2, bgcolor: "var(--cardSecondary)", borderRadius: 2, padding: 4 }}>
-        <Typography variant="h5" color="var(--foreground)" className="font-bold">
+      <Box sx={{ display: "flex", flexDirection: "column", padding: 4, gap: 1, ml: 4 }}>
+        <Typography variant="h6" color="var(--foreground)" className="font-bold">
           {desafio.titulo}
         </Typography>
         <Typography variant="body1" color="var(--foreground)">
