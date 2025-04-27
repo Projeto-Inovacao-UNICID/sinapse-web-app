@@ -9,7 +9,7 @@ export default function Desafios() {
   if (isLoading) return <div>Carregando...</div>;
 
   return challenges?.map(desafio =>
-    <Box key={desafio.id}>
+    <Box key={desafio.id} sx={{ mb: 4 }}>
       <ChallengePostCard desafio={desafio} key={desafio.id} />
       <Divider />
     </Box>
