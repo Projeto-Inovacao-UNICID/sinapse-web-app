@@ -33,8 +33,9 @@ export class FollowersService {
     return response.data;
   }
 
-  async getFollowersCount() {
+  async getFollowersCount(empresaId: string) {
     const response = await axiosInstance.get(`/seguidores/contagem`, {
+      params: { empresaId },
       withCredentials: true,
     });
     return response.data.totalSeguidores as number;
