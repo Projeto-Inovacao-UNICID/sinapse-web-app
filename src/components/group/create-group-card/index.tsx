@@ -67,23 +67,23 @@ const CreateGroupCard = () => {
               style: { 
                 background: 'var(--input)', 
                 borderRadius: 'var(--radius)', 
-                color: 'var(--muted)',  // Texto do input
+                color: 'var(--muted)',
               },
             },
           }}
           sx={{
             '& .MuiOutlinedInput-root': {
               '&:hover fieldset': {
-                borderColor: 'var(--primary)',  // Cor da borda quando o input é hover
+                borderColor: 'var(--primary)',
               },
               '&.Mui-focused fieldset': {
-                borderColor: 'var(--primary)',  // Cor da borda quando o input está em foco
+                borderColor: 'var(--primary)',
               },
             },
             '& .MuiInputLabel-root': {
-              color: 'var(--muted)', // Cor do label quando não está em foco
+              color: 'var(--muted)',
               '&.Mui-focused': {
-                color: 'var(--primary)', // Cor do label quando o input está em foco
+                color: 'var(--primary)',
               },
             },
           }}
@@ -101,23 +101,23 @@ const CreateGroupCard = () => {
               style: { 
                 background: 'var(--input)', 
                 borderRadius: 'var(--radius)', 
-                color: 'var(--muted)',  // Texto do input
+                color: 'var(--muted)',
               },
             },
           }}
           sx={{
             '& .MuiOutlinedInput-root': {
               '&:hover fieldset': {
-                borderColor: 'var(--primary)',  // Cor da borda quando o input é hover
+                borderColor: 'var(--primary)',
               },
               '&.Mui-focused fieldset': {
-                borderColor: 'var(--primary)',  // Cor da borda quando o input está em foco
+                borderColor: 'var(--primary)',
               },
             },
             '& .MuiInputLabel-root': {
-              color: 'var(--muted)', // Cor do label quando não está em foco
+              color: 'var(--muted)',
               '&.Mui-focused': {
-                color: 'var(--primary)', // Cor do label quando o input está em foco
+                color: 'var(--primary)',
               },
             },
           }}
@@ -152,23 +152,23 @@ const CreateGroupCard = () => {
               style: { 
                 background: 'var(--input)', 
                 borderRadius: 'var(--radius)', 
-                color: 'var(--muted)',  // Texto do input
+                color: 'var(--muted)',
               },
             },
           }}
           sx={{
             '& .MuiOutlinedInput-root': {
               '&:hover fieldset': {
-                borderColor: 'var(--primary)',  // Cor da borda quando o input é hover
+                borderColor: 'var(--primary)',
               },
               '&.Mui-focused fieldset': {
-                borderColor: 'var(--primary)',  // Cor da borda quando o input está em foco
+                borderColor: 'var(--primary)',
               },
             },
             '& .MuiInputLabel-root': {
-              color: 'var(--muted)', // Cor do label quando não está em foco
+              color: 'var(--muted)',
               '&.Mui-focused': {
-                color: 'var(--primary)', // Cor do label quando o input está em foco
+                color: 'var(--primary)',
               },
             },
           }}
@@ -179,7 +179,7 @@ const CreateGroupCard = () => {
             <Button
               key={friend.usuarioId}
               variant="outlined"
-              onClick={() => handleUserSelect(friend.usuarioId, friend.nome)} // Passa o nome também
+              onClick={() => handleUserSelect(friend.usuarioId, friend.nome)}
               sx={{ marginRight: 1, marginBottom: 1 }}
               className="text-accent border-accent hover:bg-accent-foreground"
               style={{
@@ -196,7 +196,7 @@ const CreateGroupCard = () => {
         <Box mt={2}>
           <Typography variant="body2" sx={{color: 'var(--muted)'}}>Usuários selecionados</Typography>
           <Box display="flex" flexWrap="wrap">
-            {selectedUsers.map(({ userId, nome }) => ( // Agora mapeia userId e nome
+            {selectedUsers.map(({ userId, nome }) => (
               <Button
                 key={userId}
                 variant="contained"
