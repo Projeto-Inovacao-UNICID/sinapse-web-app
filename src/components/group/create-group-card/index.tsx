@@ -67,7 +67,7 @@ const CreateGroupCard = () => {
               style: { 
                 background: 'var(--input)', 
                 borderRadius: 'var(--radius)', 
-                color: 'var(--muted)',
+                color: 'var(--foreground)',
               },
             },
           }}
@@ -101,7 +101,7 @@ const CreateGroupCard = () => {
               style: { 
                 background: 'var(--input)', 
                 borderRadius: 'var(--radius)', 
-                color: 'var(--muted)',
+                color: 'var(--foreground)',
               },
             },
           }}
@@ -152,7 +152,7 @@ const CreateGroupCard = () => {
               style: { 
                 background: 'var(--input)', 
                 borderRadius: 'var(--radius)', 
-                color: 'var(--muted)',
+                color: 'var(--foreground)',
               },
             },
           }}
