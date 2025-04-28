@@ -9,8 +9,14 @@ export default function Desafios() {
   if (isLoading) return <div>Carregando...</div>;
 
   return challenges?.map(desafio =>
-    <Box key={desafio.id} sx={{ mb: 4 }}>
-      <ChallengePostCard desafio={desafio} key={desafio.id} />
+    <Box 
+      key={desafio.id} 
+      sx={{ 
+        mb: 4,
+        display: 'grid',
+        gridTemplateColumns: '1fr minmax(0, 10fr) 1fr',
+      }}>
+      <ChallengePostCard desafio={desafio} key={desafio.id} gridColumn={2}/>
       <Divider />
     </Box>
   );
