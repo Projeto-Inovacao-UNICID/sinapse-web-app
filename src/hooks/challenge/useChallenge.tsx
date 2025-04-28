@@ -43,8 +43,17 @@ export function useGetChallengeStageParticipants(stageId: string) {
 export function useGetChallengeCounts(companyId: string) {
   return useQuery({
     queryKey: ["challengeCounts", companyId],
-    queryFn: () => challengeService.getCounts(companyId),
+    queryFn: () => challengeService.getChallengesCountsCompany(companyId),
     enabled: !!companyId,
+  });
+}
+
+// Hook para obter as contagens de desafios de um usuário
+export function useGetChallengeCountsUser(userId: string) {
+  return useQuery({
+    queryKey: ["challengeCountsUser", userId],
+    queryFn: () => challengeService.getChallengesCountsUser(userId),
+    enabled: !!userId,
   });
 }
 

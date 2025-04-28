@@ -119,7 +119,6 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
               variant="contained"
               sx={{
                 backgroundColor: podeAdicionarAmigo && !isActiveFriendshipInvitation ? "var(--primary)" : "var(--muted)",
-                fontWeight: "bold",
                 ':hover': { opacity: 0.8 },
                 textTransform: 'none',
               }}
@@ -202,10 +201,9 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
         defaultValues={{ nome: userProfile ? userProfile.nome : '', username: userProfile ? userProfile.username : '', email: '' }}
       />
 
-      {/* Modal de criação de grupo */}
       <CreateGroupModal
         open={openModalCreateGroup}
-        onClose={() => setOpenModalCreateGroup(false)} // Fecha o modal de criação de grupo
+        onClose={() => setOpenModalCreateGroup(false)}
       />
     </Box>
   );

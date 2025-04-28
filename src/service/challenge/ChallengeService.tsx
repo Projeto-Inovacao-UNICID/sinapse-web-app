@@ -63,7 +63,7 @@ export class ChallengeService {
     return response.data;
   }
 
-  async getCounts(companyId: string) {
+  async getChallengesCountsCompany(companyId: string) {
     const resp = await axiosInstance.get<{
       criados: number;
       ativos: number;
@@ -72,6 +72,21 @@ export class ChallengeService {
       `/desafios/contagem`,
       {
         params: { empresaId: companyId },
+        withCredentials: true
+      }
+    );
+    return resp.data;
+  }
+
+  async getChallengesCountsUser(userId: string) {
+    const resp = await axiosInstance.get<{
+      criados: number;
+      ativos: number;
+      encerrados: number;
+    }>(
+      `/desafios/contagem/usuario`,
+      {
+        params: { usuarioId: userId },
         withCredentials: true
       }
     );

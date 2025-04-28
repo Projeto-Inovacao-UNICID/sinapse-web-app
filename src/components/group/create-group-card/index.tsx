@@ -36,6 +36,7 @@ export function CreateGroupModal({ open, onClose }: CreateGroupModalProps) {
       fullWidth
       maxWidth="sm"
       transitionDuration={300}
+      aria-labelledby="create-group-dialog-title"
       slotProps={{ 
         paper: {
           sx: {
@@ -52,8 +53,8 @@ export function CreateGroupModal({ open, onClose }: CreateGroupModalProps) {
         transition={{ duration: 0.3 }}
         style={{ backgroundColor: 'var(--card)', borderRadius: 16, padding: 16 }}
       >
-        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, bgcolor: 'var(--card)' }}>
-          <Typography variant="h6" sx={{ color: 'var(--foreground)' }}>
+        <DialogTitle sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2  }} id="create-group-dialog-title">
+          <Typography sx={{ color: 'var(--foreground)', fontWeight: 'bold', fontSize: '1.2rem' }}>
             Criar Grupo
           </Typography>
           <IconButton onClick={onClose}>
@@ -61,7 +62,7 @@ export function CreateGroupModal({ open, onClose }: CreateGroupModalProps) {
           </IconButton>
         </DialogTitle>
 
-        <DialogContent sx={{ borderRadius: 4}}>
+        <DialogContent sx={{ borderRadius: 4 }}>
           {/* Mensagens de sucesso ou erro */}
           {isError && (
             <Alert severity="error" sx={{ mb: 2 }}>

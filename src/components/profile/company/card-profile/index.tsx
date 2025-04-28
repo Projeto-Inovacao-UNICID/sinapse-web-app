@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useSession } from '@/hooks/session/useSession';
 import { useGetCompanyProfile } from '@/hooks/company/useCompanyProfile';
-import { useChallengesCount } from '@/hooks/company/useChallengesCount';
 import { useGetFollowersCount } from '@/hooks/company/useFollowers';
 import {
   Box,
@@ -32,6 +31,7 @@ import {
   useFollowCompany,
   useUnfollowCompany
 } from '@/hooks/company/useFollowers';
+import { useGetChallengeCounts } from '@/hooks/challenge/useChallenge';
 
 interface CompanyProfileCardProps {
   companyId: string;
@@ -39,7 +39,7 @@ interface CompanyProfileCardProps {
 
 export function CompanyProfileCard({ companyId }: CompanyProfileCardProps) {
   const { data: company, isLoading, isError } = useGetCompanyProfile(companyId);
-  const { data: counts, isLoading: loadingCounts } = useChallengesCount(companyId);
+  const { data: counts, isLoading: loadingCounts } = useGetChallengeCounts(companyId);
   const { data: followersCount, isLoading: loadingFollowers } = useGetFollowersCount(companyId);
   const { session } = useSession();
   const router = useRouter();
