@@ -14,7 +14,7 @@ export default function Desafios() {
       sx={{ 
         mb: 4,
         display: 'grid',
-        gridTemplateColumns: '1fr minmax(0, 10fr) 1fr',
+        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
       }}>
       <ChallengePostCard desafio={desafio} key={desafio.id} gridColumn={2}/>
       <Divider />
