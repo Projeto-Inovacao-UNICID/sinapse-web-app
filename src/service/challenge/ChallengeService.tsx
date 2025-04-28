@@ -80,9 +80,9 @@ export class ChallengeService {
 
   async getChallengesCountsUser(userId: string) {
     const resp = await axiosInstance.get<{
-      criados: number;
+      participados: number;
       ativos: number;
-      encerrados: number;
+      concluidos: number;
     }>(
       `/desafios/contagem/usuario`,
       {

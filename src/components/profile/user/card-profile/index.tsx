@@ -1,23 +1,22 @@
 'use client';
 
-import { useState } from "react"; 
+import { CreateGroupModal } from "@/components/group/create-group-card";
+import { useGetChallengeCountsUser } from "@/hooks/challenge/useChallenge";
 import { useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
+import { useGetPosts } from "@/hooks/posts/usePosts";
 import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile, useUserProfileImage } from "@/hooks/user/useUserProfile";
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import MessageIcon from '@mui/icons-material/Message';
+import ShareIcon from '@mui/icons-material/Share';
 import { Avatar, Box, Button, CircularProgress, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { BoxInfo } from "../../box-info";
-import { useGetPosts } from "@/hooks/posts/usePosts";
-import { useGetChallenges } from "@/hooks/challenge/useChallenge";
-import MessageIcon from '@mui/icons-material/Message';
-import EditIcon from '@mui/icons-material/Edit';
-import ShareIcon from '@mui/icons-material/Share';
-import AddIcon from '@mui/icons-material/Add';
 import { useRouter } from 'next/navigation';
-import { EditCompanyProfileModal } from "../../company/profile-edit-modal";
-import { EditProfileModal } from "../profile-edit-modal";
+import { useState } from "react";
+import { BoxInfo } from "../../box-info";
 import { ShareDialog } from "../../utils/shareDialog";
-import { CreateGroupModal } from "@/components/group/create-group-card";
+import { EditProfileModal } from "../profile-edit-modal";
 
 
 interface UserProfileCardProps {
@@ -37,7 +36,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   const { mutateAsync: sendFriendRequest, isPending: isPostFriendshipLoading } = usePostFriendship();
   const { data: friendshipInvitations } = useGetFriendshipInvitations("enviados");
   const { data: posts } = useGetPosts();
-  const { data: challenge } = useGetChallenges();
+  const { data: challenge } = useGetChallengeCountsUser(userId);
 
   const temImagem = userProfile?.temImagem ?? false;
   const { data: userProfileImage } = useUserProfileImage(userId, temImagem);
@@ -107,7 +106,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
             <BoxInfo data={posts ? posts.length : 0} title="Postagens" />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}>
-            <BoxInfo data={challenge ? challenge.length : 0} title="Desafios" />
+            <BoxInfo data={challenge ? challenge.participados : 0} title="Desafios" />
           </Box>
         </Grid>
 
