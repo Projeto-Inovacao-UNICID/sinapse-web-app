@@ -12,8 +12,8 @@ export class GroupService {
   }
 
   async getGroups() {
-    const response = await axiosInstance.get<Group[]>("/grupos", { withCredentials: true });
-    return response.data;
+    const response = await axiosInstance.get("/grupos", { withCredentials: true });
+    return response.data.content;
   }
 
   async getGroupById(id: string) {
