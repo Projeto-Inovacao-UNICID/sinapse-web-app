@@ -1,7 +1,7 @@
 import { axiosInstance } from "../api";
 
 export class GroupService {
-  async postGroup(nome: string, descricao: string, isPublic: boolean) {
+  async postGroup(nome: string, descricao: string, isPublic: boolean = true) {
     const response = await axiosInstance.post("/grupos", {
       nome,
       descricao,
