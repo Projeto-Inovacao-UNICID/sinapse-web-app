@@ -1,11 +1,11 @@
 import { axiosInstance } from "../api";
 
 export class GroupService {
-  async postGroup(nome: string, descricao: string, isPublic: boolean = true) {
+  async postGroup(nome: string, descricao: string, publico: boolean = true) {
     const response = await axiosInstance.post("/grupos", {
       nome,
       descricao,
-      isPublic,
+      publico,
     }, { withCredentials: true });
     return response.data;
   }

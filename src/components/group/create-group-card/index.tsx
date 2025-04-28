@@ -14,6 +14,9 @@ const CreateGroupCard = () => {
     createGroup({ nome, descricao, isPublic });
   };
 
+  console.log(isSuccess);
+  console.log(nome);
+  console.log(descricao);
   return (
     <motion.div
       initial={{ opacity: 0 }}
