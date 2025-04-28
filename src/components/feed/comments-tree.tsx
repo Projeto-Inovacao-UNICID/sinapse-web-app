@@ -27,7 +27,7 @@ export function CommentsTree({ postagemId }: CommentsTreeProps) {
 
   return (
     <Box>
-      <Typography variant="h6" sx={{ mb: 2 }}>
+      <Typography variant="h6" sx={{ mb: 2, color: 'var(--foreground)' }}>
         Comentários
       </Typography>
 
@@ -38,7 +38,7 @@ export function CommentsTree({ postagemId }: CommentsTreeProps) {
       />
 
       {comments.length === 0 && (
-        <Typography variant="body2" color="text.secondary" sx={{ mt: 2 }}>
+        <Typography variant="body2" sx={{ mt: 2, color: 'var(--foreground)' }}>
           Seja o primeiro a comentar!
         </Typography>
       )}

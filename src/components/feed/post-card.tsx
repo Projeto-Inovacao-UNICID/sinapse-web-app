@@ -33,6 +33,7 @@ import {
 } from '@/hooks/posts/useReactions';
 import { usePostCommentsCount } from '@/hooks/posts/useComments';
 import { CommentsTree } from './comments-tree';
+import { colors } from '@/theme/colors';
 
 interface PostCardProps {
   post: {
@@ -84,7 +85,7 @@ export function PostCard({ post }: PostCardProps) {
         <CardHeader
           avatar={<Avatar src={post.autorAvatarUrl} alt={post.autorNome} />}
           title={
-            <Typography variant="subtitle1" sx={{ color: 'white', fontWeight: 'bold' }}>
+            <Typography variant="subtitle1" sx={{ color: 'var(--card-foreground)', fontWeight: 'bold' }}>
               {post.autorNome}
             </Typography>
           }
@@ -104,7 +105,7 @@ export function PostCard({ post }: PostCardProps) {
         />
 
         <CardContent sx={{ pt: 1 }}>
-          <Typography variant="body2" sx={{ color: 'white' }}>
+          <Typography variant="body2" sx={{ color: 'var(--card-foreground)' }}>
             {post.texto}
           </Typography>
         </CardContent>
@@ -139,7 +140,7 @@ export function PostCard({ post }: PostCardProps) {
             <IconButton
               onClick={handleLike}
               disabled={busy || myLoading}
-              sx={{ color: liked ? 'var(--primary)' : 'white' }}
+              sx={{ color: liked ? 'var(--primary)' : 'var(--card-foreground)' }}
             >
               {busy || myLoading ? (
                 <CircularProgress size={20} color="inherit" />
@@ -149,14 +150,14 @@ export function PostCard({ post }: PostCardProps) {
                 <FavoriteBorderIcon />
               )}
             </IconButton>
-            <Typography variant="caption" sx={{ color: 'white' }}>
+            <Typography variant="caption" sx={{ color: 'var(--card-foreground)' }}>
               {countsLoading ? '…' : counts?.CURTIR ?? 0}
             </Typography>
 
             <IconButton onClick={toggleComments}>
-              <ChatBubbleOutlineIcon sx={{ color: showComments ? 'var(--primary)' : 'white' }} />
+              <ChatBubbleOutlineIcon sx={{ color: showComments ? 'var(--primary)' : 'var(--card-foreground)'}} />
             </IconButton>
-            <Typography variant="caption" sx={{ color: 'white' }}>
+            <Typography variant="caption" sx={{ color:'var(--card-foreground)' }}>
               {commentsLoading ? '…' : commentsCount ?? 0}
             </Typography>
           </Box>
@@ -188,13 +189,13 @@ export function PostCard({ post }: PostCardProps) {
             position: 'absolute',
             top: 8,
             right: 8,
-            color: 'white',
-            bgcolor: 'rgba(0,0,0,0.5)'
+            color: 'var(--card-foreground)',
+            bgcolor: "var(--background)"
           }}
         >
           <CloseIcon />
         </IconButton>
-        <DialogContent sx={{ p: 0, bgcolor: 'black', textAlign: 'center' }}>
+        <DialogContent sx={{ p: 0, bgcolor: 'var(--background)', textAlign: 'center' }}>
           <Box
             component="img"
             src={post.imagemUrl}

@@ -42,19 +42,19 @@ export function CommentItem({
         </Avatar>
         <Box sx={{ flexGrow: 1 }}>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <Typography variant="subtitle2">{comment.autorNome}</Typography>
-            <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
+            <Typography variant="subtitle2" sx={{ color: 'var(--foreground)' }}>{comment.autorNome}</Typography>
+            <Typography variant="caption" sx={{ color: 'var(--foreground)' }}>
               {new Date(comment.createdAt).toLocaleString()}
             </Typography>
           </Box>
-          <Typography variant="body2" sx={{ mt: 0.5 }}>
+          <Typography variant="body2" sx={{ mt: 0.5, color: 'var(--foreground)' }}>
             {comment.conteudo}
           </Typography>
-          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, gap: 1 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, gap: 1, color: 'var(--foreground)'  }}>
             <IconButton
               size="small"
               onClick={() => setReplying(prev => !prev)}
-              sx={{ p: 0.5 }}
+              sx={{ p: 0.5, color: 'var(--foreground)'  }}
             >
               <ReplyIcon fontSize="small" />
             </IconButton>
