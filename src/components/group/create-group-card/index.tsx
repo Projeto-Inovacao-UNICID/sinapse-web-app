@@ -127,13 +127,12 @@ const CreateGroupCard = () => {
           <Button
             variant={isPublic ? 'contained' : 'outlined'}
             onClick={() => setIsPublic(!isPublic)}
-            sx={{ marginRight: 2 }}
-            className="text-secondary bg-secondary-foreground hover:bg-secondary"
-            style={{
-              borderRadius: 'var(--radius)',
-              backgroundColor: isPublic ? 'var(--primary)' : 'transparent',
-              color: isPublic ? 'var(--primary-foreground)' : 'var(--secondary)',
-              borderColor: 'var(--border)',
+            sx={{ 
+              marginRight: 2, 
+              color: "var(--foreground)",
+              bgcolor: isPublic ? "var(--primary)" : "var(--cardSecondary)",
+              borderRadius: 2,
+              borderColor: "var(--border)",
             }}
           >
             {isPublic ? 'Público' : 'Privado'}
