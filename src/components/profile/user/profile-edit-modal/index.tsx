@@ -11,7 +11,7 @@ interface EditProfileModalProps {
   onClose: () => void;
   userId: string;
   defaultValues: {
-    name: string;
+    nome: string | '';
     username: string;
     email: string;
   };
@@ -45,7 +45,7 @@ export function EditProfileModal({ open, onClose, userId, defaultValues }: EditP
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     patchUserProfile.mutate(
-      { userId, data: formData },
+      { userId, ...formData },
       {
         onSuccess: () => {
           onClose();
@@ -73,9 +73,9 @@ export function EditProfileModal({ open, onClose, userId, defaultValues }: EditP
         <form onSubmit={handleSubmit}>
           <DialogContent style={{ display: "flex", flexDirection: "column", gap: 4 }}>
             <TextField
-              name="name"
+              name="nome"
               label="Nome"
-              value={formData.name}
+              value={formData.nome}
               onChange={handleChange}
               fullWidth
               variant="outlined"

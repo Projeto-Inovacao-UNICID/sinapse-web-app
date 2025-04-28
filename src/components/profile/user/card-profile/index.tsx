@@ -9,6 +9,15 @@ import { useQueryClient } from "@tanstack/react-query";
 import { BoxButton, BoxButton2, BoxInfo } from "../../box-info";
 import { useGetPosts } from "@/hooks/posts/usePosts";
 import { useGetChallenges } from "@/hooks/challenge/useChallenge";
+import MessageIcon from '@mui/icons-material/Message';
+import EditIcon from '@mui/icons-material/Edit';
+import ShareIcon from '@mui/icons-material/Share';
+import AddIcon from '@mui/icons-material/Add';
+
+import { useRouter } from 'next/navigation';
+import { EditCompanyProfileModal } from "../../company/profile-edit-modal";
+import { EditProfileModal } from "../profile-edit-modal";
+import { ShareDialog } from "../../utils/shareDialog";
 
 interface UserProfileCardProps {
   userId: string;
@@ -17,9 +26,13 @@ interface UserProfileCardProps {
 export function UserProfileCard({ userId }: UserProfileCardProps) {
   // Definindo o estado para controlar o valor da aba
   const [tabValue, setTabValue] = useState(0); // 0 é o valor inicial da aba selecionada
+  const [shareOpen, setShareOpen] = useState(false);
 
   const { data: userProfile, isLoading, isError, error } = useUserProfile(userId);
   const { session } = useSession();
+  const router = useRouter();
+
+  
   const { data: friendship } = useFriendship();
   const { mutateAsync: sendFriendRequest, isPending: isPostFriendshipLoading } = usePostFriendship();
   const { data: friendshipInvitations } = useGetFriendshipInvitations("enviados");
@@ -37,6 +50,11 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   const isActiveFriendshipInvitation = !isProfileOwner && friendshipInvitations?.content.some(
     (invitation) => invitation.usuarioId === userId
   );
+
+  const [openModal, setOpenModal] = useState(false);
+
+  const handleMessage = () => router.push(`/conversas?userId=${userId}`);
+  const handleEdit    = () => setOpenModal(true);
 
   if (isLoading) {
     return (
@@ -97,24 +115,9 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
         </Grid>
 
         <Grid size={2} sx={{ display: "flex", flexDirection: "row", gap: 2, width: "100%" }}>
-          <BoxButton data="Seguir" />
-          <BoxButton data="Mensagem" />
-          <BoxButton2 data="Compartilhar" />
-          <BoxButton2 data="Editar perfil" />
-        </Grid>
-
-        <Divider sx={{ my: 0.3, borderBottom: '1px solid var(--secondary)', width: '100%' }} />
-
-        <Tabs value={tabValue} onChange={(_, v) => setTabValue(v)} textColor="inherit" TabIndicatorProps={{ style: { backgroundColor: 'var(--primary)' } }} sx={{ '& .MuiTab-root': { color: 'var(--muted)', textTransform: 'none' }, '& .Mui-selected': { color: 'var(--primary)' } }}>
-          <Tab label="Início" />
-          <Tab label="Sobre" />
-          <Tab label="Publicações" />
-          <Tab label="Desafios" />
-        </Tabs>
-
-        <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-          {!isProfileOwner && isUser && (
-            <Button
+        {!isProfileOwner && isUser && (
+            <Button 
+              startIcon={<AddIcon />}
               onClick={podeAdicionarAmigo && !isActiveFriendshipInvitation ? handleAddFriendship : undefined}
               variant="contained"
               sx={{
@@ -132,8 +135,63 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
               }
             </Button>
           )}
+        
+          <Button
+                startIcon={<MessageIcon />}
+                variant="outlined"
+                onClick={handleMessage}
+                sx={{ borderColor: 'var(--muted)', color: 'var(--text)', textTransform: 'none', backgroundColor: 'var(--primary)' }}
+              >Mensagem</Button>
+         
+         <Button
+  startIcon={<ShareIcon />}
+  variant="outlined"
+  onClick={() => setShareOpen(true)} // Aciona a abertura do ShareDialog
+  sx={{
+    borderColor: 'var(--muted)',
+    color: 'var(--foreground)',
+    textTransform: 'none',
+    ':hover': { opacity: 0.8 }  // Aplica o mesmo efeito de hover
+  }}
+>
+  Compartilhar
+</Button>
+
+<ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={window.location.href} />
+
+
+          {isUser && isProfileOwner && (
+                <Button
+                  startIcon={<EditIcon />}
+                  variant="outlined"
+                  onClick={handleEdit}
+                  sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
+                >
+                  Editar Perfil
+                </Button>)}
+        
+        </Grid>
+
+        <Divider sx={{ my: 0.3, borderBottom: '1px solid var(--secondary)', width: '100%' }} />
+
+        <Tabs value={tabValue} onChange={(_, v) => setTabValue(v)} textColor="inherit" TabIndicatorProps={{ style: { backgroundColor: 'var(--primary)' } }} sx={{ '& .MuiTab-root': { color: 'var(--muted)', textTransform: 'none' }, '& .Mui-selected': { color: 'var(--primary)' } }}>
+          <Tab label="Início" />
+          <Tab label="Sobre" />
+          <Tab label="Publicações" />
+          <Tab label="Desafios" />
+        </Tabs>
+
+        <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+    
         </Grid>
       </Grid>
+
+       <EditProfileModal
+                open={openModal}
+                onClose={() => setOpenModal(false)}
+                userId={userId}
+                defaultValues={{ nome: userProfile ? userProfile.nome : '', username: userProfile ? userProfile.username : '', email : ''}}
+              />
     </Box>
   );
 }

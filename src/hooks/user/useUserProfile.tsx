@@ -25,7 +25,8 @@ export function useUserProfileImage(userId: string, enabled: boolean = true) {
 
 export function usePatchUserProfile() {
   return useMutation({
-    mutationFn: ({ userId, data }: { userId: string; data: Partial<UserProfileResponse> }) => 
-      userProfileService.patchUserProfile(userId, data),
+    mutationFn: ({ userId, nome, username, email }: { userId: string; nome: string, username: string, email: string}) => 
+      userProfileService.patchUserProfile(userId, nome, username, email
+      ),
   });
 }
