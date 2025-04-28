@@ -224,15 +224,25 @@ const CreateGroupCard = () => {
             onClick={handleCreateGroup}
             fullWidth
             disabled={isPending || !nome || !descricao}
-            className="bg-primary text-primary-foreground"
-            style={{
+            sx={{
               backgroundColor: 'var(--primary)',
-              color: 'var(--primary-foreground)',
-              borderRadius: 'var(--radius)',
+              color: 'var(--foreground)',
+              borderRadius: 2,
+              '&:hover': {
+                opacity: 0.8,
+                cursor: 'pointer',
+              },
+              '&:disabled': {
+                opacity: 0.5,
+                cursor: 'not-allowed',
+                bgcolor: 'var(--primary)',
+                color: 'var(--foreground)',
+              },
             }}
           >
             {isPending ? 'Criando...' : 'Criar Grupo'}
           </Button>
+
         </Box>
       </div>
     </motion.div>
