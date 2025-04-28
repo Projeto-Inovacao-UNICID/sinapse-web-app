@@ -1,3 +1,4 @@
+import { Group } from "@/types";
 import { axiosInstance } from "../api";
 
 export class GroupService {
@@ -11,12 +12,12 @@ export class GroupService {
   }
 
   async getGroups() {
-    const response = await axiosInstance.get("/grupos", { withCredentials: true });
+    const response = await axiosInstance.get<Group[]>("/grupos", { withCredentials: true });
     return response.data;
   }
 
   async getGroupById(id: string) {
-    const response = await axiosInstance.get(`/grupos/${id}`, { withCredentials: true });
+    const response = await axiosInstance.get<Group>(`/grupos/${id}`, { withCredentials: true });
     return response.data;
   }
 
