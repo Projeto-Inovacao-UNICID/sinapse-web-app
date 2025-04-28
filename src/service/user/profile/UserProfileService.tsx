@@ -7,8 +7,8 @@ export class UserProfileService {
     return response.data;
   }
 
-  async patchUserProfile(userId: string, data: Partial<UserProfileResponse>) {
-    const response = await axiosInstance.patch(`/profile/user/${userId}`, data, { withCredentials: true });
+  async patchUserProfile(userId: string, nome: string, username: string, email: string) {
+    const response = await axiosInstance.patch(`/profile/user/${userId}`, {nome, username, email}, { withCredentials: true });
     return response.status;
   }
 

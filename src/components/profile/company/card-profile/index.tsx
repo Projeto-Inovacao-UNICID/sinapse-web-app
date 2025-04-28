@@ -134,7 +134,7 @@ export function CompanyProfileCard({ companyId }: CompanyProfileCardProps) {
                   disabled={loadingFollow}
                   sx={{ textTransform: 'none', backgroundColor: isFollowing && !checkingFollow ? 'var(--muted)' : 'var(--primary)', ':hover': { opacity: 0.8 } }}
                 >
-                  {loadingFollow ? <CircularProgress size={20} sx={{ color: 'white' }} /> : (isFollowing ? 'Seguindo' : '+ Seguir')}
+                  {loadingFollow ? <CircularProgress size={20} sx={{ color: 'white' }} /> : (isFollowing ? 'Seguir' : '+ Seguir')}
                 </Button>
               )}
 
