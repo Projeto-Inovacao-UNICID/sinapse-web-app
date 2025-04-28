@@ -1,7 +1,7 @@
 'use client';
 
 import { ChallengePostCard } from "@/components/challenge/challenge-post-card";
-import { useGetChallenges } from "@/hooks/challenge/useGetChallenge";
+import { useGetChallenges } from "@/hooks/challenge/useChallenge";
 import { Box, Divider } from "@mui/material";
 
 export default function Desafios() {

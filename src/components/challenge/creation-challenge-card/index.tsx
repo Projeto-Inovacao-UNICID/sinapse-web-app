@@ -1,6 +1,6 @@
 'use client';
 
-import { usePostChallenge } from '@/hooks/challenge/usePostChallenge';
+import { usePostChallenge } from '@/hooks/challenge/useChallenge';
 import { ChallengeToPost } from '@/types/challenge';
 import { challengeTypesLabels } from '@/types/challengeTypes';
 import {
@@ -33,7 +33,7 @@ export function CreationChallengeCard({ empresaId }: Props) {
     modalidade: 'marketing',
   });
 
-  const postChallenge = usePostChallenge(empresaId);
+const { mutate: postChallenge, isPending, isSuccess, isError } = usePostChallenge(empresaId, form);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -48,18 +48,7 @@ export function CreationChallengeCard({ empresaId }: Props) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    postChallenge.mutate(form, {
-      onSuccess: () => {
-        setForm({
-          titulo: '',
-          descricao: '',
-          dataInicio: '',
-          dataFim: '',
-          interno: false,
-          modalidade: 'marketing',
-        });
-      },
-    });
+    postChallenge({ empresaId, desafio: form });
   };
 
   return (
@@ -79,10 +68,10 @@ export function CreationChallengeCard({ empresaId }: Props) {
 
           <form onSubmit={handleSubmit}>
             <Stack spacing={3}>
-              {postChallenge.isError && (
+              {isError && (
                 <Alert severity="error">Erro ao criar desafio. Tente novamente.</Alert>
               )}
-              {postChallenge.isSuccess && (
+              {isSuccess && (
                 <Alert severity="success">Desafio criado com sucesso!</Alert>
               )}
 
@@ -284,8 +273,8 @@ export function CreationChallengeCard({ empresaId }: Props) {
                 label="Desafio Interno"
               />
 
-              <Button type="submit" variant="contained" disabled={postChallenge.isPending} sx={{ backgroundColor: 'var(--primary)', color: 'var(--primary-foreground)', ':hover': { opacity: 0.8 }, fontWeight: 'bold' }}>
-                {postChallenge.isPending ? <CircularProgress size={24} /> : 'Criar Desafio'}
+              <Button type="submit" variant="contained" disabled={isPending} sx={{ backgroundColor: 'var(--primary)', color: 'var(--primary-foreground)', ':hover': { opacity: 0.8 }, fontWeight: 'bold' }}>
+                {isPending ? <CircularProgress size={24} /> : 'Criar Desafio'}
               </Button>
             </Stack>
           </form>

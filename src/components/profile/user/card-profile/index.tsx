@@ -8,7 +8,7 @@ import { Avatar, Box, Button, CircularProgress, Divider, Grid, Tab, Tabs, Typogr
 import { useQueryClient } from "@tanstack/react-query";
 import { BoxButton, BoxButton2, BoxInfo } from "../../box-info";
 import { useGetPosts } from "@/hooks/posts/usePosts";
-import { useGetChallenges } from "@/hooks/challenge/useGetChallenge";
+import { useGetChallenges } from "@/hooks/challenge/useChallenge";
 
 interface UserProfileCardProps {
   userId: string;
