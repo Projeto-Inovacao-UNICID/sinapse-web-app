@@ -29,8 +29,8 @@ const CreateGroupCard = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-card p-6 rounded-lg shadow-md max-w-sm mx-auto">
-        <CircularProgress />
+      <div className="bg-card p-6 rounded-lg shadow-md max-w-sm mx-auto h-full flex justify-center items-center">
+        <CircularProgress sx={{ color: "var(--muted)" }} />
       </div>
     );
   }
