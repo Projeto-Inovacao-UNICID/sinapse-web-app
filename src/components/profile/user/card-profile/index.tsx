@@ -1,38 +1,38 @@
 'use client';
 
-import { useState } from "react"; // Adicione esta importação no início do seu arquivo
+import { useState } from "react"; 
 import { useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
 import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile, useUserProfileImage } from "@/hooks/user/useUserProfile";
 import { Avatar, Box, Button, CircularProgress, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { BoxButton, BoxButton2, BoxInfo } from "../../box-info";
+import { BoxInfo } from "../../box-info";
 import { useGetPosts } from "@/hooks/posts/usePosts";
 import { useGetChallenges } from "@/hooks/challenge/useChallenge";
 import MessageIcon from '@mui/icons-material/Message';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
 import AddIcon from '@mui/icons-material/Add';
-
 import { useRouter } from 'next/navigation';
 import { EditCompanyProfileModal } from "../../company/profile-edit-modal";
 import { EditProfileModal } from "../profile-edit-modal";
 import { ShareDialog } from "../../utils/shareDialog";
+import { CreateGroupModal } from "@/components/group/create-group-card";
+
 
 interface UserProfileCardProps {
   userId: string;
 }
 
 export function UserProfileCard({ userId }: UserProfileCardProps) {
-  // Definindo o estado para controlar o valor da aba
-  const [tabValue, setTabValue] = useState(0); // 0 é o valor inicial da aba selecionada
+  const [tabValue, setTabValue] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
-
+  const [openModal, setOpenModal] = useState(false);
+  const [openModalCreateGroup, setOpenModalCreateGroup] = useState(false);  // Controle para o modal de criação de grupo
+  
   const { data: userProfile, isLoading, isError, error } = useUserProfile(userId);
   const { session } = useSession();
   const router = useRouter();
-
-  
   const { data: friendship } = useFriendship();
   const { mutateAsync: sendFriendRequest, isPending: isPostFriendshipLoading } = usePostFriendship();
   const { data: friendshipInvitations } = useGetFriendshipInvitations("enviados");
@@ -40,10 +40,9 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   const { data: challenge } = useGetChallenges();
 
   const temImagem = userProfile?.temImagem ?? false;
-  const { data: userProfileImage } = useUserProfileImage(userId, temImagem); // <- controle de carregamento
+  const { data: userProfileImage } = useUserProfileImage(userId, temImagem);
 
   const queryClient = useQueryClient();
-
   const isProfileOwner = session?.id === userId;
   const isUser = session ? session.roles.includes('ROLE_USER') : false;
 
@@ -51,10 +50,8 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     (invitation) => invitation.usuarioId === userId
   );
 
-  const [openModal, setOpenModal] = useState(false);
-
   const handleMessage = () => router.push(`/conversas?userId=${userId}`);
-  const handleEdit    = () => setOpenModal(true);
+  const handleEdit = () => setOpenModal(true);
 
   if (isLoading) {
     return (
@@ -115,7 +112,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
         </Grid>
 
         <Grid size={2} sx={{ display: "flex", flexDirection: "row", gap: 2, width: "100%" }}>
-        {!isProfileOwner && isUser && (
+          {!isProfileOwner && isUser && (
             <Button 
               startIcon={<AddIcon />}
               onClick={podeAdicionarAmigo && !isActiveFriendshipInvitation ? handleAddFriendship : undefined}
@@ -124,6 +121,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
                 backgroundColor: podeAdicionarAmigo && !isActiveFriendshipInvitation ? "var(--primary)" : "var(--muted)",
                 fontWeight: "bold",
                 ':hover': { opacity: 0.8 },
+                textTransform: 'none',
               }}
               disabled={isPostFriendshipLoading}
             >
@@ -137,38 +135,51 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
           )}
         
           <Button
-                startIcon={<MessageIcon />}
-                variant="outlined"
-                onClick={handleMessage}
-                sx={{ borderColor: 'var(--muted)', color: 'var(--text)', textTransform: 'none', backgroundColor: 'var(--primary)' }}
-              >Mensagem</Button>
-         
-         <Button
-  startIcon={<ShareIcon />}
-  variant="outlined"
-  onClick={() => setShareOpen(true)} // Aciona a abertura do ShareDialog
-  sx={{
-    borderColor: 'var(--muted)',
-    color: 'var(--foreground)',
-    textTransform: 'none',
-    ':hover': { opacity: 0.8 }  // Aplica o mesmo efeito de hover
-  }}
->
-  Compartilhar
-</Button>
+            startIcon={<MessageIcon />}
+            variant="contained"
+            onClick={handleMessage}
+            sx={{ color: 'white', textTransform: 'none', backgroundColor: 'var(--primary)', ':hover': { opacity: 0.8 } }}
+          >
+            Mensagem
+          </Button>
 
-<ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={window.location.href} />
+          <Button
+            startIcon={<ShareIcon />}
+            variant="outlined"
+            onClick={() => setShareOpen(true)} 
+            sx={{
+              borderColor: 'var(--muted)',
+              color: 'var(--foreground)',
+              textTransform: 'none',
+              ':hover': { opacity: 0.8 }
+            }}
+          >
+            Compartilhar
+          </Button>
 
+          <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={window.location.href} />
 
           {isUser && isProfileOwner && (
-                <Button
-                  startIcon={<EditIcon />}
-                  variant="outlined"
-                  onClick={handleEdit}
-                  sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
-                >
-                  Editar Perfil
-                </Button>)}
+            <>
+              <Button
+                startIcon={<EditIcon />}
+                variant="outlined"
+                onClick={handleEdit}
+                sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
+              >
+                Editar Perfil
+              </Button>
+
+              <Button
+                startIcon={<AddIcon />}
+                variant="outlined"
+                onClick={() => setOpenModalCreateGroup(true)} // Abre o modal de criação de grupo
+                sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
+              >
+                Criar Grupo
+              </Button>
+            </>
+          )}
         
         </Grid>
 
@@ -181,17 +192,21 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
           <Tab label="Desafios" />
         </Tabs>
 
-        <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-    
-        </Grid>
+        <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}></Grid>
       </Grid>
 
-       <EditProfileModal
-                open={openModal}
-                onClose={() => setOpenModal(false)}
-                userId={userId}
-                defaultValues={{ nome: userProfile ? userProfile.nome : '', username: userProfile ? userProfile.username : '', email : ''}}
-              />
+      <EditProfileModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        userId={userId}
+        defaultValues={{ nome: userProfile ? userProfile.nome : '', username: userProfile ? userProfile.username : '', email: '' }}
+      />
+
+      {/* Modal de criação de grupo */}
+      <CreateGroupModal
+        open={openModalCreateGroup}
+        onClose={() => setOpenModalCreateGroup(false)} // Fecha o modal de criação de grupo
+      />
     </Box>
   );
 }
