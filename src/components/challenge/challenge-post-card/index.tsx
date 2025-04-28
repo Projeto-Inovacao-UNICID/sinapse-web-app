@@ -1,20 +1,21 @@
 'use client';
 
-import { CompanyProfileImage } from "@/components/profile/company/avatar";
 import { useGetCompanyProfile } from "@/hooks/company/useCompanyProfile";
 import { Challenge } from "@/types";
 import {
+  Avatar,
   Box,
   Card,
-  CardHeader,
-  CardContent,
   CardActions,
-  Avatar,
-  Typography,
-  Divider,
+  CardContent,
+  CardHeader,
   CircularProgress,
+  Divider,
+  Typography,
 } from "@mui/material";
 import { format } from "date-fns";
+import CircleIcon from '@mui/icons-material/Circle';
+import { colors } from "@/theme/colors";
 
 interface ChallengePostCardProps {
   desafio: Challenge;
@@ -35,6 +36,8 @@ export function ChallengePostCard({ desafio, gridColumn }: ChallengePostCardProp
 
   const inicio = format(new Date(desafio.dataInicio), "dd/MM/yyyy");
   const fim = format(new Date(desafio.dataFim), "dd/MM/yyyy");
+  const status = desafio.status;
+  const statusColor = status === 'ABERTO' ? colors.green : status === 'FECHADO' ? "red" : "orange";
 
   return (
     <Card sx={{ bgcolor: 'var(--card)', borderRadius: 2, mb: 2, overflow: 'visible', gridColumn: `${gridColumn} / span 1` }}>
@@ -77,6 +80,9 @@ export function ChallengePostCard({ desafio, gridColumn }: ChallengePostCardProp
           </Typography>
           <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
             Modalidade: {desafio.modalidade}
+          </Typography>
+          <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
+            Status:  <CircleIcon sx={{ color: statusColor, fontSize: "0.75rem" }} /> {status}
           </Typography>
         </Box>
       </CardContent>

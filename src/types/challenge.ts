@@ -1,3 +1,5 @@
+import { ChallengeStatus } from "./challengeStatus";
+
 export interface ChallengeToPost {
   titulo: string;
   descricao: string;
@@ -15,7 +17,7 @@ export interface Challenge {
   descricao: string;
   dataInicio: string;
   dataFim: string;
-  status: string;
+  status: ChallengeStatus;
   interno: boolean;
   modalidade: string;
   createdAt: string;

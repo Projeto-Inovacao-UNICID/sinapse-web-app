@@ -1,0 +1,1 @@
+export type ChallengeStatus = 'ABERTO' | 'FECHADO' | 'PENDENTE';
