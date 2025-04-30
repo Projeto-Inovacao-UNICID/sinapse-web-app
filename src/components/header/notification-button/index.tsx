@@ -38,37 +38,25 @@ export function NotificationButton() {
   };
 
   const contNotifications = friendshipInvitations ? friendshipInvitations.content.length : 0;
-
   const hasUnreadNotifications = contNotifications > 0;
 
   return (
     <>
       <motion.button
         style={iconButtonStyles}
-        whileHover={{ scale: 1.3 }}
+        whileHover={open ? {} : { scale: 1.3 }}
         whileTap={{ scale: 0.9 }}
         transition={{ type: 'spring', stiffness: 300 }}
         onClick={handleClick}
       >
-        {open ? 
         <Badge
           badgeContent={contNotifications}
           color='error'
           overlap='circular'
           invisible={!hasUnreadNotifications}
         >
-          <NotificationsIcon sx={iconStyles} /> 
+          {open ? (<NotificationsIcon sx={iconStyles} />) : (<NotificationsIconOutlined sx={iconStyles} />)}
         </Badge>
-        : 
-        <Badge
-          badgeContent={contNotifications}
-          color='error'
-          overlap='circular'
-          invisible={!hasUnreadNotifications}
-        >
-          <NotificationsIconOutlined sx={iconStyles} />
-        </Badge>
-        }
       </motion.button>
 
       <Popover
@@ -96,7 +84,7 @@ export function NotificationButton() {
       >
         {isFriendshipInvitationsLoading ? (
           <CircularProgress />
-        ) :  friendshipInvitations ? (
+        ) : friendshipInvitations ? (
           <Notifications friendshipInvitations={friendshipInvitations} />
         ) : (
           <></>
