@@ -7,57 +7,35 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { ContactList } from '@/components/chat/contact-list';
 import { useChatContacts } from '@/hooks/chat/useChatContacts';
 import { useChatSocket } from '@/hooks/chat/useChatSocket';
-import { useSSE } from '@/hooks/useSSE';          // << seu hook SSE
+import { useSSE } from '@/hooks/useSSE';
 import { NotificationDto } from '@/types/notification';
 import { Message } from '@/types';
 import { Chat } from '@/components/chat';
 import { motion } from 'framer-motion';
+import { ChatService } from '@/service/chat/ChatService';
 
 export default function ConversasClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const initialUserId = searchParams.get('userId') || '';
+  const initialId = searchParams.get('participanteId') || '';
 
-  const [selectedId, setSelectedId] = useState<string>(initialUserId);
+  const [selectedId, setSelectedId] = useState<string>(initialId);
   const [conversaId, setConversaId] = useState<number | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
 
   const { data: contacts = [], isLoading, isError, error } = useChatContacts();
+  const chatService = new ChatService();
 
   console.log('contacts', contacts);
 
-  // callback para receber mensagens via WS
   const handleReceive = useCallback((msg: Message) => {
-    setMessages(prev =>
-      prev.some(m => m.id === msg.id) ? prev : [...prev, msg]
-    );
+    setMessages(prev => (prev.some(m => m.id === msg.id) ? prev : [...prev, msg]));
   }, []);
 
-  // WebSocket hook
   const { isConnected, sendMessage } = useChatSocket({
     destId: selectedId,
     onMessage: handleReceive,
   });
-
-  // SSE de notificações
-  useSSE<NotificationDto>(
-    '/conversas/notificacoes/sse',
-    ({ conversaId: notiConvId, lastMessage, lastMessageAt }) => {
-      // se for a conversa ativa, empurra uma "mensagem fake" pra UI
-      if (conversaId === notiConvId) {
-        handleReceive({
-          id: Date.now(),           // temporário
-          conversaId: notiConvId,
-          remetenteTipo: 'OUTRO',   // ou 'usuario' se quiser uniformizar
-          remetenteId: selectedId,  // id do outro
-          conteudo: lastMessage,
-          createdAt: lastMessageAt,
-          editada: false,
-          removida: false,
-        });
-      }
-    }
-  );
 
   const handleSend = useCallback(
     (conteudo: string) => {
@@ -66,23 +44,41 @@ export default function ConversasClient() {
     },
     [conversaId, sendMessage]
   );
-  
 
   const handleSelect = useCallback(
     (id: string, convId: number) => {
       setSelectedId(id);
       setConversaId(convId);
       setMessages([]);
-      router.push(`/conversas?userId=${id}`);
+      router.push(`/conversas?participanteId=${id}`);
     },
     [router]
   );
 
+  // 💡 Cria ou busca a conversa automaticamente se participanteId for passado
   useEffect(() => {
-    if (!selectedId) return;
-    const contato = contacts.find(c => c.participanteId === selectedId);
-    if (contato) setConversaId(contato.conversaId);
-  }, [selectedId, contacts]);
+    if (!initialId || conversaId) return;
+
+    const iniciarConversa = async () => {
+      try {
+        const res = await chatService.postChat(initialId);
+        const conversaId = res?.id;
+
+        if (typeof conversaId !== 'number') {
+          console.error('ID da conversa inválido');
+          return;
+        }
+
+        setSelectedId(initialId);
+        setConversaId(conversaId);
+        router.push(`/conversas?participanteId=${initialId}`);
+      } catch (err) {
+        console.error('Erro ao iniciar conversa via URL:', err);
+      }
+    };
+
+    iniciarConversa();
+  }, [initialId, conversaId, router]);
 
   return (
     <Grid container spacing={1}>
@@ -96,36 +92,37 @@ export default function ConversasClient() {
         )}
       </Grid>
 
-      <Grid size={9} sx={{ height: 'calc(100vh - 65px - 1rem  )' }}>
-         {/* <div style={{ marginBottom: 8 }}>
-          WS: {isConnected ? '🔵 Conectado' : '⚪ Desconectado'}
-        </div>
-          */}
-        {selectedId ?
+      <Grid size={9} sx={{ height: 'calc(100vh - 65px - 1rem)' }}>
+        {selectedId ? (
           <Chat
             conversaId={conversaId}
             selectedId={selectedId}
             messages={messages}
             handleSend={handleSend}
           />
-          : <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 2, borderRadius: 2, gap: 2 }}>
-              <motion.img
-                src="/assets/logo.png"
-                alt="Logo"
-                style={{ height: '4rem' }}
-                animate={{
-                  rotate: 360,
-                }}
-                transition={{
-                  repeat: Infinity,
-                  repeatType: 'loop',
-                  duration: 10,
-                  ease: 'linear',
-                }}
-              />
-              <Typography color="var(--foreground)" variant="h5" sx={{ fontWeigh: 'bold' }}>Selecione um contato para conversar</Typography>
+        ) : (
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 2,
+              borderRadius: 2,
+              gap: 2,
+            }}
+          >
+            <motion.img
+              src="/assets/logo.png"
+              alt="Logo"
+              style={{ height: '4rem' }}
+              animate={{ rotate: 360 }}
+              transition={{ repeat: Infinity, duration: 10, ease: 'linear' }}
+            />
+            <Typography color="var(--foreground)" variant="h5" sx={{ fontWeight: 'bold' }}>
+              Selecione um contato para conversar
+            </Typography>
           </Box>
-        }
+        )}
       </Grid>
     </Grid>
   );

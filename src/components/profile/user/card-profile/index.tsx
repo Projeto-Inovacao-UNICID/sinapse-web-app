@@ -49,7 +49,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     (invitation) => invitation.usuarioId === userId
   );
 
-  const handleMessage = () => router.push(`/conversas?userId=${userId}`);
+  const handleMessage = () => router.push(`/conversas?participanteId=${userId}`);
   const handleEdit = () => setOpenModal(true);
 
   if (isLoading) {

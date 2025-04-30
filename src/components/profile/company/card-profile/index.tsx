@@ -83,7 +83,7 @@ export function CompanyProfileCard({ companyId }: CompanyProfileCardProps) {
     if (isFollowing) unfollowMutation.mutate(companyId);
     else followMutation.mutate(companyId);
   };
-  const handleMessage = () => router.push(`/conversas?companyId=${companyId}`);
+  const handleMessage = () => router.push(`/conversas?participanteId=${companyId}`);
   const handleEdit    = () => setOpenModal(true);
 
   return (
