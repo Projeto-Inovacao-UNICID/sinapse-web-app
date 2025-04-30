@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Badge, CircularProgress, Popover } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsIconOutlined from '@mui/icons-material/NotificationsOutlined';
 import { motion } from 'framer-motion';
 import { Notifications } from '@/components/notifications'; 
 import { useGetFriendshipInvitations } from '@/hooks/friendship/useFriendship';
@@ -49,14 +50,25 @@ export function NotificationButton() {
         transition={{ type: 'spring', stiffness: 300 }}
         onClick={handleClick}
       >
+        {open ? 
         <Badge
           badgeContent={contNotifications}
           color='error'
           overlap='circular'
           invisible={!hasUnreadNotifications}
         >
-          <NotificationsIcon sx={iconStyles} />
+          <NotificationsIcon sx={iconStyles} /> 
         </Badge>
+        : 
+        <Badge
+          badgeContent={contNotifications}
+          color='error'
+          overlap='circular'
+          invisible={!hasUnreadNotifications}
+        >
+          <NotificationsIconOutlined sx={iconStyles} />
+        </Badge>
+        }
       </motion.button>
 
       <Popover

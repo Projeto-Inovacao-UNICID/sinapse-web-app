@@ -1,7 +1,14 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import ChatIcon from '@mui/icons-material/Chat';
+import ChatIconOutlined from '@mui/icons-material/ChatOutlined';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import EmojiEventsIconOutlined from '@mui/icons-material/EmojiEventsOutlined';
+import HomeIcon from '@mui/icons-material/Home';
+import HomeIconOutlined from '@mui/icons-material/HomeOutlined';
+import PersonIcon from '@mui/icons-material/Person';
+import PersonIconOutlined from '@mui/icons-material/PersonOutlined';
+import SearchIcon from '@mui/icons-material/Search';
 import {
   Autocomplete,
   Avatar,
@@ -12,17 +19,13 @@ import {
   ListItemText,
   TextField
 } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import ChatIcon from '@mui/icons-material/Chat';
-import PersonIcon from '@mui/icons-material/Person';
-import SearchIcon from '@mui/icons-material/Search';
+import { motion } from 'framer-motion';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { ThemeSwitch } from '../switch';
+import { useSearch } from '@/hooks/header/useSearch';
 import { useSession } from '@/hooks/session/useSession';
 import { NotificationButton } from './notification-button';
 import { SettingsButton } from './settings-button';
-import { useSearch } from '@/hooks/header/useSearch';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -41,6 +44,7 @@ const iconButtonStyles = {
 
 export function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const { session } = useSession();
   const userId = session?.id!;
   const roles = session?.roles;
@@ -54,6 +58,29 @@ export function Header() {
   const navClick = (route: string) => {
     router.push(route);
   };
+
+  const navItems = [
+    {
+      filled: <HomeIcon sx={iconStyles} />,
+      outlined: <HomeIconOutlined sx={iconStyles} />,
+      route: '/',
+    },
+    {
+      filled: <EmojiEventsIcon sx={iconStyles} />,
+      outlined: <EmojiEventsIconOutlined sx={iconStyles} />,
+      route: '/desafios',
+    },
+    {
+      filled: <ChatIcon sx={iconStyles} />,
+      outlined: <ChatIconOutlined sx={iconStyles} />,
+      route: '/conversas',
+    },
+    {
+      filled: <PersonIcon sx={iconStyles} />,
+      outlined: <PersonIconOutlined sx={iconStyles} />,
+      route: profileRoute,
+    },
+  ];
 
   return (
     <header
@@ -161,24 +188,23 @@ export function Header() {
         </motion.div>
 
         <div style={{ display: 'flex', gap: 16 }}>
-          {[
-            { icon: <HomeIcon sx={iconStyles} />, route: '/' },
-            { icon: <EmojiEventsIcon sx={iconStyles} />, route: '/desafios' },
-            { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
-            { icon: <PersonIcon sx={iconStyles} />, route: profileRoute },
-          ].map(({ icon, route }, index) => (
-            <motion.button
-              key={index}
-              style={iconButtonStyles}
-              whileHover={{ scale: 1.3 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-              onClick={() => navClick(route)}
-            >
-              {icon}
-            </motion.button>
-          ))}
-
+          {navItems.map(({ filled, outlined, route }, index) => {
+            const isActive =
+              pathname === route ||
+              (route.includes('/me/') && pathname.startsWith(route.split('/me/')[0])); // para rota do perfil
+            return (
+              <motion.button
+                key={index}
+                style={iconButtonStyles}
+                whileHover={{ scale: 1.3 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+                onClick={() => navClick(route)}
+              >
+                {isActive ? filled : outlined}
+              </motion.button>
+            );
+          })}
           <NotificationButton />
           <SettingsButton />
         </div>

@@ -24,6 +24,8 @@ export default function ConversasClient() {
 
   const { data: contacts = [], isLoading, isError, error } = useChatContacts();
 
+  console.log('contacts', contacts);
+
   // callback para receber mensagens via WS
   const handleReceive = useCallback((msg: Message) => {
     setMessages(prev =>
