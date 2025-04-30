@@ -2,7 +2,7 @@
 
 import { CreateGroupModal } from "@/components/group/create-group-card";
 import { useGetChallengeCountsUser } from "@/hooks/challenge/useChallenge";
-import { useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
+import { useAcceptFriendshipRequest, useDeleteFriendshipRequest, useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
 import { useGetPosts } from "@/hooks/posts/usePosts";
 import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile, useUserProfileImage } from "@/hooks/user/useUserProfile";
@@ -10,6 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import MessageIcon from '@mui/icons-material/Message';
 import ShareIcon from '@mui/icons-material/Share';
+import CloseIcon from '@mui/icons-material/Close';
 import { Avatar, Box, Button, CircularProgress, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from 'next/navigation';
@@ -17,7 +18,6 @@ import { useState } from "react";
 import { BoxInfo } from "../../box-info";
 import { ShareDialog } from "../../utils/shareDialog";
 import { EditProfileModal } from "../profile-edit-modal";
-
 
 interface UserProfileCardProps {
   userId: string;
@@ -27,14 +27,16 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   const [tabValue, setTabValue] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
-  const [openModalCreateGroup, setOpenModalCreateGroup] = useState(false);  // Controle para o modal de criação de grupo
-  
+  const [openModalCreateGroup, setOpenModalCreateGroup] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
+
   const { data: userProfile, isLoading, isError, error } = useUserProfile(userId);
   const { session } = useSession();
   const router = useRouter();
   const { data: friendship } = useFriendship();
   const { mutateAsync: sendFriendRequest, isPending: isPostFriendshipLoading } = usePostFriendship();
   const { data: friendshipInvitations } = useGetFriendshipInvitations("enviados");
+  const { data: friendshipRequests } = useGetFriendshipInvitations("recebidos");
   const { data: posts } = useGetPosts();
   const { data: challenge } = useGetChallengeCountsUser(userId);
 
@@ -49,25 +51,12 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     (invitation) => invitation.usuarioId === userId
   );
 
+  const isActiveFriendshipRequest = !isProfileOwner && friendshipRequests?.content.some(
+    (request) => request.usuarioId === userId
+  );
+
   const handleMessage = () => router.push(`/conversas?participanteId=${userId}`);
   const handleEdit = () => setOpenModal(true);
-
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-        <CircularProgress sx={{ color: "var(--muted)" }} />
-      </Box>
-    );
-  }
-
-  if (isError) {
-    console.log(error);
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-        <Typography color="error">Erro ao carregar perfil</Typography>
-      </Box>
-    );
-  }
 
   const {
     nome,
@@ -87,6 +76,49 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
       console.error('Erro ao adicionar amizade:', err);
     }
   };
+
+  const handleAcceptFriendshipRequest = async () => {
+    const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
+    if (!amizadeId) return;
+    try {
+      const res = await useAcceptFriendshipRequest(amizadeId);
+      console.log('Convite de amizade aceito com sucesso:', res);
+      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
+    }
+    catch (err) {
+      console.error('Erro ao aceitar convite de amizade:', err);
+    }
+  };
+
+  const handleDeleteFriendshipRequest = async () => {
+    const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
+    if (!amizadeId) return;
+    try {
+      const res = await useDeleteFriendshipRequest(amizadeId);
+      console.log('Convite de amizade recusado com sucesso:', res);
+      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
+    }
+    catch (err) {
+      console.error('Erro ao recusar convite de amizade:', err);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+        <CircularProgress sx={{ color: "var(--muted)" }} />
+      </Box>
+    );
+  }
+
+  if (isError) {
+    console.log(error);
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+        <Typography color="error">Erro ao carregar perfil</Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box className="flex flex-col gap-2 p-4" sx={{ backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}>
@@ -110,28 +142,62 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
           </Box>
         </Grid>
 
-        <Grid size={2} sx={{ display: "flex", flexDirection: "row", gap: 2, width: "100%" }}>
+        <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
           {!isProfileOwner && isUser && (
-            <Button 
-              startIcon={<AddIcon />}
-              onClick={podeAdicionarAmigo && !isActiveFriendshipInvitation ? handleAddFriendship : undefined}
+            <Button
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+              startIcon={
+                isActiveFriendshipRequest && isHovering ? (
+                  <CloseIcon
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteFriendshipRequest();
+                    }}
+                  />
+                ) : (
+                  <AddIcon />
+                )
+              }
+              onClick={
+                podeAdicionarAmigo && !isActiveFriendshipInvitation
+                  ? handleAddFriendship
+                  : isActiveFriendshipRequest
+                  ? handleAcceptFriendshipRequest
+                  : undefined
+              }
               variant="contained"
               sx={{
-                backgroundColor: podeAdicionarAmigo && !isActiveFriendshipInvitation ? "var(--primary)" : "var(--muted)",
-                ':hover': { opacity: 0.8 },
+                backgroundColor:
+                  isActiveFriendshipRequest && isHovering
+                    ? 'var(--primary)'
+                    : podeAdicionarAmigo && !isActiveFriendshipInvitation
+                    ? 'var(--primary)'
+                    : 'var(--muted)',
+                ':hover': {
+                  opacity: 0.9,
+                },
+                color: 'white',
                 textTransform: 'none',
               }}
               disabled={isPostFriendshipLoading}
             >
               {isPostFriendshipLoading ? (
-                <CircularProgress size={20} sx={{ color: "white" }} />
-              ) : isActiveFriendshipInvitation ? "Convite enviado"
-                : podeAdicionarAmigo ? "Adicionar amigo"
-                : "Amigo já adicionado"
-              }
+                <CircularProgress size={20} sx={{ color: 'white' }} />
+              ) : isActiveFriendshipRequest && isHovering ? (
+                'Adicionar amigo'
+              ) : isActiveFriendshipInvitation ? (
+                'Convite enviado'
+              ) : isActiveFriendshipRequest ? (
+                'Convite recebido'
+              ) : podeAdicionarAmigo ? (
+                'Adicionar amigo'
+              ) : (
+                'Amigo já adicionado'
+              )}
             </Button>
           )}
-        
+
           <Button
             startIcon={<MessageIcon />}
             variant="contained"
@@ -144,7 +210,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
           <Button
             startIcon={<ShareIcon />}
             variant="outlined"
-            onClick={() => setShareOpen(true)} 
+            onClick={() => setShareOpen(true)}
             sx={{
               borderColor: 'var(--muted)',
               color: 'var(--foreground)',
@@ -154,8 +220,6 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
           >
             Compartilhar
           </Button>
-
-          <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={window.location.href} />
 
           {isUser && isProfileOwner && (
             <>
@@ -171,14 +235,13 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
               <Button
                 startIcon={<AddIcon />}
                 variant="outlined"
-                onClick={() => setOpenModalCreateGroup(true)} // Abre o modal de criação de grupo
+                onClick={() => setOpenModalCreateGroup(true)}
                 sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
               >
                 Criar Grupo
               </Button>
             </>
           )}
-        
         </Grid>
 
         <Divider sx={{ my: 0.3, borderBottom: '1px solid var(--secondary)', width: '100%' }} />
@@ -190,20 +253,22 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
           <Tab label="Desafios" />
         </Tabs>
 
-        <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}></Grid>
+        <Grid size={12}></Grid>
       </Grid>
 
       <EditProfileModal
         open={openModal}
         onClose={() => setOpenModal(false)}
         userId={userId}
-        defaultValues={{ nome: userProfile ? userProfile.nome : '', username: userProfile ? userProfile.username : '', email: '' }}
+        defaultValues={{ nome: userProfile?.nome || '', username: userProfile?.username || '', email: '' }}
       />
 
       <CreateGroupModal
         open={openModalCreateGroup}
         onClose={() => setOpenModalCreateGroup(false)}
       />
+
+      <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={typeof window !== 'undefined' ? window.location.href : ''} />
     </Box>
   );
 }

@@ -34,3 +34,21 @@ export function useGetFriendshipInvitations(tipo: FriendshipInviteType, page?: n
     refetchOnWindowFocus: false,
   });
 }
+
+export function useAcceptFriendshipRequest(amizadeId: number) {
+  return useMutation({
+    mutationFn: async () => {
+      const service = new FriendshipService();
+      return service.patchFriendship(amizadeId, 'aceito');
+    },
+  });
+}
+
+export function useDeleteFriendshipRequest(amizadeId: number) { 
+  return useMutation({
+    mutationFn: async () => {
+      const service = new FriendshipService();
+      return service.deleteFriendship(amizadeId);
+    },
+  });
+}
