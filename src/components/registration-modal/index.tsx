@@ -1,8 +1,9 @@
 'use client';
 
+import { usePostGroup } from "@/hooks/group/useGroup";
 import { RegisterService } from "@/service/auth/RegisterService";
 import { buttonFormStyle, inputFormStyle, modalStyle, radioStyle } from "@/theme/components-styles";
-import { Box, Button, Fade, FormControlLabel, Modal, Radio, RadioGroup, TextField } from "@mui/material";
+import { Box, Button, Fade, FormControlLabel, Modal, Radio, RadioGroup, TextField, Alert } from "@mui/material";
 import { useState } from "react";
 
 interface RegistrationModalProps {
@@ -18,27 +19,28 @@ export function RegistrationModal({ open, handleClose }: RegistrationModalProps)
   const [emailConfirmation, setEmailConfirmation] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
+  const [message, setMessage] = useState<{ text: string; type: "success" | "error" }>({ text: "", type: "success" });
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     if (email !== emailConfirmation) {
-      alert('Os campos de email não coincidem.');
+      setMessage({ text: "Os campos de email não coincidem.", type: "error" });
       return;
     }
 
     if (password !== passwordConfirmation) {
-      alert('Os campos de senha não coincidem.');
+      setMessage({ text: "Os campos de senha não coincidem.", type: "error" });
       return;
     }
 
     try {
       const service = new RegisterService();
       const data = await service.registerService(type, name, username, email, password);
-      console.log('Cadastro bem-sucedido:', data);
+      setMessage({ text: 'Cadastro bem-sucedido!', type: 'success' });
       handleClose();
     } catch (error) {
-      console.error('Erro ao fazer cadastro:', error);
+      setMessage({ text: 'Erro ao fazer cadastro. Tente novamente.', type: 'error' });
     }
   };
 
@@ -93,6 +95,10 @@ export function RegistrationModal({ open, handleClose }: RegistrationModalProps)
               <TextField fullWidth type="password" label="Senha" autoComplete="current-password" variant="filled" sx={inputFormStyle} value={password} onChange={(e) => setPassword(e.target.value)} />
               <TextField fullWidth type="password" label="Confirmar senha" autoComplete="current-password" variant="filled" sx={inputFormStyle} value={passwordConfirmation} onChange={(e) => setPasswordConfirmation(e.target.value)} />
             </div>
+
+            {message.text && (
+              <Alert severity={message.type}>{message.text}</Alert>
+            )}
 
             <Button type="submit" sx={buttonFormStyle} variant="contained">
               <b>Cadastrar</b>

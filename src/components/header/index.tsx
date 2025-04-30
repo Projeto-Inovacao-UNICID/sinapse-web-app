@@ -1,7 +1,14 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
+import ChatIcon from '@mui/icons-material/Chat';
+import ChatIconOutlined from '@mui/icons-material/ChatOutlined';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import EmojiEventsIconOutlined from '@mui/icons-material/EmojiEventsOutlined';
+import HomeIcon from '@mui/icons-material/Home';
+import HomeIconOutlined from '@mui/icons-material/HomeOutlined';
+import PersonIcon from '@mui/icons-material/Person';
+import PersonIconOutlined from '@mui/icons-material/PersonOutlined';
+import SearchIcon from '@mui/icons-material/Search';
 import {
   Autocomplete,
   Avatar,
@@ -12,17 +19,13 @@ import {
   ListItemText,
   TextField
 } from '@mui/material';
-import HomeIcon from '@mui/icons-material/Home';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import ChatIcon from '@mui/icons-material/Chat';
-import PersonIcon from '@mui/icons-material/Person';
-import SearchIcon from '@mui/icons-material/Search';
+import { motion } from 'framer-motion';
+import { usePathname, useRouter } from 'next/navigation';
 
-import { ThemeSwitch } from '../switch';
+import { useSearch } from '@/hooks/header/useSearch';
 import { useSession } from '@/hooks/session/useSession';
 import { NotificationButton } from './notification-button';
 import { SettingsButton } from './settings-button';
-import { useSearch } from '@/hooks/header/useSearch';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -41,6 +44,7 @@ const iconButtonStyles = {
 
 export function Header() {
   const router = useRouter();
+  const pathname = usePathname();
   const { session } = useSession();
   const userId = session?.id!;
   const roles = session?.roles;
@@ -54,6 +58,29 @@ export function Header() {
   const navClick = (route: string) => {
     router.push(route);
   };
+
+  const navItems = [
+    {
+      filled: <HomeIcon sx={iconStyles} />,
+      outlined: <HomeIconOutlined sx={iconStyles} />,
+      route: '/',
+    },
+    {
+      filled: <EmojiEventsIcon sx={iconStyles} />,
+      outlined: <EmojiEventsIconOutlined sx={iconStyles} />,
+      route: '/desafios',
+    },
+    {
+      filled: <ChatIcon sx={iconStyles} />,
+      outlined: <ChatIconOutlined sx={iconStyles} />,
+      route: '/conversas',
+    },
+    {
+      filled: <PersonIcon sx={iconStyles} />,
+      outlined: <PersonIconOutlined sx={iconStyles} />,
+      route: profileRoute,
+    },
+  ];
 
   return (
     <header
@@ -99,7 +126,13 @@ export function Header() {
             options={options}
             getOptionLabel={opt => (typeof opt === 'string' ? opt : opt.nome)}
             loading={loading}
+            loadingText={<span style={{ color: 'var(--foreground)' }}>Procurando...</span>}
             inputValue={inputValue}
+            sx={{
+              color: 'var(--foreground)',
+              backgroundColor: 'var(--card)',
+              width: '75%',
+            }}
             onInputChange={(_, v) => setInputValue(v)}
             onChange={(_, val) => {
               if (typeof val === 'string' || !val) return;
@@ -109,9 +142,36 @@ export function Header() {
                   : `/profile/me/${val.id}`;
               navClick(path);
             }}
+            slotProps={{
+              popper: {
+                modifiers: [{ name: 'offset', options: { offset: [0, 8] } }],
+              },
+              paper: {
+                sx: {
+                  backgroundColor: 'var(--card)',
+                  color: 'var(--foreground)',
+                  borderRadius: 2,
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                },
+              },
+              listbox: {
+                sx: {
+                  backgroundColor: 'var(--card)',
+                  color: 'var(--foreground)',
+                },
+              },
+            }}
             renderOption={(props, opt) => (
               <li {...props} key={typeof opt === 'string' ? opt : `${opt.type}-${opt.id}`}>
-                <ListItemButton>
+                <ListItemButton
+                  sx={{
+                    backgroundColor: 'var(--card)',
+                    color: 'var(--foreground)',
+                    '&:hover': {
+                      backgroundColor: 'var(--muted)',
+                    }
+                  }}
+                >
                   {typeof opt !== 'string' && (
                     <>
                       <ListItemAvatar>
@@ -131,15 +191,16 @@ export function Header() {
                 placeholder="Buscar..."
                 size="small"
                 sx={{
-                  width: '75%',
-                  backgroundColor: 'var(--input)',
+                  backgroundColor: 'var(--card)',
                   borderRadius: 2,
                   input: { color: 'var(--foreground)' },
                   '& .MuiOutlinedInput-root': {
+                    backgroundColor: 'var(--card)',
+                    color: 'var(--foreground)',
                     '& fieldset': { borderColor: 'transparent' },
                     '&:hover fieldset': { borderColor: 'var(--primary)' },
-                    '&.Mui-focused fieldset': { borderColor: 'var(--primary)' }
-                  }
+                    '&.Mui-focused fieldset': { borderColor: 'var(--primary)' },
+                  },
                 }}
                 InputProps={{
                   ...params.InputProps,
@@ -150,10 +211,12 @@ export function Header() {
                   ),
                   endAdornment: (
                     <>
-                      {loading && <CircularProgress size={20} />}
+                      {loading && (
+                        <CircularProgress size={20} sx={{ color: 'var(--foreground)' }} />
+                      )}
                       {params.InputProps.endAdornment}
                     </>
-                  )
+                  ),
                 }}
               />
             )}
@@ -161,24 +224,23 @@ export function Header() {
         </motion.div>
 
         <div style={{ display: 'flex', gap: 16 }}>
-          {[
-            { icon: <HomeIcon sx={iconStyles} />, route: '/' },
-            { icon: <EmojiEventsIcon sx={iconStyles} />, route: '/desafios' },
-            { icon: <ChatIcon sx={iconStyles} />, route: '/conversas' },
-            { icon: <PersonIcon sx={iconStyles} />, route: profileRoute },
-          ].map(({ icon, route }, index) => (
-            <motion.button
-              key={index}
-              style={iconButtonStyles}
-              whileHover={{ scale: 1.3 }}
-              whileTap={{ scale: 0.9 }}
-              transition={{ type: 'spring', stiffness: 300 }}
-              onClick={() => navClick(route)}
-            >
-              {icon}
-            </motion.button>
-          ))}
-
+          {navItems.map(({ filled, outlined, route }, index) => {
+            const isActive =
+              pathname === route ||
+              (route.includes('/me/') && pathname.startsWith(route.split('/me/')[0]));
+            return (
+              <motion.button
+                key={index}
+                style={iconButtonStyles}
+                whileHover={{ scale: 1.3 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+                onClick={() => navClick(route)}
+              >
+                {isActive ? filled : outlined}
+              </motion.button>
+            );
+          })}
           <NotificationButton />
           <SettingsButton />
         </div>

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Badge, CircularProgress, Popover } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificationsIconOutlined from '@mui/icons-material/NotificationsOutlined';
 import { motion } from 'framer-motion';
 import { Notifications } from '@/components/notifications'; 
 import { useGetFriendshipInvitations } from '@/hooks/friendship/useFriendship';
@@ -37,14 +38,13 @@ export function NotificationButton() {
   };
 
   const contNotifications = friendshipInvitations ? friendshipInvitations.content.length : 0;
-
   const hasUnreadNotifications = contNotifications > 0;
 
   return (
     <>
       <motion.button
         style={iconButtonStyles}
-        whileHover={{ scale: 1.3 }}
+        whileHover={open ? {} : { scale: 1.3 }}
         whileTap={{ scale: 0.9 }}
         transition={{ type: 'spring', stiffness: 300 }}
         onClick={handleClick}
@@ -55,7 +55,7 @@ export function NotificationButton() {
           overlap='circular'
           invisible={!hasUnreadNotifications}
         >
-          <NotificationsIcon sx={iconStyles} />
+          {open ? (<NotificationsIcon sx={iconStyles} />) : (<NotificationsIconOutlined sx={iconStyles} />)}
         </Badge>
       </motion.button>
 
@@ -84,7 +84,7 @@ export function NotificationButton() {
       >
         {isFriendshipInvitationsLoading ? (
           <CircularProgress />
-        ) :  friendshipInvitations ? (
+        ) : friendshipInvitations ? (
           <Notifications friendshipInvitations={friendshipInvitations} />
         ) : (
           <></>

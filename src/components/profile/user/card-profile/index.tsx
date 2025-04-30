@@ -1,49 +1,49 @@
 'use client';
 
-import { useState } from "react"; // Adicione esta importação no início do seu arquivo
-import { useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
+import { CreateGroupModal } from "@/components/group/create-group-card";
+import { useGetChallengeCountsUser } from "@/hooks/challenge/useChallenge";
+import { useAcceptFriendshipRequest, useDeleteFriendshipRequest, useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
+import { useGetPosts } from "@/hooks/posts/usePosts";
 import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile, useUserProfileImage } from "@/hooks/user/useUserProfile";
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import MessageIcon from '@mui/icons-material/Message';
+import ShareIcon from '@mui/icons-material/Share';
+import CloseIcon from '@mui/icons-material/Close';
 import { Avatar, Box, Button, CircularProgress, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
-import { BoxButton, BoxButton2, BoxInfo } from "../../box-info";
-import { useGetPosts } from "@/hooks/posts/usePosts";
-import { useGetChallenges } from "@/hooks/challenge/useGetChallenge";
-import MessageIcon from '@mui/icons-material/Message';
-import EditIcon from '@mui/icons-material/Edit';
-import ShareIcon from '@mui/icons-material/Share';
-import AddIcon from '@mui/icons-material/Add';
-
 import { useRouter } from 'next/navigation';
-import { EditCompanyProfileModal } from "../../company/profile-edit-modal";
-import { EditProfileModal } from "../profile-edit-modal";
+import { useState } from "react";
+import { BoxInfo } from "../../box-info";
 import { ShareDialog } from "../../utils/shareDialog";
+import { EditProfileModal } from "../profile-edit-modal";
 
 interface UserProfileCardProps {
   userId: string;
 }
 
 export function UserProfileCard({ userId }: UserProfileCardProps) {
-  // Definindo o estado para controlar o valor da aba
-  const [tabValue, setTabValue] = useState(0); // 0 é o valor inicial da aba selecionada
+  const [tabValue, setTabValue] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [openModalCreateGroup, setOpenModalCreateGroup] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   const { data: userProfile, isLoading, isError, error } = useUserProfile(userId);
   const { session } = useSession();
   const router = useRouter();
-
-  
   const { data: friendship } = useFriendship();
   const { mutateAsync: sendFriendRequest, isPending: isPostFriendshipLoading } = usePostFriendship();
   const { data: friendshipInvitations } = useGetFriendshipInvitations("enviados");
+  const { data: friendshipRequests } = useGetFriendshipInvitations("recebidos");
   const { data: posts } = useGetPosts();
-  const { data: challenge } = useGetChallenges();
+  const { data: challenge } = useGetChallengeCountsUser(userId);
 
   const temImagem = userProfile?.temImagem ?? false;
-  const { data: userProfileImage } = useUserProfileImage(userId, temImagem); // <- controle de carregamento
+  const { data: userProfileImage } = useUserProfileImage(userId, temImagem);
 
   const queryClient = useQueryClient();
-
   const isProfileOwner = session?.id === userId;
   const isUser = session ? session.roles.includes('ROLE_USER') : false;
 
@@ -51,27 +51,12 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     (invitation) => invitation.usuarioId === userId
   );
 
-  const [openModal, setOpenModal] = useState(false);
+  const isActiveFriendshipRequest = !isProfileOwner && friendshipRequests?.content.some(
+    (request) => request.usuarioId === userId
+  );
 
-  const handleMessage = () => router.push(`/conversas?userId=${userId}`);
-  const handleEdit    = () => setOpenModal(true);
-
-  if (isLoading) {
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-        <CircularProgress sx={{ color: "var(--muted)" }} />
-      </Box>
-    );
-  }
-
-  if (isError) {
-    console.log(error);
-    return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-        <Typography color="error">Erro ao carregar perfil</Typography>
-      </Box>
-    );
-  }
+  const handleMessage = () => router.push(`/conversas?participanteId=${userId}`);
+  const handleEdit = () => setOpenModal(true);
 
   const {
     nome,
@@ -92,6 +77,49 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
     }
   };
 
+  const handleAcceptFriendshipRequest = async () => {
+    const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
+    if (!amizadeId) return;
+    try {
+      const res = await useAcceptFriendshipRequest(amizadeId);
+      console.log('Convite de amizade aceito com sucesso:', res);
+      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
+    }
+    catch (err) {
+      console.error('Erro ao aceitar convite de amizade:', err);
+    }
+  };
+
+  const handleDeleteFriendshipRequest = async () => {
+    const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
+    if (!amizadeId) return;
+    try {
+      const res = await useDeleteFriendshipRequest(amizadeId);
+      console.log('Convite de amizade recusado com sucesso:', res);
+      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
+    }
+    catch (err) {
+      console.error('Erro ao recusar convite de amizade:', err);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+        <CircularProgress sx={{ color: "var(--muted)" }} />
+      </Box>
+    );
+  }
+
+  if (isError) {
+    console.log(error);
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+        <Typography color="error">Erro ao carregar perfil</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box className="flex flex-col gap-2 p-4" sx={{ backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}>
       <Grid container spacing={2}>
@@ -110,66 +138,110 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
             <BoxInfo data={posts ? posts.length : 0} title="Postagens" />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}>
-            <BoxInfo data={challenge ? challenge.length : 0} title="Desafios" />
+            <BoxInfo data={challenge ? challenge.participados : 0} title="Desafios" />
           </Box>
         </Grid>
 
-        <Grid size={2} sx={{ display: "flex", flexDirection: "row", gap: 2, width: "100%" }}>
-        {!isProfileOwner && isUser && (
-            <Button 
-              startIcon={<AddIcon />}
-              onClick={podeAdicionarAmigo && !isActiveFriendshipInvitation ? handleAddFriendship : undefined}
+        <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+          {!isProfileOwner && isUser && (
+            <Button
+              onMouseEnter={() => setIsHovering(true)}
+              onMouseLeave={() => setIsHovering(false)}
+              startIcon={
+                isActiveFriendshipRequest && isHovering ? (
+                  <CloseIcon
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteFriendshipRequest();
+                    }}
+                  />
+                ) : (
+                  <AddIcon />
+                )
+              }
+              onClick={
+                podeAdicionarAmigo && !isActiveFriendshipInvitation
+                  ? handleAddFriendship
+                  : isActiveFriendshipRequest
+                  ? handleAcceptFriendshipRequest
+                  : undefined
+              }
               variant="contained"
               sx={{
-                backgroundColor: podeAdicionarAmigo && !isActiveFriendshipInvitation ? "var(--primary)" : "var(--muted)",
-                fontWeight: "bold",
-                ':hover': { opacity: 0.8 },
+                backgroundColor:
+                  isActiveFriendshipRequest && isHovering
+                    ? 'var(--primary)'
+                    : podeAdicionarAmigo && !isActiveFriendshipInvitation
+                    ? 'var(--primary)'
+                    : 'var(--muted)',
+                ':hover': {
+                  opacity: 0.9,
+                },
+                color: 'white',
+                textTransform: 'none',
               }}
               disabled={isPostFriendshipLoading}
             >
               {isPostFriendshipLoading ? (
-                <CircularProgress size={20} sx={{ color: "white" }} />
-              ) : isActiveFriendshipInvitation ? "Convite enviado"
-                : podeAdicionarAmigo ? "Adicionar amigo"
-                : "Amigo já adicionado"
-              }
+                <CircularProgress size={20} sx={{ color: 'white' }} />
+              ) : isActiveFriendshipRequest && isHovering ? (
+                'Adicionar amigo'
+              ) : isActiveFriendshipInvitation ? (
+                'Convite enviado'
+              ) : isActiveFriendshipRequest ? (
+                'Convite recebido'
+              ) : podeAdicionarAmigo ? (
+                'Adicionar amigo'
+              ) : (
+                'Amigo já adicionado'
+              )}
             </Button>
           )}
-        
+
           <Button
-                startIcon={<MessageIcon />}
-                variant="outlined"
-                onClick={handleMessage}
-                sx={{ borderColor: 'var(--muted)', color: 'var(--text)', textTransform: 'none', backgroundColor: 'var(--primary)' }}
-              >Mensagem</Button>
-         
-         <Button
-  startIcon={<ShareIcon />}
-  variant="outlined"
-  onClick={() => setShareOpen(true)} // Aciona a abertura do ShareDialog
-  sx={{
-    borderColor: 'var(--muted)',
-    color: 'var(--foreground)',
-    textTransform: 'none',
-    ':hover': { opacity: 0.8 }  // Aplica o mesmo efeito de hover
-  }}
->
-  Compartilhar
-</Button>
+            startIcon={<MessageIcon />}
+            variant="contained"
+            onClick={handleMessage}
+            sx={{ color: 'white', textTransform: 'none', backgroundColor: 'var(--primary)', ':hover': { opacity: 0.8 } }}
+          >
+            Mensagem
+          </Button>
 
-<ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={window.location.href} />
-
+          <Button
+            startIcon={<ShareIcon />}
+            variant="outlined"
+            onClick={() => setShareOpen(true)}
+            sx={{
+              borderColor: 'var(--muted)',
+              color: 'var(--foreground)',
+              textTransform: 'none',
+              ':hover': { opacity: 0.8 }
+            }}
+          >
+            Compartilhar
+          </Button>
 
           {isUser && isProfileOwner && (
-                <Button
-                  startIcon={<EditIcon />}
-                  variant="outlined"
-                  onClick={handleEdit}
-                  sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
-                >
-                  Editar Perfil
-                </Button>)}
-        
+            <>
+              <Button
+                startIcon={<EditIcon />}
+                variant="outlined"
+                onClick={handleEdit}
+                sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
+              >
+                Editar Perfil
+              </Button>
+
+              <Button
+                startIcon={<AddIcon />}
+                variant="outlined"
+                onClick={() => setOpenModalCreateGroup(true)}
+                sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
+              >
+                Criar Grupo
+              </Button>
+            </>
+          )}
         </Grid>
 
         <Divider sx={{ my: 0.3, borderBottom: '1px solid var(--secondary)', width: '100%' }} />
@@ -181,17 +253,22 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
           <Tab label="Desafios" />
         </Tabs>
 
-        <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
-    
-        </Grid>
+        <Grid size={12}></Grid>
       </Grid>
 
-       <EditProfileModal
-                open={openModal}
-                onClose={() => setOpenModal(false)}
-                userId={userId}
-                defaultValues={{ nome: userProfile ? userProfile.nome : '', username: userProfile ? userProfile.username : '', email : ''}}
-              />
+      <EditProfileModal
+        open={openModal}
+        onClose={() => setOpenModal(false)}
+        userId={userId}
+        defaultValues={{ nome: userProfile?.nome || '', username: userProfile?.username || '', email: '' }}
+      />
+
+      <CreateGroupModal
+        open={openModalCreateGroup}
+        onClose={() => setOpenModalCreateGroup(false)}
+      />
+
+      <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={typeof window !== 'undefined' ? window.location.href : ''} />
     </Box>
   );
 }

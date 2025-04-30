@@ -13,6 +13,8 @@ export * from './challenge';
 export * from './challengeStage';
 export * from './challengeTypes';
 export * from './companyInfo';
+export * from './challengeStatus';
+export * from './group';
 
 export * from './responses/sessionResponse';
 export * from './responses/userProfileResponse';

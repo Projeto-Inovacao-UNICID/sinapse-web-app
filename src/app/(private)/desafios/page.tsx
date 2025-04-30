@@ -1,7 +1,7 @@
 'use client';
 
 import { ChallengePostCard } from "@/components/challenge/challenge-post-card";
-import { useGetChallenges } from "@/hooks/challenge/useGetChallenge";
+import { useGetChallenges } from "@/hooks/challenge/useChallenge";
 import { Box, Divider } from "@mui/material";
 
 export default function Desafios() {
@@ -9,8 +9,14 @@ export default function Desafios() {
   if (isLoading) return <div>Carregando...</div>;
 
   return challenges?.map(desafio =>
-    <Box key={desafio.id} sx={{ mb: 4 }}>
-      <ChallengePostCard desafio={desafio} key={desafio.id} />
+    <Box 
+      key={desafio.id} 
+      sx={{ 
+        mb: 4,
+        display: 'grid',
+        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
+      }}>
+      <ChallengePostCard desafio={desafio} key={desafio.id} gridColumn={2}/>
       <Divider />
     </Box>
   );

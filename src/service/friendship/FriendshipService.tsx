@@ -26,10 +26,10 @@ export class FriendshipService {
 
     async patchFriendship(amizadeId: number, status: string) {
         const response = await axiosInstance.patch(`/amizades/atualizar`, { amizadeId, status }, { withCredentials: true });
-        return response.status;
+        return response.data;
     }
 
-    async deleteFriendship(amizadeId: string) {
+    async deleteFriendship(amizadeId: number) {
         const response = await axiosInstance.delete('/amizades/remover', {
             data: { amizadeId },
             withCredentials: true

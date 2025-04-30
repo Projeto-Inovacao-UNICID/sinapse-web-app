@@ -1,5 +1,5 @@
-import { Suspense } from 'react';
-import ConversasClient from './ConversasClient';
+import { Suspense } from "react";
+import ConversasClient from "./ConversasClient";
 
 export default function Page() {
   return (

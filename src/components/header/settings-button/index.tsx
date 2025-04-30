@@ -1,13 +1,14 @@
 'use client';
 
-import { useState } from 'react';
-import { Box, Divider, Popover, Typography } from '@mui/material';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { useRouter } from 'next/navigation';
-import { motion } from 'framer-motion';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { ThemeSwitch } from '@/components/switch';
 import { usePostLogout } from '@/hooks/logout/useLogout';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
+import SeetingsIconOutlined from '@mui/icons-material/SettingsOutlined';
+import { Box, Divider, Popover, Typography } from '@mui/material';
+import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -65,7 +66,7 @@ export function SettingsButton() {
         transition={{ type: 'spring', stiffness: 300 }}
         onClick={handleClickSettings}
       >
-        <SettingsIcon sx={iconStyles} />
+        {openSettings ? <SettingsIcon sx={iconStyles} /> : <SeetingsIconOutlined sx={iconStyles} />}
       </motion.button>
 
       <Popover
