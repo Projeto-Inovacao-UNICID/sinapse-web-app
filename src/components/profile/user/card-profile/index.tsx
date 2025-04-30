@@ -40,6 +40,12 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   const { data: posts } = useGetPosts();
   const { data: challenge } = useGetChallengeCountsUser(userId);
 
+  const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
+
+  const { mutateAsync: deleteFriendship } = useDeleteFriendshipRequest(amizadeId);
+  const { mutateAsync: acceptFriendship } = useAcceptFriendshipRequest(amizadeId);
+
+
   const temImagem = userProfile?.temImagem ?? false;
   const { data: userProfileImage } = useUserProfileImage(userId, temImagem);
 
@@ -78,30 +84,19 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   };
 
   const handleAcceptFriendshipRequest = async () => {
-    const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
     if (!amizadeId) return;
-    try {
-      const res = await useAcceptFriendshipRequest(amizadeId);
-      console.log('Convite de amizade aceito com sucesso:', res);
-      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
-    }
-    catch (err) {
-      console.error('Erro ao aceitar convite de amizade:', err);
-    }
-  };
-
+    const res = await acceptFriendship();
+    console.log('Convite de amizade aceito com sucesso:', res);
+    await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
+  }
+  
   const handleDeleteFriendshipRequest = async () => {
-    const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
     if (!amizadeId) return;
-    try {
-      const res = await useDeleteFriendshipRequest(amizadeId);
-      console.log('Convite de amizade recusado com sucesso:', res);
-      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
-    }
-    catch (err) {
-      console.error('Erro ao recusar convite de amizade:', err);
-    }
-  };
+    const res = await deleteFriendship();
+    console.log('Convite de amizade recusado com sucesso:', res);
+    await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
+  }
+  
 
   if (isLoading) {
     return (

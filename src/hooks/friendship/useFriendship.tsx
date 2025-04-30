@@ -35,18 +35,20 @@ export function useGetFriendshipInvitations(tipo: FriendshipInviteType, page?: n
   });
 }
 
-export function useAcceptFriendshipRequest(amizadeId: number) {
+export function useAcceptFriendshipRequest(amizadeId?: number) {
   return useMutation({
     mutationFn: async () => {
+      if (!amizadeId) throw new Error('amizadeId é obrigatório');
       const service = new FriendshipService();
       return service.patchFriendship(amizadeId, 'aceito');
     },
   });
 }
 
-export function useDeleteFriendshipRequest(amizadeId: number) { 
+export function useDeleteFriendshipRequest(amizadeId?: number) {
   return useMutation({
     mutationFn: async () => {
+      if (!amizadeId) throw new Error('amizadeId é obrigatório');
       const service = new FriendshipService();
       return service.deleteFriendship(amizadeId);
     },
