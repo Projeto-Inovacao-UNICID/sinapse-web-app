@@ -23,14 +23,21 @@ export function ContactList({ contacts, onSelect }: ContactListProps) {
     setError(null);
 
     try {
-      const res = await chatService.postChat(id);
-      const conversaId = res?.id;
+      // Tenta encontrar uma conversa existente
+      let conversa = await chatService.getChatsAndFriends()
+        .then(c => c.find(c => c.participanteId === id));
 
+      // Se não existir, cria uma nova
+      if (!conversa) {
+        conversa = await chatService.postChat(id);
+      }
+
+      const conversaId = conversa?.conversaId;
       if (typeof conversaId !== 'number') {
         throw new Error('ID da conversa inválido');
       }
 
-      onSelect(id, conversaId); // retorna id + conversaId
+      onSelect(id, conversaId);
     } catch (err) {
       console.error('Erro ao iniciar o chat:', err);
       setError('Falha ao iniciar o chat. Tente novamente.');
@@ -54,7 +61,6 @@ export function ContactList({ contacts, onSelect }: ContactListProps) {
       {contacts.map((contact) => (
         <Box key={contact.participanteId} sx={{ display: 'flex', padding: 0.5 }}>
           <ContactCard
-            key={contact.participanteId}
             name={contact.nome}
             isSelected={selectedId === contact.participanteId}
             onClick={() => handleSelect(contact.participanteId)}
