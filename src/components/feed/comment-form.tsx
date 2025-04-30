@@ -43,7 +43,8 @@ export function CommentForm({ postagemId, comentarioPaiId, onSubmitted }: Commen
       elevation={0}
       sx={{
         display: 'flex', alignItems: 'center', gap: 1, p: 1,
-        bgcolor: theme.palette.background.paper, borderRadius: 2,
+        bgcolor: 'var(--bgSecondary)',
+        borderRadius: 2,
         ml: comentarioPaiId ? 6 : 0, mt: 2
       }}
     >
@@ -59,7 +60,11 @@ export function CommentForm({ postagemId, comentarioPaiId, onSubmitted }: Commen
         sx={{
           '& .MuiOutlinedInput-root': {
             borderRadius: '999px',
-            bgcolor: theme.palette.grey[50]
+            bgcolor: 'var(--card)',
+            color: 'var(--foreground)',
+            '& fieldset': { borderColor: 'transparent' },
+            '&:hover fieldset': { borderColor: 'var(--primary)' },
+            '&.Mui-focused fieldset': { borderColor: 'var(--primary)' },
           }
         }}
       />
@@ -67,9 +72,9 @@ export function CommentForm({ postagemId, comentarioPaiId, onSubmitted }: Commen
         type="submit"
         disabled={submitting || !text.trim()}
         sx={{
-          color: theme.palette.primary.main,
-          bgcolor: theme.palette.primary.light,
-          '&:hover': { bgcolor: theme.palette.primary.main, color: '#fff' }
+          color: 'var(--foreground)',
+          bgcolor: 'var(--primary)',
+          '&:hover': { bgcolor: 'var(--primary)', color: '#fff' }
         }}
       >
         <SendIcon />

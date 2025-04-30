@@ -32,7 +32,7 @@ export function CommentItem({
 
   return (
     <Box sx={{ ml: depth * 4, mt: 2 }}>
-      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 2, color: 'var(--foreground)' }}>
         <Avatar
           src={comment.autorAvatarUrl}
           alt={comment.autorNome}
@@ -43,11 +43,11 @@ export function CommentItem({
         <Box sx={{ flexGrow: 1 }}>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
             <Typography variant="subtitle2">{comment.autorNome}</Typography>
-            <Typography variant="caption" sx={{ color: theme.palette.text.secondary }}>
+            <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
               {new Date(comment.createdAt).toLocaleString()}
             </Typography>
           </Box>
-          <Typography variant="body2" sx={{ mt: 0.5 }}>
+          <Typography variant="body2" sx={{ mt: 0.5, color: 'var(--foreground)' }}>
             {comment.conteudo}
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 1, gap: 1 }}>
@@ -56,7 +56,7 @@ export function CommentItem({
               onClick={() => setReplying(prev => !prev)}
               sx={{ p: 0.5 }}
             >
-              <ReplyIcon fontSize="small" />
+              <ReplyIcon fontSize="small" sx={{ color: 'var(--foreground)' }} />
             </IconButton>
             <Typography
               variant="caption"
