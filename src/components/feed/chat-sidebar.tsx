@@ -108,92 +108,89 @@ export function ChatSidebar({
       {/* Contact list */}
       <List sx={{ maxHeight: '60vh', overflowY: 'auto', p: 0 }}>
         {filtered.map(contact => (
-          <>
-            <ListItem
-              key={contact.participanteId}
-              disablePadding
-              sx={{ bgcolor: 'var(--card)'}}
-              >
-              <ListItemButton
-                onClick={() => handleSelect(contact.participanteId, contact.conversaId)}
-                sx={{
-                  alignItems: 'center',
-                  px: 2,
-                  py: 1,
-                  cursor: 'pointer',
-                  '&:hover': {
-                    backgroundColor: 'var(--bgTertiary)'
-                  }
-                }}
-              >
-                <ListItemAvatar>
-                  <Avatar
-                    sx={{
-                      bgcolor: 'var(--bgSecondary',
-                      color: 'var(--muted)',
-                      width: 40,
-                      height: 40,
-                      border: '2px solid var(--card)'
-                    }}
-                  >
-                    {contact.nome.charAt(0)}
-                  </Avatar>
-                </ListItemAvatar>
+          <ListItem
+            key={contact.participanteId} // A chave agora é no nível do ListItem
+            disablePadding
+            sx={{ bgcolor: 'var(--card)'}}
+          >
+            <ListItemButton
+              onClick={() => handleSelect(contact.participanteId, contact.conversaId)}
+              sx={{
+                alignItems: 'center',
+                px: 2,
+                py: 1,
+                cursor: 'pointer',
+                '&:hover': {
+                  backgroundColor: 'var(--bgTertiary)'
+                }
+              }}
+            >
+              <ListItemAvatar>
+                <Avatar
+                  sx={{
+                    bgcolor: 'var(--bgSecondary',
+                    color: 'var(--muted)',
+                    width: 40,
+                    height: 40,
+                    border: '2px solid var(--card)'
+                  }}
+                >
+                  {contact.nome.charAt(0)}
+                </Avatar>
+              </ListItemAvatar>
 
-                <ListItemText
-                  primary={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{ color: 'var(--foreground)', fontWeight: 600 }}
-                    >
-                      {contact.nome}
-                    </Typography>
-                  }
-                  secondary={
-                    <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
-                      {contact.ultimaInteracao}
-                    </Typography>
-                  }
-                />
-
-                {contact.tipo === 'message' && (
-                  <Box
-                    sx={{
-                      ml: 1,
-                      minWidth: 20,
-                      height: 20,
-                      bgcolor: 'var(--primary)',
-                      borderRadius: '50%',
-                      color: 'var(--primary-foreground)',
-                      fontSize: 12,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
+              <ListItemText
+                primary={
+                  <Typography
+                    variant="subtitle2"
+                    sx={{ color: 'var(--foreground)', fontWeight: 600 }}
                   >
-                    1
-                  </Box>
-                )}
-                {contact.tipo === 'seen' && (
-                  <Typography sx={{ color: 'var(--primary)', fontSize: 16, ml: 1 }}>
-                    ✓✓
+                    {contact.nome}
                   </Typography>
-                )}
-                {contact.tipo === 'typing' && (
-                  <Box
-                    sx={{
-                      ml: 1,
-                      width: 10,
-                      height: 10,
-                      bgcolor: 'var(--accent)',
-                      borderRadius: '50%'
-                    }}
-                  />
-                )}
-              </ListItemButton>
-            </ListItem>
-            <Divider />
-          </>
+                }
+                secondary={
+                  <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
+                    {contact.ultimaInteracao}
+                  </Typography>
+                }
+              />
+
+              {contact.tipo === 'message' && (
+                <Box
+                  sx={{
+                    ml: 1,
+                    minWidth: 20,
+                    height: 20,
+                    bgcolor: 'var(--primary)',
+                    borderRadius: '50%',
+                    color: 'var(--primary-foreground)',
+                    fontSize: 12,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  1
+                </Box>
+              )}
+              {contact.tipo === 'seen' && (
+                <Typography sx={{ color: 'var(--primary)', fontSize: 16, ml: 1 }}>
+                  ✓✓
+                </Typography>
+              )}
+              {contact.tipo === 'typing' && (
+                <Box
+                  sx={{
+                    ml: 1,
+                    width: 10,
+                    height: 10,
+                    bgcolor: 'var(--accent)',
+                    borderRadius: '50%'
+                  }}
+                />
+              )}
+            </ListItemButton>
+          </ListItem>
         ))}
       </List>
 
