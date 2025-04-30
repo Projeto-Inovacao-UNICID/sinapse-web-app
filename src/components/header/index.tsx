@@ -126,7 +126,13 @@ export function Header() {
             options={options}
             getOptionLabel={opt => (typeof opt === 'string' ? opt : opt.nome)}
             loading={loading}
+            loadingText={<span style={{ color: 'var(--foreground)' }}>Procurando...</span>}
             inputValue={inputValue}
+            sx={{
+              color: 'var(--foreground)',
+              backgroundColor: 'var(--card)',
+              width: '75%',
+            }}
             onInputChange={(_, v) => setInputValue(v)}
             onChange={(_, val) => {
               if (typeof val === 'string' || !val) return;
@@ -136,9 +142,36 @@ export function Header() {
                   : `/profile/me/${val.id}`;
               navClick(path);
             }}
+            slotProps={{
+              popper: {
+                modifiers: [{ name: 'offset', options: { offset: [0, 8] } }],
+              },
+              paper: {
+                sx: {
+                  backgroundColor: 'var(--card)',
+                  color: 'var(--foreground)',
+                  borderRadius: 2,
+                  boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+                },
+              },
+              listbox: {
+                sx: {
+                  backgroundColor: 'var(--card)',
+                  color: 'var(--foreground)',
+                },
+              },
+            }}
             renderOption={(props, opt) => (
               <li {...props} key={typeof opt === 'string' ? opt : `${opt.type}-${opt.id}`}>
-                <ListItemButton>
+                <ListItemButton
+                  sx={{
+                    backgroundColor: 'var(--card)',
+                    color: 'var(--foreground)',
+                    '&:hover': {
+                      backgroundColor: 'var(--muted)',
+                    }
+                  }}
+                >
                   {typeof opt !== 'string' && (
                     <>
                       <ListItemAvatar>
@@ -158,15 +191,16 @@ export function Header() {
                 placeholder="Buscar..."
                 size="small"
                 sx={{
-                  width: '75%',
-                  backgroundColor: 'var(--input)',
+                  backgroundColor: 'var(--card)',
                   borderRadius: 2,
                   input: { color: 'var(--foreground)' },
                   '& .MuiOutlinedInput-root': {
+                    backgroundColor: 'var(--card)',
+                    color: 'var(--foreground)',
                     '& fieldset': { borderColor: 'transparent' },
                     '&:hover fieldset': { borderColor: 'var(--primary)' },
-                    '&.Mui-focused fieldset': { borderColor: 'var(--primary)' }
-                  }
+                    '&.Mui-focused fieldset': { borderColor: 'var(--primary)' },
+                  },
                 }}
                 InputProps={{
                   ...params.InputProps,
@@ -177,10 +211,12 @@ export function Header() {
                   ),
                   endAdornment: (
                     <>
-                      {loading && <CircularProgress size={20} />}
+                      {loading && (
+                        <CircularProgress size={20} sx={{ color: 'var(--foreground)' }} />
+                      )}
                       {params.InputProps.endAdornment}
                     </>
-                  )
+                  ),
                 }}
               />
             )}
@@ -191,7 +227,7 @@ export function Header() {
           {navItems.map(({ filled, outlined, route }, index) => {
             const isActive =
               pathname === route ||
-              (route.includes('/me/') && pathname.startsWith(route.split('/me/')[0])); // para rota do perfil
+              (route.includes('/me/') && pathname.startsWith(route.split('/me/')[0]));
             return (
               <motion.button
                 key={index}
