@@ -120,7 +120,7 @@ export function ChatSidebar({
                 py: 1,
                 cursor: 'pointer',
                 '&:hover': {
-                  backgroundColor: 'var(--bgTertiary)'
+                  opacity: 0.8,
                 }
               }}
             >
