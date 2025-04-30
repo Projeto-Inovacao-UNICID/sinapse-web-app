@@ -59,7 +59,7 @@ export function CommentForm({ postagemId, comentarioPaiId, onSubmitted }: Commen
         sx={{
           '& .MuiOutlinedInput-root': {
             borderRadius: '999px',
-            bgcolor: 'var(--muted)'
+            bgcolor: 'var(--cardSecondary)'
           }
         }}
       />
