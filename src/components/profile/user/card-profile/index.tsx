@@ -21,9 +21,10 @@ import { EditProfileModal } from "../profile-edit-modal";
 
 interface UserProfileCardProps {
   userId: string;
+  gridColumnNumber?: number;
 }
 
-export function UserProfileCard({ userId }: UserProfileCardProps) {
+export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCardProps) {
   const [tabValue, setTabValue] = useState(0);
   const [shareOpen, setShareOpen] = useState(false);
   const [openModal, setOpenModal] = useState(false);
@@ -116,7 +117,7 @@ export function UserProfileCard({ userId }: UserProfileCardProps) {
   }
 
   return (
-    <Box className="flex flex-col gap-2 p-4" sx={{ backgroundColor: "var(--card)", borderRadius: 2, padding: 4 }}>
+    <Box className="flex flex-col gap-2 p-4" sx={{ backgroundColor: "var(--card)", borderRadius: 2, padding: 4, gridColumn: `${gridColumnNumber}` }}>
       <Grid container spacing={2}>
         <Grid size={8}>
           <Box sx={{ display: "flex", alignItems: "flex-start", flexDirection: "column", gap: 2 }}>

@@ -81,49 +81,57 @@ export default function ConversasClient() {
   }, [initialId, conversaId, router]);
 
   return (
-    <Grid container spacing={1}>
-      <Grid size={3}>
-        {isLoading ? (
-          <CircularProgress />
-        ) : isError ? (
-          <div>Erro: {error!.message}</div>
-        ) : (
-          <ContactList contacts={contacts} onSelect={handleSelect} />
-        )}
-      </Grid>
+    <div
+      style={{  
+        display: 'grid',
+        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
+        minHeight: '100vh',
+      }}
+    >
+      <Grid container spacing={1} sx={{ gridColumn: '2' }}>
+        <Grid size={3}>
+          {isLoading ? (
+            <CircularProgress />
+          ) : isError ? (
+            <div>Erro: {error!.message}</div>
+          ) : (
+            <ContactList contacts={contacts} onSelect={handleSelect} />
+          )}
+        </Grid>
 
-      <Grid size={9} sx={{ height: 'calc(100vh - 65px - 1rem)' }}>
-        {selectedId ? (
-          <Chat
-            conversaId={conversaId}
-            selectedId={selectedId}
-            messages={messages}
-            handleSend={handleSend}
-          />
-        ) : (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              padding: 2,
-              borderRadius: 2,
-              gap: 2,
-            }}
-          >
-            <motion.img
-              src="/assets/logo.png"
-              alt="Logo"
-              style={{ height: '4rem' }}
-              animate={{ rotate: 360 }}
-              transition={{ repeat: Infinity, duration: 10, ease: 'linear' }}
+        <Grid size={9} sx={{ height: 'calc(100vh - 65px - 1rem)' }}>
+          {selectedId ? (
+            <Chat
+              conversaId={conversaId}
+              selectedId={selectedId}
+              messages={messages}
+              handleSend={handleSend}
             />
-            <Typography color="var(--foreground)" variant="h5" sx={{ fontWeight: 'bold' }}>
-              Selecione um contato para conversar
-            </Typography>
-          </Box>
-        )}
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                padding: 2,
+                borderRadius: 2,
+                gap: 2,
+              }}
+            >
+              <motion.img
+                src="/assets/logo.png"
+                alt="Logo"
+                style={{ height: '4rem' }}
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 10, ease: 'linear' }}
+              />
+              <Typography color="var(--foreground)" variant="h5" sx={{ fontWeight: 'bold' }}>
+                Selecione um contato para conversar
+              </Typography>
+            </Box>
+          )}
+        </Grid>
       </Grid>
-    </Grid>
+    </div>
   );
 }

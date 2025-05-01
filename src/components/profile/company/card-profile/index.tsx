@@ -35,9 +35,10 @@ import { useGetChallengeCounts } from '@/hooks/challenge/useChallenge';
 
 interface CompanyProfileCardProps {
   companyId: string;
+  gridColumnNumber?: number;
 }
 
-export function CompanyProfileCard({ companyId }: CompanyProfileCardProps) {
+export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyProfileCardProps) {
   const { data: company, isLoading, isError } = useGetCompanyProfile(companyId);
   const { data: counts, isLoading: loadingCounts } = useGetChallengeCounts(companyId);
   const { data: followersCount, isLoading: loadingFollowers } = useGetFollowersCount(companyId);
@@ -88,7 +89,7 @@ export function CompanyProfileCard({ companyId }: CompanyProfileCardProps) {
 
   return (
     <>
-      <Box sx={{ backgroundColor: 'var(--card)', borderRadius: 2, p: 4 }}>
+      <Box sx={{ backgroundColor: 'var(--card)', borderRadius: 2, p: 4, gridColumn: `${gridColumnNumber}` }}>
         <Grid container spacing={4}>
 
           <Grid size={8}>

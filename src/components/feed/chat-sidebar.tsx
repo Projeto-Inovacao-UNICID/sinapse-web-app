@@ -40,10 +40,18 @@ export function ChatSidebar({
   return (
     <Box
       sx={{
-        width: 300,
+        position: 'sticky',
+        bottom: 16,
+        width: "100%",
+        maxHeight: '60vh',
         bgcolor: 'var(--sidebar)',
         borderRadius: 2,
-        overflow: 'hidden'
+        boxShadow: 4,
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        zIndex: 2,
+        alignSelf: 'flex-end', // garante que fique colado no final da coluna
       }}
     >
       {/* Header */}
@@ -63,23 +71,8 @@ export function ChatSidebar({
           onChange={e => setSearch(e.target.value)}
           InputProps={{
             startAdornment: (
-              <InputAdornment
-                position="start"
-                sx={{
-                  height: 36,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}
-              >
-                <SearchIcon
-                  sx={{
-                    color: 'var(--muted)',
-                    fontSize: 20,
-                    position: 'relative',
-                    bottom: '6px'
-                  }}
-                />
+              <InputAdornment position="start">
+                <SearchIcon sx={{ color: 'var(--muted)', fontSize: 20 }} />
               </InputAdornment>
             ),
             disableUnderline: true,
@@ -88,8 +81,6 @@ export function ChatSidebar({
               borderRadius: '20px',
               height: 36,
               pl: 1,
-              display: 'flex',
-              alignItems: 'center',
               '& .MuiFilledInput-root': { padding: 0, height: '100%' },
               '& .MuiFilledInput-input': {
                 padding: 0,
@@ -105,98 +96,102 @@ export function ChatSidebar({
 
       <Divider sx={{ bgcolor: 'var(--border)' }} />
 
-      {/* Contact list */}
-      <List sx={{ maxHeight: '60vh', overflowY: 'auto', p: 0 }}>
-        {filtered.map(contact => (
-          <ListItem
-            key={contact.participanteId} // A chave agora é no nível do ListItem
-            disablePadding
-            sx={{ bgcolor: 'var(--card)'}}
-          >
-            <ListItemButton
-              onClick={() => handleSelect(contact.participanteId, contact.conversaId)}
-              sx={{
-                alignItems: 'center',
-                px: 2,
-                py: 1,
-                cursor: 'pointer',
-                '&:hover': {
-                  backgroundColor: 'var(--bgTertiary)'
-                }
-              }}
+      {/* Lista de contatos com scroll */}
+      <Box sx={{ flex: 1, overflowY: 'auto' }}>
+        <List sx={{ p: 0 }}>
+          {filtered.map(contact => (
+            <ListItem
+              key={contact.participanteId}
+              disablePadding
+              sx={{ bgcolor: 'var(--card)' }}
             >
-              <ListItemAvatar>
-                <Avatar
-                  sx={{
-                    bgcolor: 'var(--bgSecondary',
-                    color: 'var(--muted)',
-                    width: 40,
-                    height: 40,
-                    border: '2px solid var(--card)'
-                  }}
-                >
-                  {contact.nome.charAt(0)}
-                </Avatar>
-              </ListItemAvatar>
-
-              <ListItemText
-                primary={
-                  <Typography
-                    variant="subtitle2"
-                    sx={{ color: 'var(--foreground)', fontWeight: 600 }}
+              <ListItemButton
+                onClick={() =>
+                  handleSelect(contact.participanteId, contact.conversaId)
+                }
+                sx={{
+                  alignItems: 'center',
+                  px: 2,
+                  py: 1,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    backgroundColor: 'var(--bgTertiary)'
+                  }
+                }}
+              >
+                <ListItemAvatar>
+                  <Avatar
+                    sx={{
+                      bgcolor: 'var(--bgSecondary)',
+                      color: 'var(--muted)',
+                      width: 40,
+                      height: 40,
+                      border: '2px solid var(--card)'
+                    }}
                   >
-                    {contact.nome}
-                  </Typography>
-                }
-                secondary={
-                  <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
-                    {contact.ultimaInteracao}
-                  </Typography>
-                }
-              />
+                    {contact.nome.charAt(0)}
+                  </Avatar>
+                </ListItemAvatar>
 
-              {contact.tipo === 'message' && (
-                <Box
-                  sx={{
-                    ml: 1,
-                    minWidth: 20,
-                    height: 20,
-                    bgcolor: 'var(--primary)',
-                    borderRadius: '50%',
-                    color: 'var(--primary-foreground)',
-                    fontSize: 12,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  1
-                </Box>
-              )}
-              {contact.tipo === 'seen' && (
-                <Typography sx={{ color: 'var(--primary)', fontSize: 16, ml: 1 }}>
-                  ✓✓
-                </Typography>
-              )}
-              {contact.tipo === 'typing' && (
-                <Box
-                  sx={{
-                    ml: 1,
-                    width: 10,
-                    height: 10,
-                    bgcolor: 'var(--accent)',
-                    borderRadius: '50%'
-                  }}
+                <ListItemText
+                  primary={
+                    <Typography
+                      variant="subtitle2"
+                      sx={{ color: 'var(--foreground)', fontWeight: 600 }}
+                    >
+                      {contact.nome}
+                    </Typography>
+                  }
+                  secondary={
+                    <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
+                      {contact.ultimaInteracao}
+                    </Typography>
+                  }
                 />
-              )}
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
+
+                {contact.tipo === 'message' && (
+                  <Box
+                    sx={{
+                      ml: 1,
+                      minWidth: 20,
+                      height: 20,
+                      bgcolor: 'var(--primary)',
+                      borderRadius: '50%',
+                      color: 'var(--primary-foreground)',
+                      fontSize: 12,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    1
+                  </Box>
+                )}
+                {contact.tipo === 'seen' && (
+                  <Typography sx={{ color: 'var(--primary)', fontSize: 16, ml: 1 }}>
+                    ✓✓
+                  </Typography>
+                )}
+                {contact.tipo === 'typing' && (
+                  <Box
+                    sx={{
+                      ml: 1,
+                      width: 10,
+                      height: 10,
+                      bgcolor: 'var(--accent)',
+                      borderRadius: '50%'
+                    }}
+                  />
+                )}
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
 
       <Divider sx={{ bgcolor: 'var(--border)' }} />
 
-      {/* Footer */}
+      {/* Rodapé */}
       <Box sx={{ bgcolor: 'var(--card)', p: 2, textAlign: 'center' }}>
         <Typography variant="body2" sx={{ color: 'var(--sidebar-foreground)' }}>
           Conecte-se com seus amigos e troque umas ideias

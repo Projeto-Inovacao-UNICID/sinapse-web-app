@@ -13,6 +13,14 @@ export default function UserProfile ({ params }: CompanyProfileProps) {
   const resolvedParams = use(params); 
 
   return (
-    <CompanyProfileCard companyId={resolvedParams.id} />
+    <div
+      style={{  
+        display: 'grid',
+        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
+        minHeight: '100vh',
+      }}
+    >
+      <CompanyProfileCard companyId={resolvedParams.id} />
+    </div>
   );
 }
