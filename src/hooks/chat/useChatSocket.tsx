@@ -1,51 +1,79 @@
+'use client';
+
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { Message } from '@/types';
 
 type UseChatSocketProps = {
-  destId: string;
-  onMessage: (msg: Message) => void;
+  destId: string;                    // ID do outro participante
+  onMessage: (m: Message) => void;   // callback para cada mensagem recebida
 };
 
+/**
+ * Hook para gerenciar conexão WebSocket do chat.
+ * Conecta-se apenas se destId estiver preenchido.
+ */
 export function useChatSocket({ destId, onMessage }: UseChatSocketProps) {
-  const socketRef = useRef<WebSocket | null>(null);
-  const reconnectTimer = useRef<number | undefined>(undefined);
+  const wsRef          = useRef<WebSocket | null>(null);
+  const reconnectTimer = useRef<number | null>(null);
   const [isConnected, setIsConnected] = useState(false);
 
+  /** Abre (ou reabre) a conexão */
   const connect = useCallback(() => {
-    if (!destId) return;
+    if (!destId) return; // nada a fazer até termos um ID válido
 
-    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
-    const url = `${protocol}://${window.location.host}/ws?destId=${destId}`;
-    const ws = new WebSocket(url);
+    // já conectado ao mesmo destino → sai
+    if (
+      wsRef.current?.readyState === WebSocket.OPEN &&
+      wsRef.current.url.endsWith(`destId=${destId}`)
+    ) {
+      return;
+    }
 
-    ws.onopen = () => setIsConnected(true);
-    ws.onmessage = ev => {
+    // encerra socket antigo (se houver)
+    wsRef.current?.close(1000, 'new connection');
+
+    const protocol = location.protocol === 'https:' ? 'wss' : 'ws';
+    const url      = `${protocol}://${location.host}/ws?destId=${destId}`;
+    const ws       = new WebSocket(url);
+
+    ws.onopen    = () => setIsConnected(true);
+    ws.onmessage = (ev) => {
       try {
-        onMessage(JSON.parse(ev.data));
-      } catch {}
+        onMessage(JSON.parse(ev.data) as Message);
+      } catch (e) {
+        console.error('[WS] mensagem inválida', e);
+      }
     };
+
     ws.onclose = () => {
       setIsConnected(false);
-      reconnectTimer.current = window.setTimeout(connect, 5000);
-    };
-    ws.onerror = () => {
+      wsRef.current = null;
+      if (reconnectTimer.current == null) {
+        reconnectTimer.current = window.setTimeout(() => {
+          reconnectTimer.current = null;
+          connect();                    // tenta de novo em 5 s
+        }, 5000);
+      }
     };
 
-    socketRef.current = ws;
+    ws.onerror = () => console.error('[WS] erro ao conectar', url);
+
+    wsRef.current = ws;
   }, [destId, onMessage]);
 
+  /** dispara connect/desconnect no ciclo de vida do componente */
   useEffect(() => {
     connect();
     return () => {
       if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
-      socketRef.current?.close();
+      wsRef.current?.close(1000, 'component unmount');
     };
   }, [connect]);
 
-  const sendMessage = useCallback((payload: any) => {
-    const ws = socketRef.current;
-    if (ws?.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify(payload));
+  /** Envia payload se houver socket aberto */
+  const sendMessage = useCallback((payload: unknown) => {
+    if (wsRef.current?.readyState === WebSocket.OPEN) {
+      wsRef.current.send(JSON.stringify(payload));
     }
   }, []);
 

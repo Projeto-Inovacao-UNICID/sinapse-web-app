@@ -75,7 +75,6 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
     );
   }
 
-  // Desestruturando apenas os campos disponíveis em CompanyInfo
   const { nome, username, descricao, criadoEm, temImagem } = company;
 
   const loadingFollow =
@@ -89,13 +88,17 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
   };
   const handleMessage = () => {
     try {
-      chatService.postChat(companyId);
-      router.push(`/conversas?participanteId=${companyId}`);
+      if (isOwner) {
+        router.push('/conversas');
+      } else {
+        chatService.postChat(companyId);
+        router.push(`/conversas?participanteId=${companyId}`);
+      }
     } catch (err) {
       console.error('Erro ao iniciar o chat:', err);
     }
-  }
-  const handleEdit    = () => setOpenModal(true);
+  };
+  const handleEdit = () => setOpenModal(true);
 
   return (
     <>

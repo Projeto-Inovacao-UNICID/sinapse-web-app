@@ -1,37 +1,33 @@
 'use client';
 
-import { MessageService } from '@/service/chat/MessageService';
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, Paper, TextField } from '@mui/material';
 import { useRef, useEffect, useState } from 'react';
 
 interface ChatInputProps {
-  conversasId: number;
+  conversasId: number;           // ainda chega, mas não é usado aqui
   message: string;
   setMessage: (msg: string) => void;
   onSend: (message: string) => void;
-  disabled?: boolean; // nova prop opcional
+  disabled?: boolean;
 }
 
 export function ChatInput({
-  conversasId,
   message,
   setMessage,
   onSend,
-  disabled = false
+  disabled = false,
 }: ChatInputProps) {
   const [isSending, setIsSending] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const service = new MessageService();
 
   const handleSend = async () => {
     if (!message.trim() || isSending) return;
 
     try {
       setIsSending(true);
-      onSend(message);
-      await service.postMessage(conversasId, message);
-      setMessage('');
+      onSend(message);   // dispara via WebSocket (handleSend em ConversasClient)
+      setMessage('');    // limpa o campo
     } catch (err) {
       console.error('Erro ao enviar mensagem:', err);
     } finally {
@@ -43,7 +39,7 @@ export function ChatInput({
     if (!disabled) {
       inputRef.current?.focus();
     }
-  }, [message, conversasId, disabled]);
+  }, [message, disabled]);
 
   if (disabled) return null;
 
@@ -75,9 +71,7 @@ export function ChatInput({
         onChange={(e) => setMessage(e.target.value)}
         inputRef={inputRef}
         sx={{
-          input: {
-            color: 'var(--foreground)',
-          },
+          input: { color: 'var(--foreground)' },
           '& .MuiInput-underline:before': {
             borderBottom: `2px solid var(--border)`,
           },
@@ -95,9 +89,7 @@ export function ChatInput({
         type="submit"
         sx={{
           color: 'var(--primary)',
-          '&:disabled': {
-            opacity: 0.5,
-          },
+          '&:disabled': { opacity: 0.5 },
         }}
         disabled={isSending || disabled}
       >

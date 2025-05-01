@@ -67,8 +67,12 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
 
   const handleMessage = () => {
     try {
-      chatService.postChat(userId);
-      router.push(`/conversas?participanteId=${userId}`);
+      if (isProfileOwner) {
+        router.push('/conversas');
+      } else {
+        chatService.postChat(userId);
+        router.push(`/conversas?participanteId=${userId}`);
+      }
     } catch (err) {
       console.error('Erro ao iniciar o chat:', err);
     }
