@@ -32,6 +32,7 @@ import {
   useUnfollowCompany
 } from '@/hooks/company/useFollowers';
 import { useGetChallengeCounts } from '@/hooks/challenge/useChallenge';
+import { ChatService } from '@/service/chat/ChatService';
 
 interface CompanyProfileCardProps {
   companyId: string;
@@ -47,6 +48,8 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
   const [openModal, setOpenModal] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [tabValue, setTabValue] = useState(0);
+
+  const chatService = new ChatService();
 
   const isOwner   = session?.id === companyId;
   const isCompany = session?.roles.includes('ROLE_COMPANY') ?? false;
@@ -84,7 +87,14 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
     if (isFollowing) unfollowMutation.mutate(companyId);
     else followMutation.mutate(companyId);
   };
-  const handleMessage = () => router.push(`/conversas?participanteId=${companyId}`);
+  const handleMessage = () => {
+    try {
+      chatService.postChat(companyId);
+      router.push(`/conversas?participanteId=${companyId}`);
+    } catch (err) {
+      console.error('Erro ao iniciar o chat:', err);
+    }
+  }
   const handleEdit    = () => setOpenModal(true);
 
   return (

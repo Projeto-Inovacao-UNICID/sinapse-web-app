@@ -18,6 +18,7 @@ import { useState } from "react";
 import { BoxInfo } from "../../box-info";
 import { ShareDialog } from "../../utils/shareDialog";
 import { EditProfileModal } from "../profile-edit-modal";
+import { ChatService } from "@/service/chat/ChatService";
 
 interface UserProfileCardProps {
   userId: string;
@@ -41,6 +42,8 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const { data: posts } = useGetPosts();
   const { data: challenge } = useGetChallengeCountsUser(userId);
 
+  const chatService = new ChatService();
+
   const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
 
   const { mutateAsync: deleteFriendship } = useDeleteFriendshipRequest(amizadeId);
@@ -62,7 +65,14 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
     (request) => request.usuarioId === userId
   );
 
-  const handleMessage = () => router.push(`/conversas?participanteId=${userId}`);
+  const handleMessage = () => {
+    try {
+      chatService.postChat(userId);
+      router.push(`/conversas?participanteId=${userId}`);
+    } catch (err) {
+      console.error('Erro ao iniciar o chat:', err);
+    }
+  }
   const handleEdit = () => setOpenModal(true);
 
   const {

@@ -26,13 +26,6 @@ export function ContactList({ contacts, onSelect }: ContactListProps) {
       const res = await chatService.postChat(id);
       const conversaId = res?.id;
 
-
-
-
-
-
-
-
       if (typeof conversaId !== 'number') {
         throw new Error('ID da conversa inválido');
       }
