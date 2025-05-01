@@ -85,7 +85,7 @@ export default function ConversasClient() {
       style={{  
         display: 'grid',
         gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
-        minHeight: '100vh',
+        minHeight: 'calc(100vh - 65px - 1rem)',
       }}
     >
       <Grid container spacing={1} sx={{ gridColumn: '2' }}>
