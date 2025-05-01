@@ -1,16 +1,19 @@
 'use client';
 
 import { CreateGroupModal } from "@/components/group/create-group-card";
+import { GroupList } from "@/components/group/group-list";
 import { useGetChallengeCountsUser } from "@/hooks/challenge/useChallenge";
 import { useAcceptFriendshipRequest, useDeleteFriendshipRequest, useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
+import { useGetGroups } from "@/hooks/group/useGroup";
 import { useGetPosts } from "@/hooks/posts/usePosts";
 import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile, useUserProfileImage } from "@/hooks/user/useUserProfile";
+import { ChatService } from "@/service/chat/ChatService";
 import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import MessageIcon from '@mui/icons-material/Message';
 import ShareIcon from '@mui/icons-material/Share';
-import CloseIcon from '@mui/icons-material/Close';
 import { Avatar, Box, Button, CircularProgress, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from 'next/navigation';
@@ -18,7 +21,8 @@ import { useState } from "react";
 import { BoxInfo } from "../../box-info";
 import { ShareDialog } from "../../utils/shareDialog";
 import { EditProfileModal } from "../profile-edit-modal";
-import { ChatService } from "@/service/chat/ChatService";
+import { Group } from "@/types";
+import { FriendshipList } from "../friendship-list";
 
 interface UserProfileCardProps {
   userId: string;
@@ -41,6 +45,10 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const { data: friendshipRequests } = useGetFriendshipInvitations("recebidos");
   const { data: posts } = useGetPosts();
   const { data: challenge } = useGetChallengeCountsUser(userId);
+  const { data: groups, isLoading: loadingGroups } = useGetGroups();
+
+  const userGroups = ( groups ?? [] ).filter((group: Group) => group.liderId === userId);
+  const userGroupsIds = userGroups.map((group: Group) => group.id);
 
   const chatService = new ChatService();
 
@@ -82,6 +90,11 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
     podeAdicionarAmigo,
   } = userProfile ?? {};
 
+  const friends = isProfileOwner ? friendship : amigos;
+  const friendshipIds = friends?.map((friend) =>
+    'usuarioId' in friend ? friend.usuarioId : friend.id
+  );
+  
   const imagemSrc = temImagem ? userProfileImage ?? "" : "";
 
   const handleAddFriendship = async () => {
@@ -140,7 +153,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
         </Grid>
         <Grid size={4} sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2 }}>
           <Box sx={{ display: "flex", flexDirection: "row", gap: 2, width: "100%" }}>
-            <BoxInfo data={amigos ? amigos.length : 0} title="Amigos" />
+            <BoxInfo data={friends ? friends.length : 0} title="Amigos" />
             <BoxInfo data={posts ? posts.length : 0} title="Postagens" />
           </Box>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}>
@@ -257,9 +270,13 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
           <Tab label="Sobre" />
           <Tab label="Publicações" />
           <Tab label="Desafios" />
+          <Tab label="Amigos" />
+          <Tab label="Grupos" />
         </Tabs>
-
-        <Grid size={12}></Grid>
+        <Grid size={12}>
+          {tabValue === 4 && <FriendshipList friendshipIds={friendshipIds ?? []} />}
+          {tabValue === 5 && <GroupList groupIds={userGroupsIds} viewDescription={true} />}
+        </Grid>
       </Grid>
 
       <EditProfileModal

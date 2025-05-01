@@ -21,7 +21,7 @@ export function UserProfileImage({ userId, temImagem }: UserProfileImageProps) {
   }
 
   return (
-    <Avatar src={temImagem ? userProfileImage : ""} alt="Imagem do usuário" sx={{ width: 100, height: 100 }} />
+    <Avatar src={temImagem ? userProfileImage : ""} alt="Imagem do usuário" sx={{ width: "100%", height: "100%"}} /> 
   );;
 }
 
