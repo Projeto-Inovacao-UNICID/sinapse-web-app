@@ -1,4 +1,4 @@
-import { Group } from "@/types";
+import { Group, GroupMember } from "@/types";
 import { axiosInstance } from "../api";
 
 export class GroupService {
@@ -46,7 +46,7 @@ export class GroupService {
   }
 
   async getGroupMembers(id: string) {
-    const response = await axiosInstance.get(`/grupos/${id}/membros`, { withCredentials: true });
+    const response = await axiosInstance.get<GroupMember[]>(`/grupos/${id}/membros`, { withCredentials: true });
     return response.data;
   }
 

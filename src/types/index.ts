@@ -15,6 +15,7 @@ export * from './challengeTypes';
 export * from './companyInfo';
 export * from './challengeStatus';
 export * from './group';
+export * from './groupMember';
 
 export * from './responses/sessionResponse';
 export * from './responses/userProfileResponse';

@@ -2,11 +2,11 @@ import { useUserProfile } from "@/hooks/user/useUserProfile";
 import { Box, Card, Typography } from "@mui/material";
 import { UserProfileImage } from "../avatar";
 
-interface FriendCardProps {
+interface UserCardProps {
   friendId: string;
 }
 
-export function FriendCard({ friendId }: FriendCardProps) {
+export function UserCard({ friendId }: UserCardProps) {
   const {data: profile} = useUserProfile(friendId);
   return (
     <Card sx={{ bgcolor: "var(--cardSecondary)", display: "flex", flexDirection: "row", gap: 2, p: 2, borderRadius: 2, minWidth: "100%" }}>

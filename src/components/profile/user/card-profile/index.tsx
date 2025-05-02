@@ -22,7 +22,7 @@ import { BoxInfo } from "../../box-info";
 import { ShareDialog } from "../../utils/shareDialog";
 import { EditProfileModal } from "../profile-edit-modal";
 import { Group } from "@/types";
-import { FriendshipList } from "../friendship-list";
+import { UsersList } from "../users-list";
 
 interface UserProfileCardProps {
   userId: string;
@@ -274,7 +274,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
           <Tab label="Grupos" />
         </Tabs>
         <Grid size={12}>
-          {tabValue === 4 && <FriendshipList friendshipIds={friendshipIds ?? []} />}
+          {tabValue === 4 && <UsersList ids={friendshipIds ?? []} />}
           {tabValue === 5 && <GroupList groupIds={userGroupsIds} viewDescription={true} />}
         </Grid>
       </Grid>
