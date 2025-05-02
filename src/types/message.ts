@@ -1,4 +1,5 @@
 export interface Message {
+    userId: any;
     id: number;
     conversaId: number;
     remetenteTipo: string;
