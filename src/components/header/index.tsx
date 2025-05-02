@@ -192,7 +192,7 @@ export function Header() {
                 size="small"
                 sx={{
                   backgroundColor: 'var(--card)',
-                  borderRadius: 2,
+                  borderRadius:2,
                   input: { color: 'var(--foreground)' },
                   '& .MuiOutlinedInput-root': {
                     backgroundColor: 'var(--card)',
