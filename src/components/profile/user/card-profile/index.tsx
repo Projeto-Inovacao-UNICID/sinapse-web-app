@@ -290,26 +290,29 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
           <Tab label="Desafios" />
           <Tab label="Amigos" />
           <Tab label="Grupos" />
-          <Tab
-            icon={
-              <Badge
-                badgeContent={contGroupInvites}
-                color="error"
-                invisible={!hasUnreadInvites}
-                sx={{
-                  '& .MuiBadge-badge': {
-                    top: -10,
-                    right: -4,
-                    fontSize: '0.7rem',
-                    minWidth: 16,
-                    height: 16,
-                  },
-                }}
-              />
-            }
-            iconPosition="end"
-            label="Convites"
-          />
+          {
+            isProfileOwner &&
+            <Tab
+              icon={
+                <Badge
+                  badgeContent={contGroupInvites}
+                  color="error"
+                  invisible={!hasUnreadInvites}
+                  sx={{
+                    '& .MuiBadge-badge': {
+                      top: -10,
+                      right: -4,
+                      fontSize: '0.7rem',
+                      minWidth: 16,
+                      height: 16,
+                    },
+                  }}
+                />
+              }
+              iconPosition="end"
+              label="Convites"
+            />
+          }
         </Tabs>
 
         <Grid size={12}>

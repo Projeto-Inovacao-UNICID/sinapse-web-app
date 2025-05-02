@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { GroupCardEditor } from "../group-card-editor";
 import { useState } from "react";
 import { InviteMembersModal } from "@/components/group/invite-members-modal";
+import { useSession } from "@/hooks/session/useSession";
 
 interface GroupCardProps {
   groupId: number;
@@ -20,6 +21,9 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
   const { data: leaderProfile } = useUserProfile(leaderId);
   const { data: groupMembers } = useGetGroupMembers(groupId);
   const { mutateAsync: editGroup } = usePatchGroup();
+  const { session } = useSession();
+
+  const isLeader = session?.id === leaderId;
 
   const [isEditing, setIsEditing] = useState(false);
   const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
@@ -75,27 +79,29 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
               <Typography variant="h6" color="var(--foreground)" className="font-bold">
                 {group?.nome}
               </Typography>
-              <motion.button
-                whileHover={{ scale: 1.3 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-                onClick={() => setIsEditing(true)}
-                style={{
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  padding: 0,
-                  cursor: 'pointer',
-                }}
-              >
-                <EditIcon
-                  sx={{
-                    color: 'var(--muted)',
-                    ':hover': { color: 'var(--primary)' },
-                    width: '1.5rem',
-                    height: '1.5rem',
+              {isLeader && (
+                <motion.button
+                  whileHover={{ scale: 1.3 }}
+                  whileTap={{ scale: 0.9 }}
+                  transition={{ type: 'spring', stiffness: 300 }}
+                  onClick={() => setIsEditing(true)}
+                  style={{
+                    backgroundColor: 'transparent',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
                   }}
-                />
-              </motion.button>
+                >
+                  <EditIcon
+                    sx={{
+                      color: 'var(--muted)',
+                      ':hover': { color: 'var(--primary)' },
+                      width: '1.5rem',
+                      height: '1.5rem',
+                    }}
+                  />
+                </motion.button>
+              )}
             </Box>
 
             <Divider sx={{ bgcolor: 'var(--muted)', my: 2 }} />
@@ -145,15 +151,17 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
                     <Typography variant="body1" color="var(--foreground)">
                       Membros:
                     </Typography>
-                    <motion.button
-                      whileHover={{ scale: 1.3 }}
-                      whileTap={{ scale: 0.9 }}
-                      transition={{ type: 'spring', stiffness: 300 }}
-                      onClick={() => setIsMembersModalOpen(true)}
-                      style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
-                    >
-                      <GroupAddIcon sx={{ color: 'var(--muted)', ':hover': { color: 'var(--primary)' }, width: '1.5rem', height: '1.5rem' }} />
-                    </motion.button>
+                    {isLeader && (
+                      <motion.button
+                        whileHover={{ scale: 1.3 }}
+                        whileTap={{ scale: 0.9 }}
+                        transition={{ type: 'spring', stiffness: 300 }}
+                        onClick={() => setIsMembersModalOpen(true)}
+                        style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
+                      >
+                        <GroupAddIcon sx={{ color: 'var(--muted)', ':hover': { color: 'var(--primary)' }, width: '1.5rem', height: '1.5rem' }} />
+                      </motion.button>
+                    )}
                   </Box>
                   <Box sx={{ width: "100%" }}>
                     {members}
