@@ -1,6 +1,9 @@
 export interface Friend {
-  id: string;
+  amizadeId: number;
+  usuarioId: string;
   nome: string;
   username: string;
-  temImagem: boolean;
+  imagemPerfil: string | null;
+  status: string;
+  created_at: string;
 }

@@ -1,5 +1,5 @@
+import { Friend, FriendshipInvitation, FriendshipInvitationsResponse } from "@/types";
 import { axiosInstance } from "../api";
-import { FriendshipInvitation, FriendshipInvitationsResponse, FriendshipInviteType, User } from "@/types";
 
 export class FriendshipService {
     async postFriendship(destinatarioId: string) {
@@ -8,7 +8,7 @@ export class FriendshipService {
     }
 
     async getFriendship() {
-        const response = await axiosInstance.get<User[]>(`/amizades`, { withCredentials: true });
+        const response = await axiosInstance.get<Friend[]>(`/amizades`, { withCredentials: true });
         return response.data;
     }
 

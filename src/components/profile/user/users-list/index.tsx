@@ -3,9 +3,10 @@ import { UserCard } from "../user-card";
 
 interface UsersListProps {
   ids: string[];
+  type?: "friend" | "group";
 }
 
-export function UsersList({ ids }: UsersListProps) {
+export function UsersList({ ids, type }: UsersListProps) {
   if (ids.length === 0) {
     return (
       <Typography variant="body1" color="var(--muted)">
@@ -18,7 +19,7 @@ export function UsersList({ ids }: UsersListProps) {
     <List disablePadding>
       {ids.map((id) => (
         <ListItem key={id} disableGutters sx={{ paddingY: 1 }}>
-          <UserCard friendId={id} />
+          <UserCard id={id} type={type} />
         </ListItem>
       ))}
     </List>

@@ -1,4 +1,3 @@
-import { UserProfileCard } from "@/components/profile/user/card-profile";
 import { UsersList } from "@/components/profile/user/users-list";
 import { useGetGroupById, useGetGroupMembers } from "@/hooks/group/useGroup";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
@@ -17,7 +16,7 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
 
   const membersIds = groupMembers?.map(member => member.usuarioId);
 
-  const members = <UsersList ids={membersIds ?? []} />;
+  const members = <UsersList ids={membersIds ?? []} type="group" />;
 
   return (
     <Card sx={{ bgcolor: 'var(--cardSecondary)', borderRadius: 2, p: 2, overflow: 'visible', display: 'flex', flexDirection: 'column',minWidth: "100%" }}>

@@ -274,7 +274,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
           <Tab label="Grupos" />
         </Tabs>
         <Grid size={12}>
-          {tabValue === 4 && <UsersList ids={friendshipIds ?? []} />}
+          {tabValue === 4 && <UsersList ids={friendshipIds ?? []} type= {isProfileOwner ? "friend" : undefined} />}
           {tabValue === 5 && <GroupList groupIds={userGroupsIds} viewDescription={true} />}
         </Grid>
       </Grid>
