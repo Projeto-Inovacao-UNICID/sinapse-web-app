@@ -72,7 +72,7 @@ export function Chat({
 
       {conversaId !== null && (
         <ChatInput
-          conversasId={conversaId}
+          conversasId={conversaId.toString()}
           message={message}
           setMessage={setMessage}
           onSend={handleSend}
