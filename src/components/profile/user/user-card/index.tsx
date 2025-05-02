@@ -48,7 +48,7 @@ export function UserCard({ id, type }: UserCardProps) {
               onClick={removeFriendship}
               style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
           >
-            <PersonRemoveIcon sx={{ color: 'var(--mutate)', ':hover': { color: 'var(--primary)' }, width: '1.5rem', height: '1.5rem' }} />
+            <PersonRemoveIcon sx={{ color: 'var(--muted)', ':hover': { color: 'var(--primary)' }, width: '1.5rem', height: '1.5rem' }} />
           </motion.button>
         </Box>
       )}
