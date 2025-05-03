@@ -9,6 +9,8 @@ type UseChatSocketProps = {
 export function useChatSocket({ destId, onMessage }: UseChatSocketProps) {
   const socketRef = useRef<WebSocket | null>(null);
   const reconnectTimer = useRef<number | undefined>(undefined);
+  const shouldReconnect = useRef(true);
+
   const [isConnected, setIsConnected] = useState(false);
 
   const connect = useCallback(() => {
@@ -18,16 +20,26 @@ export function useChatSocket({ destId, onMessage }: UseChatSocketProps) {
     const url = `${protocol}://${window.location.host}/ws?destId=${destId}`;
     const ws = new WebSocket(url);
 
-    ws.onopen = () => setIsConnected(true);
+    ws.onopen = () => {
+      setIsConnected(true);
+    };
+
     ws.onmessage = ev => {
       try {
-        onMessage(JSON.parse(ev.data));
-      } catch {}
+        const msg: Message = JSON.parse(ev.data);
+        onMessage(msg);
+      } catch (e) {
+        console.error('Erro ao parsear mensagem WS:', e);
+      }
     };
+
     ws.onclose = () => {
       setIsConnected(false);
-      reconnectTimer.current = window.setTimeout(connect, 5000);
+      if (shouldReconnect.current) {
+        reconnectTimer.current = window.setTimeout(connect, 5000);
+      }
     };
+
     ws.onerror = () => {
     };
 
@@ -35,10 +47,18 @@ export function useChatSocket({ destId, onMessage }: UseChatSocketProps) {
   }, [destId, onMessage]);
 
   useEffect(() => {
+    shouldReconnect.current = true;
     connect();
+
     return () => {
+      shouldReconnect.current = false;
       if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
-      socketRef.current?.close();
+      if (socketRef.current) {
+        socketRef.current.onclose = null;
+        socketRef.current.onmessage = null;
+        socketRef.current.onerror = null;
+        socketRef.current.close();
+      }
     };
   }, [connect]);
 

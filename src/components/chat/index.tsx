@@ -21,7 +21,6 @@ export function Chat({
   const [message, setMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Scroll automático
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -73,7 +72,7 @@ export function Chat({
 
       {conversaId !== null && (
         <ChatInput
-          conversasId={conversaId}
+          conversasId={conversaId.toString()}
           message={message}
           setMessage={setMessage}
           onSend={handleSend}

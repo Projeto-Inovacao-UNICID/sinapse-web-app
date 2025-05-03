@@ -1,23 +1,22 @@
 'use client';
 
-import { Box, CircularProgress, Grid, Typography } from '@mui/material';
-import { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { motion } from 'framer-motion';
 
 import { ContactList } from '@/components/chat/contact-list';
 import { useChatContacts } from '@/hooks/chat/useChatContacts';
 import { useChatSocket } from '@/hooks/chat/useChatSocket';
-import { useSSE } from '@/hooks/useSSE';
-import { NotificationDto } from '@/types/notification';
-import { Message } from '@/types';
-import { Chat } from '@/components/chat';
-import { motion } from 'framer-motion';
 import { ChatService } from '@/service/chat/ChatService';
+import { Chat } from '@/components/chat';
+import { Message } from '@/types';
 
 export default function ConversasClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialId = searchParams.get('participanteId') || '';
+  const seenSignatures = useRef<Set<string>>(new Set());
 
   const [selectedId, setSelectedId] = useState<string>(initialId);
   const [conversaId, setConversaId] = useState<number | null>(null);
@@ -26,10 +25,11 @@ export default function ConversasClient() {
   const { data: contacts = [], isLoading, isError, error } = useChatContacts();
   const chatService = new ChatService();
 
-  console.log('contacts', contacts);
-
   const handleReceive = useCallback((msg: Message) => {
-    setMessages(prev => (prev.some(m => m.id === msg.id) ? prev : [...prev, msg]));
+    const sig = `${msg.userId}_${msg.conteudo}_${msg.createdAt}`;
+    if (seenSignatures.current.has(sig)) return;
+    seenSignatures.current.add(sig);
+    setMessages(prev => [...prev, msg]);
   }, []);
 
   const { isConnected, sendMessage } = useChatSocket({
@@ -45,68 +45,93 @@ export default function ConversasClient() {
     [conversaId, sendMessage]
   );
 
+  const resetConversation = useCallback(() => {
+    seenSignatures.current.clear();
+    setMessages([]);
+  }, []);
+
   const handleSelect = useCallback(
     (id: string, convId: number) => {
+      resetConversation();
       setSelectedId(id);
       setConversaId(convId);
-      setMessages([]);
       router.push(`/conversas?participanteId=${id}`);
     },
-    [router]
+    [router, resetConversation]
   );
 
-  // 💡 Cria ou busca a conversa automaticamente se participanteId for passado
+  // Se houve participanteId na URL, inicia a conversa automaticamente
   useEffect(() => {
     if (!initialId || conversaId) return;
 
-    const iniciarConversa = async () => {
+    (async () => {
       try {
         const res = await chatService.postChat(initialId);
-        const conversaId = res?.id;
-
-        if (typeof conversaId !== 'number') {
-          console.error('ID da conversa inválido');
+        if (typeof res.id !== 'number') {
+          console.error('ID de conversa inválido', res);
           return;
         }
-
+        resetConversation();
+        setConversaId(res.id);
         setSelectedId(initialId);
-        setConversaId(conversaId);
         router.push(`/conversas?participanteId=${initialId}`);
       } catch (err) {
         console.error('Erro ao iniciar conversa via URL:', err);
       }
-    };
-
-    iniciarConversa();
-  }, [initialId, conversaId, router]);
+    })();
+  }, [initialId, conversaId, router, chatService, resetConversation]);
 
   return (
-    <div
-      style={{  
-        display: 'grid',
-        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
-        minHeight: 'calc(100vh - 65px - 1rem)',
-      }}
+    <Box
+      display="grid"
+      gridTemplateColumns="2fr minmax(0, 8fr) 2fr"
+      minHeight="calc(100vh - 65px - 1rem)"
     >
-      <Grid container spacing={1} sx={{ gridColumn: '2' }}>
-        <Grid size={3}>
+      <Box
+        gridColumn={2}
+        display="grid"
+        gridTemplateColumns="3fr 9fr"
+        gap={1}
+      >
+        {/* Lista de contatos */}
+        <Box>
           {isLoading ? (
             <CircularProgress />
           ) : isError ? (
-            <div>Erro: {error!.message}</div>
+            <Typography color="error">
+              Erro: {error?.message}
+            </Typography>
           ) : (
-            <ContactList contacts={contacts} onSelect={handleSelect} />
-          )}
-        </Grid>
-
-        <Grid size={9} sx={{ height: 'calc(100vh - 65px - 1rem)' }}>
-          {selectedId ? (
-            <Chat
-              conversaId={conversaId}
+            <ContactList
+              contacts={contacts}
               selectedId={selectedId}
-              messages={messages}
-              handleSend={handleSend}
+              onSelect={handleSelect}
             />
+          )}
+        </Box>
+
+        {/* Área de chat */}
+        <Box sx={{ height: 'calc(100vh - 65px - 1rem)' }}>
+          {selectedId ? (
+            isConnected ? (
+              <Chat
+                conversaId={conversaId}
+                selectedId={selectedId}
+                messages={messages}
+                handleSend={handleSend}
+              />
+            ) : (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  height: '100%',
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            )
           ) : (
             <Box
               sx={{
@@ -116,6 +141,7 @@ export default function ConversasClient() {
                 padding: 2,
                 borderRadius: 2,
                 gap: 2,
+                height: '100%',
               }}
             >
               <motion.img
@@ -123,15 +149,22 @@ export default function ConversasClient() {
                 alt="Logo"
                 style={{ height: '4rem' }}
                 animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 10, ease: 'linear' }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 10,
+                  ease: 'linear',
+                }}
               />
-              <Typography color="var(--foreground)" variant="h5" sx={{ fontWeight: 'bold' }}>
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 'bold', color: 'var(--foreground)' }}
+              >
                 Selecione um contato para conversar
               </Typography>
             </Box>
           )}
-        </Grid>
-      </Grid>
-    </div>
+        </Box>
+      </Box>
+    </Box>
   );
 }
