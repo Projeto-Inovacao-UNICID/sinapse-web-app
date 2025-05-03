@@ -5,6 +5,13 @@ const groupService = new GroupService();
 
 // QUERIES
 
+export function useGetMyGroups() {
+  return useQuery({
+    queryKey: ["groups", "my"],
+    queryFn: () => groupService.getMyGroups(),
+  });
+}
+
 export function useGetGroups() {
   return useQuery({
     queryKey: ["groups"],

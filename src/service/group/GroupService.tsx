@@ -11,9 +11,14 @@ export class GroupService {
     return response.data;
   }
 
+  async getMyGroups() {
+    const response = await axiosInstance.get<Group[]>("/grupos/meus", { withCredentials: true });
+    return response.data;
+  }
+
   async getGroups() {
-    const response = await axiosInstance.get("/grupos", { withCredentials: true });
-    return response.data.content;
+    const response = await axiosInstance.get<Group[]>("/grupos", { withCredentials: true });
+    return response.data;
   }
 
   async getGroupById(id: number) {
