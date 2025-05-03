@@ -7,6 +7,7 @@ import NotificationsIconOutlined from '@mui/icons-material/NotificationsOutlined
 import { motion } from 'framer-motion';
 import { Notifications } from '@/components/notifications'; 
 import { useGetFriendshipInvitations } from '@/hooks/friendship/useFriendship';
+import { useGetGroupInvites } from '@/hooks/group/useGroup';
 
 const iconStyles = {
   color: 'var(--primary)',
@@ -25,6 +26,7 @@ const iconButtonStyles = {
 
 export function NotificationButton() {
   const { data: friendshipInvitations, isLoading: isFriendshipInvitationsLoading } = useGetFriendshipInvitations('recebidos');
+  const { data: groupInvites, isLoading: isGroupInvitesLoading } = useGetGroupInvites();
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -37,7 +39,9 @@ export function NotificationButton() {
     setAnchorEl(null);
   };
 
-  const contNotifications = friendshipInvitations ? friendshipInvitations.content.length : 0;
+  const contFriendshipInvitations = friendshipInvitations ? friendshipInvitations.content.length : 0;
+  const contGroupInvites = groupInvites ? groupInvites.length : 0;
+  const contNotifications = contFriendshipInvitations + contGroupInvites;
   const hasUnreadNotifications = contNotifications > 0;
 
   return (
@@ -82,10 +86,10 @@ export function NotificationButton() {
           },
         }}
       >
-        {isFriendshipInvitationsLoading ? (
+        {( isFriendshipInvitationsLoading || isGroupInvitesLoading ) ? (
           <CircularProgress />
-        ) : friendshipInvitations ? (
-          <Notifications friendshipInvitations={friendshipInvitations} />
+        ) : friendshipInvitations && groupInvites ? (
+          <Notifications friendshipInvitations={friendshipInvitations} groupInvites={groupInvites} />
         ) : (
           <></>
         )}

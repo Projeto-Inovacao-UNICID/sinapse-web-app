@@ -23,7 +23,7 @@ import { ShareDialog } from "../../utils/shareDialog";
 import { EditProfileModal } from "../profile-edit-modal";
 import { Group } from "@/types";
 import { UsersList } from "../users-list";
-import { GroupInviteList } from "@/components/group/group-invite-list";
+import { InviteList } from "@/components/invites";
 
 interface UserProfileCardProps {
   userId: string;
@@ -76,8 +76,11 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
 
   const { data: groupInvites } = useGetGroupInvites();
 
+  const friendshipRequestsContent = friendshipRequests ? friendshipRequests.content : null;
+  const contFriendshipRequests = friendshipRequestsContent ? friendshipRequestsContent.length : 0;
   const contGroupInvites = groupInvites ? groupInvites.length : 0;
-  const hasUnreadInvites = contGroupInvites > 0;
+  const invitesCount = contGroupInvites + contFriendshipRequests;
+  const hasUnreadInvites = invitesCount > 0;
 
   const handleMessage = () => {
     try {
@@ -295,7 +298,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
             <Tab
               icon={
                 <Badge
-                  badgeContent={contGroupInvites}
+                  badgeContent={invitesCount}
                   color="error"
                   invisible={!hasUnreadInvites}
                   sx={{
@@ -318,7 +321,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
         <Grid size={12}>
           {tabValue === 4 && <UsersList ids={friendshipIds ?? []} type= {isProfileOwner ? "friend" : undefined} />}
           {tabValue === 5 && <GroupList groupIds={userGroupsIds} viewDescription={true} />}
-          {tabValue === 6 && <GroupInviteList groupInvites={groupInvites ?? []} />}
+          {tabValue === 6 && <InviteList groupInvites={groupInvites ?? []} friendshipInvitations={friendshipRequestsContent ?? []} />}
         </Grid>
       </Grid>
 

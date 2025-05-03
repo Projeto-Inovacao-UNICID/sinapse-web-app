@@ -1,4 +1,3 @@
-import { useSession } from '@/hooks/session/useSession';
 import { FriendshipService } from '@/service/friendship/FriendshipService';
 import { FriendshipContent } from '@/types';
 import CloseIcon from '@mui/icons-material/Close';
@@ -12,7 +11,6 @@ interface FriendshipInvitationNotificationProps {
 }
 
 export function FriendshipInvitationNotification({ friendshipContent }: FriendshipInvitationNotificationProps) {
-  const { session } = useSession();
   const username = friendshipContent.username;
   const amizadeId = friendshipContent.amizadeId;
   const service = new FriendshipService();
