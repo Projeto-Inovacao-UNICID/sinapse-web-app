@@ -11,13 +11,13 @@ export class GroupService {
     return response.data;
   }
 
-  async getMyGroups() {
-    const response = await axiosInstance.get<Group[]>("/grupos/meus", { withCredentials: true });
+  async getMyGroups(page: number = 0, size: number = 10) {
+    const response = await axiosInstance.get(`/grupos/meus?page=${page}&size=${size}`, { withCredentials: true });
     return response.data;
   }
 
-  async getGroups() {
-    const response = await axiosInstance.get<Group[]>("/grupos", { withCredentials: true });
+  async getGroups(page: number = 0, size: number = 10) {
+    const response = await axiosInstance.get(`/grupos?page=${page}&size=${size}`, { withCredentials: true });
     return response.data;
   }
 

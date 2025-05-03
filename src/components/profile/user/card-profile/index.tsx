@@ -48,8 +48,8 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const { data: challenge } = useGetChallengeCountsUser(userId);
   const { data: groups, isLoading: loadingGroups } = useGetMyGroups();
 
-  const groupsIds = groups?.map((group: Group) => group.id);
-
+  const groupsIds = groups ? groups.content.map((group: Group) => group.id) : [];
+  
   const chatService = new ChatService();
 
   const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;

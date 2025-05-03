@@ -1,21 +1,28 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GroupService } from "@/service/group/GroupService";
+import { Group } from "@/types";
 
 const groupService = new GroupService();
 
 // QUERIES
 
-export function useGetMyGroups() {
+export function useGetMyGroups(page: number = 0, size: number = 10) {
   return useQuery({
-    queryKey: ["groups", "my"],
-    queryFn: () => groupService.getMyGroups(),
+    queryKey: ["groups", "my", page, size],
+    queryFn: ({ queryKey }) => {
+      const [, , currentPage, pageSize] = queryKey;
+      return groupService.getMyGroups(currentPage as number, pageSize as number);
+    },
   });
 }
 
-export function useGetGroups() {
+export function useGetGroups(page: number = 0, size: number = 10) {
   return useQuery({
-    queryKey: ["groups"],
-    queryFn: () => groupService.getGroups(),
+    queryKey: ["groups", "my", page, size],
+    queryFn: ({ queryKey }) => {
+      const [, , currentPage, pageSize] = queryKey;
+      return groupService.getGroups(currentPage as number, pageSize as number);
+    },
   });
 }
 

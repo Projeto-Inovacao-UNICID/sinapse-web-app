@@ -1,14 +1,17 @@
 import { UsersList } from "@/components/profile/user/users-list";
-import { useGetGroupById, useGetGroupMembers, usePatchGroup } from "@/hooks/group/useGroup";
+import { useDeleteGroup, useGetGroupById, useGetGroupMembers, usePatchGroup, usePostQuitGroup } from "@/hooks/group/useGroup";
 import { useUserProfile } from "@/hooks/user/useUserProfile";
 import { Box, Card, Divider, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import DeleteIcon from '@mui/icons-material/Delete';
+import CloseIcon from '@mui/icons-material/Close';
 import { motion } from "framer-motion";
 import { GroupCardEditor } from "../group-card-editor";
 import { useState } from "react";
 import { InviteMembersModal } from "@/components/group/invite-members-modal";
 import { useSession } from "@/hooks/session/useSession";
+import { ConfirmationDialog } from "@/components/group/confirmation-dialog";
 
 interface GroupCardProps {
   groupId: number;
@@ -22,11 +25,16 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
   const { data: groupMembers } = useGetGroupMembers(groupId);
   const { mutateAsync: editGroup } = usePatchGroup();
   const { session } = useSession();
+  const { mutateAsync: deleteGroup } = useDeleteGroup();
+  const { mutateAsync: quitGroup } = usePostQuitGroup();
 
   const isLeader = session?.id === leaderId;
+  const isUser = session ? session.roles.includes('ROLE_USER') : false;
 
   const [isEditing, setIsEditing] = useState(false);
   const [isMembersModalOpen, setIsMembersModalOpen] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [openQuitModal, setOpenQuitModal] = useState(false);
 
   const membersIds = groupMembers?.map(member => member.usuarioId);
   const members = <UsersList ids={membersIds ?? []} type="group" />;
@@ -44,6 +52,16 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
     month: 'long',
     year: 'numeric',
   });
+
+  const handleDelete = async () => {
+    await deleteGroup(groupId);
+    setOpenDeleteModal(false);
+  };
+
+  const handleQuit = async () => {
+    await quitGroup(groupId);
+    setOpenQuitModal(false);
+  };
 
   if (isLoading) {
     return <Typography>Carregando...</Typography>;
@@ -80,19 +98,50 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
                 {group?.nome}
               </Typography>
               {isLeader && (
+                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                  <motion.button
+                    whileHover={{ scale: 1.3 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                    onClick={() => setIsEditing(true)}
+                    style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
+                  >
+                    <EditIcon
+                      sx={{
+                        color: 'var(--muted)',
+                        ':hover': { color: 'var(--primary)' },
+                        width: '1.5rem',
+                        height: '1.5rem',
+                      }}
+                    />
+                  </motion.button>
+                  <motion.button
+                    whileHover={{ scale: 1.3 }}
+                    whileTap={{ scale: 0.9 }}
+                    transition={{ type: 'spring', stiffness: 300 }}
+                    onClick={() => setOpenDeleteModal(true)}
+                    style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
+                  >
+                    <DeleteIcon
+                      sx={{
+                        color: 'var(--muted)',
+                        ':hover': { color: 'var(--primary)' },
+                        width: '1.5rem',
+                        height: '1.5rem',
+                      }}
+                    />
+                  </motion.button>
+                </Box>
+              )}
+              {!isLeader && isUser && (
                 <motion.button
                   whileHover={{ scale: 1.3 }}
                   whileTap={{ scale: 0.9 }}
                   transition={{ type: 'spring', stiffness: 300 }}
-                  onClick={() => setIsEditing(true)}
-                  style={{
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    padding: 0,
-                    cursor: 'pointer',
-                  }}
+                  onClick={() => setOpenQuitModal(true)}
+                  style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
                 >
-                  <EditIcon
+                  <CloseIcon
                     sx={{
                       color: 'var(--muted)',
                       ':hover': { color: 'var(--primary)' },
@@ -159,7 +208,14 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
                         onClick={() => setIsMembersModalOpen(true)}
                         style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
                       >
-                        <GroupAddIcon sx={{ color: 'var(--muted)', ':hover': { color: 'var(--primary)' }, width: '1.5rem', height: '1.5rem' }} />
+                        <GroupAddIcon
+                          sx={{
+                            color: 'var(--muted)',
+                            ':hover': { color: 'var(--primary)' },
+                            width: '1.5rem',
+                            height: '1.5rem',
+                          }}
+                        />
                       </motion.button>
                     )}
                   </Box>
@@ -177,6 +233,24 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
         open={isMembersModalOpen}
         onClose={() => setIsMembersModalOpen(false)}
         groupId={groupId}
+      />
+
+      <ConfirmationDialog
+        open={openDeleteModal}
+        title="Deseja deletar o grupo?"
+        description="Essa ação é irreversível e removerá todos os dados do grupo."
+        onCancel={() => setOpenDeleteModal(false)}
+        onConfirm={handleDelete}
+        confirmText="Deletar"
+      />
+
+      <ConfirmationDialog
+        open={openQuitModal}
+        title="Deseja sair do grupo?"
+        description="Você não terá mais acesso a este grupo."
+        onCancel={() => setOpenQuitModal(false)}
+        onConfirm={handleQuit}
+        confirmText="Sair"
       />
     </>
   );
