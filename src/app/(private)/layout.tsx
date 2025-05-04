@@ -9,14 +9,8 @@ export default function PrivateLayout({
     <>
       <Header />
       <div
-        style={{
-          paddingTop: '65px',
-          display: 'grid',
-          gridTemplateColumns: '1fr minmax(0, 10fr) 1fr',
-          minHeight: '100vh',
-        }}
-      >
-        <main style={{ gridColumn: '2' }}>
+        style={{ paddingTop: 'calc(65px + 1rem)' }}>
+        <main>
           {children}
         </main>
       </div>

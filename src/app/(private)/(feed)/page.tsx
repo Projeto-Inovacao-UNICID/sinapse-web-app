@@ -1,3 +1,8 @@
-export default function Home() {
-    return <h1>Hello world feed</h1>;
-}   
+// src/app/(private)/(feed)/page.tsx
+'use client';
+
+import { Feed } from '@/components/feed';
+
+export default function FeedPage() {
+  return <Feed />;
+}

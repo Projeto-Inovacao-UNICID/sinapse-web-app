@@ -3,17 +3,17 @@ import { axiosInstance } from "../api";
 export class PostService {
     async postPost(conteudo: string, repost_id: string | null, arquivos: any[]) {
         const response = await axiosInstance.post(`/postagens`, { conteudo, repost_id, arquivos }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async patchPost(postId: string, conteudo: string) {
         const response = await axiosInstance.patch(`/postagens/${postId}`, { conteudo }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async deletePost(postId: string) {
         const response = await axiosInstance.delete(`/postagens/${postId}`, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async getPosts() {
@@ -38,7 +38,7 @@ export class PostService {
 
     async patchPostPrivacy(postId: string, isPublic: boolean) {
         const response = await axiosInstance.patch(`/postagens/${postId}/privacidade`, { isPublic }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async getRecommendedPosts() {

@@ -3,12 +3,12 @@ import { axiosInstance } from "../api";
 export class AdminService {
     async postCreateAdministrator(nome: string, email: string, senha: string) {
         const response = await axiosInstance.post(`/administradores`, { nome, email, senha }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async postLoginAdministrator(email: string, senha: string) {
         const response = await axiosInstance.post(`/admin/login`, { email, senha }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 
     async getListLogs(page: number) {
@@ -33,6 +33,6 @@ export class AdminService {
             aprovada,
             anotacoesAprovacao
         }, { withCredentials: true });
-        return response.data;
+        return response.status;
     }
 }

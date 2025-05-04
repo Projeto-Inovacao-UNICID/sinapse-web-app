@@ -1,58 +1,55 @@
 'use client';
 
-import { MessageService } from '@/service/chat/MessageService';
 import SendIcon from '@mui/icons-material/Send';
 import { IconButton, Paper, TextField } from '@mui/material';
 import { useRef, useEffect, useState } from 'react';
 
 interface ChatInputProps {
-  conversasId: number;
+  conversasId: string;
   message: string;
-  setMessage: (msg: string) => void;
+  setMessage: (message: string) => void;
   onSend: (message: string) => void;
+  disabled?: boolean;
 }
 
-export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInputProps) {
+export function ChatInput({
+  conversasId,
+  message,
+  setMessage,
+  onSend,
+  disabled = false
+}: ChatInputProps) {
   const [isSending, setIsSending] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const service = new MessageService();
 
   const handleSend = async () => {
     if (!message.trim() || isSending) return;
-
+    setIsSending(true);
     try {
-      setIsSending(true);
       onSend(message);
-      await service.postMessage(conversasId, message);
       setMessage('');
-    } catch (err) {
-      console.error('Erro ao enviar mensagem:', err);
     } finally {
       setIsSending(false);
     }
   };
 
   useEffect(() => {
-    inputRef.current?.focus();
-  }, [message, conversasId]);
+    if (!disabled) inputRef.current?.focus();
+  }, [message, conversasId, disabled]);
+
+  if (disabled) return null;
 
   return (
     <Paper
       component="form"
-      onSubmit={(e) => {
+      onSubmit={e => {
         e.preventDefault();
         handleSend();
       }}
       sx={{
-        display: 'flex',
-        alignItems: 'center',
-        padding: '8px',
-        marginTop: '8px',
-        borderRadius: 'var(--radius)',
-        backgroundColor: 'var(--input)',
-        position: 'sticky',
-        bottom: 0,
-        zIndex: 10,
+        display: 'flex', alignItems: 'center', p: 1, mt: 1,
+        borderRadius: 'var(--radius)', backgroundColor: 'var(--input)',
+        position: 'sticky', bottom: 0, zIndex: 10,
       }}
       elevation={0}
     >
@@ -61,34 +58,21 @@ export function ChatInput({ conversasId, message, setMessage, onSend }: ChatInpu
         variant="standard"
         placeholder="Digite sua mensagem..."
         value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        onChange={e => setMessage(e.target.value)}
         inputRef={inputRef}
         sx={{
-          input: {
-            color: 'var(--foreground)',
-          },
-          '& .MuiInput-underline:before': {
-            borderBottom: `2px solid var(--border)`,
-          },
-          '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
-            borderBottom: `2px solid var(--primary)`,
-          },
-          '& .MuiInput-underline:after': {
-            borderBottom: `2px solid var(--primary)`,
-          },
+          input: { color: 'var(--foreground)' },
+          '& .MuiInput-underline:before': { borderBottom: `2px solid var(--border)` },
+          '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: `2px solid var(--primary)` },
+          '& .MuiInput-underline:after': { borderBottom: `2px solid var(--primary)` },
         }}
-        disabled={isSending}
+        disabled={isSending || disabled}
       />
 
       <IconButton
         type="submit"
-        sx={{
-          color: 'var(--primary)',
-          '&:disabled': {
-            opacity: 0.5,
-          },
-        }}
-        disabled={isSending}
+        sx={{ color: 'var(--primary)', '&:disabled': { opacity: 0.5 } }}
+        disabled={isSending || disabled}
       >
         <SendIcon />
       </IconButton>

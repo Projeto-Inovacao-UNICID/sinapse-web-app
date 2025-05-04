@@ -1,11 +1,23 @@
 'use client';
 
-import { useState } from "react";
+import {
+  Button,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography
+} from "@mui/material";
 import { useRouter } from "next/navigation";
-import { TextField, Button, RadioGroup, FormControlLabel, Radio, Typography } from "@mui/material";
+import { useState } from "react";
+
 import { LoginService } from "@/service/auth/LoginService";
+import { SessionService } from "@/service/session/SessionService";
+import {
+  buttonFormStyle, inputFormStyle, radioStyle
+} from "@/theme/components-styles";
+import { useQueryClient } from "@tanstack/react-query";
 import { ModalError } from "../modal-error";
-import { buttonFormStyle, inputFormStyle, radioStyle } from "@/theme/components-styles";
 
 interface CardLoginProps {
   onOpenModal: () => void;
@@ -31,25 +43,37 @@ export function CardLogin({ onOpenModal }: CardLoginProps) {
     setPassword(event.target.value);
   };
 
-  const service = new LoginService();
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     try {
-      const data = await service.loginService(type, username, password);
-      // Redireciona conforme o tipo
-      if (type === 'usuario') {
-        router.push('/profile/me');
+      const loginService = new LoginService();
+      await loginService.loginService(type, username, password);
+
+      // Revalida a sessão
+      const sessionService = new SessionService();
+      const updatedSession = await queryClient.fetchQuery({
+        queryKey: ["session"],
+        queryFn: () => sessionService.getSession(),
+      });
+
+      const userId = updatedSession?.id;
+      if (!userId) throw new Error("Sessão inválida");
+
+      // Redireciona com o ID
+      if (type === "usuario") {
+        router.push(`/profile/me/${userId}`);
       } else {
-        router.push('/empresa/me');
+        router.push(`/empresa/me/${userId}`);
       }
     } catch (err: any) {
       setUsername('');
       setPassword('');
-      setErrorMsg(err.response.data.message || 'Email ou senha inválidos');
-      setErrorStatus(err.response.data.status || '400');
+      setErrorMsg(err?.response?.data?.message || 'Email ou senha inválidos');
+      setErrorStatus(err?.response?.data?.status || '400');
       setModalOpen(true);
     }
   };
@@ -64,7 +88,7 @@ export function CardLogin({ onOpenModal }: CardLoginProps) {
           alignItems: "center",
           justifyContent: "center",
           gap: 16,
-          backgroundColor: 'var(--bgSecondary)',
+          backgroundColor: 'var(--card)',
           padding: 24,
           paddingTop: 32,
           borderRadius: 32,
@@ -96,8 +120,7 @@ export function CardLogin({ onOpenModal }: CardLoginProps) {
 
         <RadioGroup
           row
-          aria-labelledby="demo-row-radio-buttons-group-label"
-          name="row-radio-buttons-group"
+          name="tipo"
           onChange={handleChangeType}
           value={type}
         >

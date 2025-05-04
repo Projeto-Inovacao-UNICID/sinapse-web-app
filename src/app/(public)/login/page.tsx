@@ -5,6 +5,7 @@ import { RegistrationModal } from "@/components/registration-modal";
 import { colors } from "@/theme/colors";
 import { Box } from "@mui/material";
 import { useState } from "react";
+import { motion } from 'framer-motion';
 
 export default function Login() {
   const [modalOpen, setModalOpen] = useState(false);
@@ -21,9 +22,24 @@ export default function Login() {
           maxWidth: 1000,
           }}
         >
+          <motion.img
+            src="/assets/logo.png"
+            alt="Logo"
+            style={{ height: '5rem' }}
+            animate={{
+              rotate: 360,
+            }}
+            transition={{
+              repeat: Infinity,
+              repeatType: 'loop',
+              duration: 10,
+              ease: 'linear',
+            }}
+          />
+
           <div style={{maxWidth: 400}}>
             <h1>Connect<b style={{color: colors.primary}}>Z</b></h1>
-            <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Soluta accusamus ipsum nam tempora consequatur ab.</p>
+            <p>Conecte, desafie, surpreenda — portfólios vivos, soluções reais, oportunidades que mudam destinos.</p>
           </div>
           <div>
             <CardLogin onOpenModal={() => setModalOpen(true)} />

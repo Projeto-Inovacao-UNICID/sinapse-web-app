@@ -1,60 +1,83 @@
 'use client';
 
-import { useState } from 'react';
-import { useChatSocket } from '@/hooks/chat/useChatSocket'; // Certifique-se de importar o hook corretamente
-import { ChatMessages } from './messages';
-import { ChatInput } from './input';
+import React, { useEffect, useRef, useState } from 'react';
+import { Box, Divider, Paper, Typography } from '@mui/material';
 import { Message } from '@/types';
+import { ChatInput } from '@/components/chat/input';
 
-interface ChatProps {
+export interface ChatProps {
   conversaId: number | null;
-  messages: Message[];
   selectedId: string;
-  handleSend: (message: string) => void;
+  messages: Message[];
+  handleSend: (conteudo: string) => void;
 }
 
-export function Chat({ conversaId, messages, selectedId, handleSend }: ChatProps) {
-  const [drafts, setDrafts] = useState<{ [key: number]: string }>({});
+export function Chat({
+  conversaId,
+  selectedId,
+  messages,
+  handleSend
+}: ChatProps) {
+  const [message, setMessage] = useState('');
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  // Chame o hook `useChatSocket` para configurar o WebSocket
-  useChatSocket({
-    destId: selectedId,
-    onMessage: (novaMensagem: Message) => {
-      // Atualize as mensagens com a mensagem recebida via WebSocket
-      handleSend(novaMensagem.conteudo);  // O `handleSend` deve adicionar a nova mensagem ao estado
-    },
-  });
-
-  // Função para enviar uma mensagem
-  const onSendMessage = (conteudo: string) => {
-    handleSend(conteudo);  // Envia a mensagem
-    setDrafts((prev) => ({ ...prev, [conversaId!]: '' }));  // Limpa o rascunho após o envio
-  };
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   return (
-    <div className="flex flex-col h-full p-4 background">
-      <div className="flex-grow overflow-y-auto mb-4">
-        {conversaId ? (
-          <ChatMessages
-            newMessages={messages}
-            contactId={selectedId}
-            conversaId={conversaId}
-          />
-        ) : (
-          <div className="text-white">Selecione uma conversa</div>
-        )}
-      </div>
+    <Box display="flex" flexDirection="column" height="100%">
+      {/* Lista de mensagens */}
+      <Box
+        flex={1}
+        p={2}
+        sx={{
+          overflowY: 'auto',
+          backgroundColor: 'var(--card)',
+          borderRadius: 2
+        }}
+      >
+        {messages.map(msg => {
+          const isOther = msg.remetenteId === selectedId;
+          const justify = isOther ? 'flex-start' : 'flex-end';
+          const bgcolor = isOther ? 'var(--cardSecondary)' : 'var(--primary)';
+          const color  = isOther ? 'var(--foreground)' : 'white';
 
-      {conversaId && (
-        <div>
-          <ChatInput
-            conversasId={conversaId}
-            message={drafts[conversaId] || ''}
-            setMessage={(msg) => setDrafts((prev) => ({ ...prev, [conversaId]: msg }))}
-            onSend={onSendMessage}  // Passa a função de envio de mensagens
-          />
-        </div>
+          return (
+            <Box key={msg.id} display="flex" justifyContent={justify} mb={1}>
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 1.5,
+                  bgcolor,
+                  color,
+                  maxWidth: '70%',
+                  borderRadius: 2
+                }}
+              >
+                <Typography variant="body2" mb={0.5} sx={{ fontSize: '1rem' }}>{msg.conteudo}</Typography>
+                <Divider/>
+                <Typography
+                  variant="caption"
+                  sx={{ display: 'block', textAlign: 'right', fontSize: '0.5rem' }}
+                >
+                  {new Date(msg.createdAt).toLocaleTimeString()}
+                </Typography>
+              </Paper>
+            </Box>
+          );
+        })}
+        <div ref={messagesEndRef} />
+      </Box>
+
+      {conversaId !== null && (
+        <ChatInput
+          conversasId={conversaId.toString()}
+          message={message}
+          setMessage={setMessage}
+          onSend={handleSend}
+        />
       )}
-    </div>
+    </Box>
   );
 }

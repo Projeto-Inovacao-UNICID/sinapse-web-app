@@ -1,4 +1,4 @@
-import { Contact } from "@/types";
+import { Contact, Message } from "@/types";
 import { axiosInstance } from "../api";
 
 export class ChatService {
@@ -21,4 +21,12 @@ export class ChatService {
         const response = await axiosInstance.get<Contact[]>(`/conversas/minhas-conversas`, { withCredentials: true });
         return response.data;
     }
+
+    async listMessages(conversaId: number): Promise<Message[]> {
+        const response = await axiosInstance.get<Message[]>(
+          `/conversas/${conversaId}/mensagens`,
+          { withCredentials: true }
+        );
+        return response.data;
+      }
 }

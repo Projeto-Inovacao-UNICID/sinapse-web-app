@@ -1,55 +1,73 @@
-import { useEffect, useRef } from 'react';
-import { Message } from '@/types'; 
+import { useEffect, useRef, useState, useCallback } from 'react';
+import { Message } from '@/types';
 
 type UseChatSocketProps = {
   destId: string;
-  onMessage: (message: Message) => void;
+  onMessage: (msg: Message) => void;
 };
 
-export const useChatSocket = ({ destId, onMessage }: UseChatSocketProps) => {
+export function useChatSocket({ destId, onMessage }: UseChatSocketProps) {
   const socketRef = useRef<WebSocket | null>(null);
+  const reconnectTimer = useRef<number | undefined>(undefined);
+  const shouldReconnect = useRef(true);
 
-  useEffect(() => {
+  const [isConnected, setIsConnected] = useState(false);
+
+  const connect = useCallback(() => {
     if (!destId) return;
 
-    const token = localStorage.getItem('token');
-    if (token) {
-      document.cookie = `token=${token}; path=/`;
-    }
+    const protocol = window.location.protocol === 'https:' ? 'wss' : 'ws';
+    const url = `${protocol}://${window.location.host}/ws?destId=${destId}`;
+    const ws = new WebSocket(url);
 
-    const wsUrl = `${process.env.NEXT_PUBLIC_WS_URL}?destId=${destId}`;
-    socketRef.current = new WebSocket(wsUrl);
-
-    socketRef.current.onopen = () => {
-      console.log('WebSocket conectado');
+    ws.onopen = () => {
+      setIsConnected(true);
     };
 
-    socketRef.current.onmessage = (event) => {
+    ws.onmessage = ev => {
       try {
-        const data = JSON.parse(event.data);
-
-        const novaMensagem: Message = {
-          id: data.id || Date.now(),
-          conteudo: data.conteudo,
-          remetenteId: data.remetenteId,
-          conversaId: data.conversaId,
-          remetenteTipo: data.remetenteTipo,
-          createdAt: data.createdAt || new Date().toISOString(),
-          editada: data.editada ?? false,
-          removida: data.removida ?? false,
-        };
-
-        onMessage(novaMensagem);
-      } catch (err) {
-        console.error('Erro ao processar mensagem:', err);
+        const msg: Message = JSON.parse(ev.data);
+        onMessage(msg);
+      } catch (e) {
+        console.error('Erro ao parsear mensagem WS:', e);
       }
     };
 
-    socketRef.current.onerror = (err) => console.error('Erro no socket:', err);
-    socketRef.current.onclose = () => console.log('WebSocket fechado');
+    ws.onclose = () => {
+      setIsConnected(false);
+      if (shouldReconnect.current) {
+        reconnectTimer.current = window.setTimeout(connect, 5000);
+      }
+    };
+
+    ws.onerror = () => {
+    };
+
+    socketRef.current = ws;
+  }, [destId, onMessage]);
+
+  useEffect(() => {
+    shouldReconnect.current = true;
+    connect();
 
     return () => {
-      socketRef.current?.close();
+      shouldReconnect.current = false;
+      if (reconnectTimer.current) clearTimeout(reconnectTimer.current);
+      if (socketRef.current) {
+        socketRef.current.onclose = null;
+        socketRef.current.onmessage = null;
+        socketRef.current.onerror = null;
+        socketRef.current.close();
+      }
     };
-  }, [destId]);
-};
+  }, [connect]);
+
+  const sendMessage = useCallback((payload: any) => {
+    const ws = socketRef.current;
+    if (ws?.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify(payload));
+    }
+  }, []);
+
+  return { isConnected, sendMessage };
+}
