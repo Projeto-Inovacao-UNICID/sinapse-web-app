@@ -61,7 +61,7 @@ export class ChallengeService {
 
   async postChallengeRegistrationGroup(
     desafioId: string,
-    groupId: string,
+    groupId: number,
     mensagem: string = ""
   ) {
     const response = await axiosInstance.post(

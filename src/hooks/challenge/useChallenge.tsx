@@ -99,7 +99,7 @@ export function usePostChallengeStage() {
 export function usePostChallengeRegistrationGroup() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { desafioId: string; groupId: string; mensagem?: string }) =>
+    mutationFn: (data: { desafioId: string; groupId: number; mensagem?: string }) =>
       challengeService.postChallengeRegistrationGroup(data.desafioId, data.groupId, data.mensagem),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["challenges"] });

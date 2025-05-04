@@ -33,7 +33,7 @@ export function CreationChallengeCard({ empresaId }: Props) {
     modalidade: 'marketing',
   });
 
-const { mutate: postChallenge, isPending, isSuccess, isError } = usePostChallenge(empresaId, form);
+const { mutate: postChallenge, isPending, isSuccess, isError } = usePostChallenge();
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -59,7 +59,7 @@ const { mutate: postChallenge, isPending, isSuccess, isError } = usePostChalleng
         p: 2,
         borderRadius: 4,
         boxShadow: 3,
-        backgroundColor: 'var(--card)'  // Aqui estamos aplicando o fundo com a variável --card
+        backgroundColor: 'var(--card)'
       }}>
         <CardContent>
           <Typography variant="h5" fontWeight={600} gutterBottom color='var(--foreground)'>
