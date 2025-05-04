@@ -1,3 +1,4 @@
+// src/components/challenge/company/creation-challenge-card/index.tsx
 'use client';
 
 import { usePostChallenge } from '@/hooks/challenge/useChallenge';
