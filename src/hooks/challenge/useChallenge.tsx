@@ -4,7 +4,6 @@ import { challengeService } from "@/service/challenge/ChallengeService";
 
 // QUERIES
 
-// Hook para obter todos os desafios
 export function useGetChallenges() {
   return useQuery({
     queryKey: ["challenges"],
@@ -12,16 +11,14 @@ export function useGetChallenges() {
   });
 }
 
-// Hook para obter um desafio por ID
 export function useGetChallengeById(id: string) {
   return useQuery({
     queryKey: ["challenges", id],
-    queryFn: () => challengeService.getChallenges(),
+    queryFn: () => challengeService.getChallengeById(id),
     enabled: !!id,
   });
 }
 
-// Hook para obter os estágios de um desafio
 export function useGetChallengeStages(id: string) {
   return useQuery({
     queryKey: ["challenges", id, "stages"],
@@ -30,7 +27,6 @@ export function useGetChallengeStages(id: string) {
   });
 }
 
-// Hook para obter os participantes de um estágio
 export function useGetChallengeStageParticipants(stageId: string) {
   return useQuery({
     queryKey: ["challengeStages", stageId, "participants"],
@@ -39,7 +35,6 @@ export function useGetChallengeStageParticipants(stageId: string) {
   });
 }
 
-// Hook para obter as contagens de desafios de uma empresa
 export function useGetChallengeCounts(companyId: string) {
   return useQuery({
     queryKey: ["challengeCounts", companyId],
@@ -48,7 +43,6 @@ export function useGetChallengeCounts(companyId: string) {
   });
 }
 
-// Hook para obter as contagens de desafios de um usuário
 export function useGetChallengeCountsUser(userId: string) {
   return useQuery({
     queryKey: ["challengeCountsUser", userId],
@@ -57,10 +51,17 @@ export function useGetChallengeCountsUser(userId: string) {
   });
 }
 
+export function useGetMyChallengeRegistration(desafioId: string) {
+  return useQuery({
+    queryKey: ["challengeRegistration", desafioId],
+    queryFn: () => challengeService.getMyChallengeRegistration(desafioId),
+    enabled: !!desafioId,
+  });
+}
+
 // MUTATIONS
 
-// Hook para criar um novo desafio
-export function usePostChallenge(empresaId: string, form: ChallengeToPost) {
+export function usePostChallenge() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: { empresaId: string; desafio: ChallengeToPost }) =>
@@ -71,7 +72,6 @@ export function usePostChallenge(empresaId: string, form: ChallengeToPost) {
   });
 }
 
-// Hook para atualizar um desafio
 export function usePatchChallenge() {
   const queryClient = useQueryClient();
   return useMutation({
@@ -84,26 +84,60 @@ export function usePatchChallenge() {
   });
 }
 
-// Hook para criar um novo estágio de desafio
 export function usePostChallengeStage() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: { desafioId: string; stage: ChallengeStage }) =>
       challengeService.postChallengeStage(data.desafioId, data.stage),
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["challenges"] });
+      queryClient.invalidateQueries({ queryKey: ["challenges", variables.desafioId, "stages"] });
     },
   });
 }
 
-// Hook para registrar um grupo em um desafio
 export function usePostChallengeRegistrationGroup() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data: { desafioId: string; groupId: string; mensagem?: string }) =>
       challengeService.postChallengeRegistrationGroup(data.desafioId, data.groupId, data.mensagem),
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["challenges"] });
+      queryClient.invalidateQueries({ queryKey: ["challengeRegistration", variables.desafioId] });
+    },
+  });
+}
+
+export function usePostChallengeRegistrationSolo() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (desafioId: string) =>
+      challengeService.postChallengeRegistrationSolo(desafioId),
+    onSuccess: (data, desafioId) => {
+      queryClient.invalidateQueries({ queryKey: ["challengeRegistration", desafioId] });
+    },
+  });
+}
+
+export function usePostChallengeWinner() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { desafioId: string; participantId: string }) =>
+      challengeService.postChallengeWinner(data.desafioId, data.participantId),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["challenges", variables.desafioId] });
+      // Pode adicionar mais invalidations se necessário
+    },
+  });
+}
+
+export function useRemoveParticipant() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { desafioId: string; participanteId: string }) =>
+      challengeService.removeParticipant(data.desafioId, data.participanteId),
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ["challenges", variables.desafioId, "participants"] });
     },
   });
 }

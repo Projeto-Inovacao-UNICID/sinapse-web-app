@@ -51,7 +51,7 @@ export function ChatSidebar({
         display: 'flex',
         flexDirection: 'column',
         zIndex: 2,
-        alignSelf: 'flex-end', // garante que fique colado no final da coluna
+        alignSelf: 'flex-end',
       }}
     >
       {/* Header */}
@@ -71,8 +71,8 @@ export function ChatSidebar({
           onChange={e => setSearch(e.target.value)}
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon sx={{ color: 'var(--muted)', fontSize: 20 }} />
+              <InputAdornment position="start" sx={{ alignItems: 'flex-start', display: 'flex' }}>
+                <SearchIcon sx={{ color: 'var(--muted)', fontSize: 20, mt: -0.7 }} />
               </InputAdornment>
             ),
             disableUnderline: true,
