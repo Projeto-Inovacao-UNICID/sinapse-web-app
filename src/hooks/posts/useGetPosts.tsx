@@ -12,17 +12,19 @@ export interface Post {
   arquivoIds: number[]
   imagemUrl?: string
   publico: boolean
+  isCompany: boolean
 }
 
 interface PostagemResponseDto {
   id: number
   autorId: string
   autorNome: string
-  autorAvatarUrl: string   // pode vir relativo ou absoluto
+  autorAvatarUrl: string
   conteudo: string
   createdAt: string
   arquivoIds: number[]
   publico: boolean
+  isEmpresa: boolean
 }
 
 const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? '').replace(/\/$/, '')
@@ -36,8 +38,6 @@ async function fetchPosts(): Promise<Post[]> {
   return data.map(p => {
     const primeiro = p.arquivoIds[0]
 
-    // se autorAvatarUrl já for absoluto (começa com http), usa direto,
-    // senão prefixa com API_BASE
     const avatarUrl = p.autorAvatarUrl.startsWith('http')
       ? p.autorAvatarUrl
       : `${API_BASE}${p.autorAvatarUrl}`
@@ -53,7 +53,8 @@ async function fetchPosts(): Promise<Post[]> {
       publico:        p.publico,
       imagemUrl:      primeiro
         ? `${API_BASE}/postagens/arquivos/${primeiro}`
-        : undefined
+        : undefined,
+      isCompany:      p.isEmpresa
     }
   })
 }
