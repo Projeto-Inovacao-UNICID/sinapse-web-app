@@ -206,7 +206,7 @@ export function Header() {
                   ...params.InputProps,
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SearchIcon sx={{ color: 'var(--muted)' }} />
+                      <SearchIcon sx={{ color: 'var(--muted-search)' }} />
                     </InputAdornment>
                   ),
                   endAdornment: (
