@@ -150,7 +150,7 @@ export function CreateGroupModal({ open, onClose }: CreateGroupModalProps) {
             </Typography>
           </Box>
 
-          <Box mt={2}>
+          <Box sx={{ mt: 2 }}>
             <Button
               variant="contained"
               fullWidth

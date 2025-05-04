@@ -2,26 +2,27 @@
 
 import { CreateGroupModal } from "@/components/group/create-group-card";
 import { GroupList } from "@/components/group/group-list";
+import { InviteList } from "@/components/invites";
 import { useGetChallengeCountsUser } from "@/hooks/challenge/useChallenge";
 import { useAcceptFriendshipRequest, useDeleteFriendshipRequest, useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
-import { useGetGroups } from "@/hooks/group/useGroup";
+import { useGetGroupInvites, useGetMyGroups } from "@/hooks/group/useGroup";
 import { useGetPosts } from "@/hooks/posts/usePosts";
 import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile, useUserProfileImage } from "@/hooks/user/useUserProfile";
 import { ChatService } from "@/service/chat/ChatService";
+import { Group } from "@/types";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 import MessageIcon from '@mui/icons-material/Message';
 import ShareIcon from '@mui/icons-material/Share';
-import { Avatar, Box, Button, CircularProgress, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
+import { Avatar, Badge, Box, Button, CircularProgress, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from 'next/navigation';
 import { useState } from "react";
 import { BoxInfo } from "../../box-info";
 import { ShareDialog } from "../../utils/shareDialog";
 import { EditProfileModal } from "../profile-edit-modal";
-import { Group } from "@/types";
 import { UsersList } from "../users-list";
 
 interface UserProfileCardProps {
@@ -45,11 +46,10 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const { data: friendshipRequests } = useGetFriendshipInvitations("recebidos");
   const { data: posts } = useGetPosts();
   const { data: challenge } = useGetChallengeCountsUser(userId);
-  const { data: groups, isLoading: loadingGroups } = useGetGroups();
+  const { data: groups, isLoading: loadingGroups } = useGetMyGroups();
 
-  const userGroups = ( groups ?? [] ).filter((group: Group) => group.liderId === userId);
-  const userGroupsIds = userGroups.map((group: Group) => group.id);
-
+  const groupsIds = groups ? groups.content.map((group: Group) => group.id) : [];
+  
   const chatService = new ChatService();
 
   const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
@@ -72,6 +72,14 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const isActiveFriendshipRequest = !isProfileOwner && friendshipRequests?.content.some(
     (request) => request.usuarioId === userId
   );
+
+  const { data: groupInvites } = useGetGroupInvites();
+
+  const friendshipRequestsContent = friendshipRequests ? friendshipRequests.content : null;
+  const contFriendshipRequests = friendshipRequestsContent ? friendshipRequestsContent.length : 0;
+  const contGroupInvites = groupInvites ? groupInvites.length : 0;
+  const invitesCount = contGroupInvites + contFriendshipRequests;
+  const hasUnreadInvites = invitesCount > 0;
 
   const handleMessage = () => {
     try {
@@ -265,17 +273,54 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
 
         <Divider sx={{ my: 0.3, borderBottom: '1px solid var(--secondary)', width: '100%' }} />
 
-        <Tabs value={tabValue} onChange={(_, v) => setTabValue(v)} textColor="inherit" TabIndicatorProps={{ style: { backgroundColor: 'var(--primary)' } }} sx={{ '& .MuiTab-root': { color: 'var(--muted)', textTransform: 'none' }, '& .Mui-selected': { color: 'var(--primary)' } }}>
+        <Tabs
+          value={tabValue}
+          onChange={(_, v) => setTabValue(v)}
+          textColor="inherit"
+          TabIndicatorProps={{ style: { backgroundColor: 'var(--primary)' } }}
+          sx={{
+            '& .MuiTab-root': {
+              color: 'var(--muted)',
+              textTransform: 'none',
+            },
+            '& .Mui-selected': { color: 'var(--primary)' },
+          }}
+        >
           <Tab label="Início" />
           <Tab label="Sobre" />
           <Tab label="Publicações" />
           <Tab label="Desafios" />
           <Tab label="Amigos" />
           <Tab label="Grupos" />
+          {
+            isProfileOwner &&
+            <Tab
+              icon={
+                <Badge
+                  badgeContent={invitesCount}
+                  color="error"
+                  invisible={!hasUnreadInvites}
+                  sx={{
+                    '& .MuiBadge-badge': {
+                      top: -10,
+                      right: -4,
+                      fontSize: '0.7rem',
+                      minWidth: 16,
+                      height: 16,
+                    },
+                  }}
+                />
+              }
+              iconPosition="end"
+              label="Convites"
+            />
+          }
         </Tabs>
+
         <Grid size={12}>
           {tabValue === 4 && <UsersList ids={friendshipIds ?? []} type= {isProfileOwner ? "friend" : undefined} />}
-          {tabValue === 5 && <GroupList groupIds={userGroupsIds} viewDescription={true} />}
+          {tabValue === 5 && <GroupList groupIds={groupsIds ?? []} viewDescription={true} />}
+          {tabValue === 6 && <InviteList groupInvites={groupInvites ?? []} friendshipInvitations={friendshipRequestsContent ?? []} />}
         </Grid>
       </Grid>
 

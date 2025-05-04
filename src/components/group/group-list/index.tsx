@@ -2,7 +2,7 @@ import { GroupCard } from "@/components/group/group-card";
 import { List, ListItem, Typography } from "@mui/material";
 
 interface GroupListProps {
-  groupIds: string[];
+  groupIds: number[];
   viewDescription?: boolean;
 }
 

@@ -1,18 +1,32 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GroupService } from "@/service/group/GroupService";
+import { Group } from "@/types";
 
 const groupService = new GroupService();
 
 // QUERIES
 
-export function useGetGroups() {
+export function useGetMyGroups(page: number = 0, size: number = 10) {
   return useQuery({
-    queryKey: ["groups"],
-    queryFn: () => groupService.getGroups(),
+    queryKey: ["groups", "my", page, size],
+    queryFn: ({ queryKey }) => {
+      const [, , currentPage, pageSize] = queryKey;
+      return groupService.getMyGroups(currentPage as number, pageSize as number);
+    },
   });
 }
 
-export function useGetGroupById(id: string) {
+export function useGetGroups(page: number = 0, size: number = 10) {
+  return useQuery({
+    queryKey: ["groups", "my", page, size],
+    queryFn: ({ queryKey }) => {
+      const [, , currentPage, pageSize] = queryKey;
+      return groupService.getGroups(currentPage as number, pageSize as number);
+    },
+  });
+}
+
+export function useGetGroupById(id: number) {
   return useQuery({
     queryKey: ["groups", id],
     queryFn: () => groupService.getGroupById(id),
@@ -20,7 +34,7 @@ export function useGetGroupById(id: string) {
   });
 }
 
-export function useGetGroupMembers(id: string) {
+export function useGetGroupMembers(id: number) {
   return useQuery({
     queryKey: ["groups", id, "members"],
     queryFn: () => groupService.getGroupMembers(id),
@@ -35,9 +49,9 @@ export function useGetGroupInvites() {
   });
 }
 
-export function useGetGroupRoles(id: string) {
+export function useGetGroupRoles(id: number) {
   return useQuery({
-    queryKey: ["groups", id, "roles"],
+    queryKey: ["groups", `${id}`, "roles"],
     queryFn: () => groupService.getGroupRoles(id),
     enabled: !!id,
   });
@@ -59,8 +73,8 @@ export function usePostGroup() {
 export function usePatchGroup() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { id: string; nome: string; descricao: string; isPublic: boolean }) =>
-      groupService.patchGroup(data.id, data.nome, data.descricao, data.isPublic),
+    mutationFn: (data: { id: number; nome?: string; descricao?: string; publico?: boolean }) =>
+      groupService.patchGroup(data.id, data.nome, data.descricao, data.publico),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["groups"] });
       queryClient.invalidateQueries({ queryKey: ["groups", variables.id] });
@@ -71,7 +85,7 @@ export function usePatchGroup() {
 export function useDeleteGroup() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => groupService.deleteGroup(id),
+    mutationFn: (id: number) => groupService.deleteGroup(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["groups"] });
     },
@@ -81,7 +95,7 @@ export function useDeleteGroup() {
 export function usePostQuitGroup() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => groupService.postQuitGroup(id),
+    mutationFn: (id: number) => groupService.postQuitGroup(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["groups"] });
     },
@@ -91,7 +105,7 @@ export function usePostQuitGroup() {
 export function usePostChangeLeader() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { id: string; userId: string }) =>
+    mutationFn: (data: { id: number; userId: string }) =>
       groupService.postChangeLeader(data.id, data.userId),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["groups", variables.id, "members"] });
@@ -102,8 +116,8 @@ export function usePostChangeLeader() {
 export function usePostGroupInvite() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { id: string; userId: string }) =>
-      groupService.postGroupInvite(data.id, data.userId),
+    mutationFn: (data: { id: number; convidadoId: string }) =>
+      groupService.postGroupInvite(data.id, data.convidadoId),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["groups", variables.id, "members"] });
     },
@@ -113,8 +127,21 @@ export function usePostGroupInvite() {
 export function usePostAcceptGroupInvite() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { id: string; inviteId: string }) =>
+    mutationFn: (data: { id: number; inviteId: number }) =>
       groupService.postAcceptGroupInvite(data.id, data.inviteId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["groups"] });
+      queryClient.invalidateQueries({ queryKey: ["group-invites"] });
+    },
+  });
+}
+
+
+export function usePostRejectGroupInvite() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data: { id: number; inviteId: number }) =>
+      groupService.postRejectGroupInvite(data.id, data.inviteId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["groups"] });
       queryClient.invalidateQueries({ queryKey: ["group-invites"] });
@@ -125,7 +152,7 @@ export function usePostAcceptGroupInvite() {
 export function usePostCreateRole() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { id: string; nome: string }) =>
+    mutationFn: (data: { id: number; nome: string }) =>
       groupService.postCreateRole(data.id, data.nome),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["groups", variables.id, "roles"] });
@@ -136,7 +163,7 @@ export function usePostCreateRole() {
 export function usePathGroupRolePermission() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { id: string; roleId: string; permissionId: number[] }) =>
+    mutationFn: (data: { id: number; roleId: string; permissionId: number[] }) =>
       groupService.pathGroupRolePermission(data.id, data.roleId, data.permissionId),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["groups", variables.id, "roles"] });
@@ -147,7 +174,7 @@ export function usePathGroupRolePermission() {
 export function usePathGroupMemberRole() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { id: string; userId: string; roleId: string }) =>
+    mutationFn: (data: { id: number; userId: string; roleId: string }) =>
       groupService.pathGroupMemberRole(data.id, data.userId, data.roleId),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["groups", variables.id, "members"] });
@@ -158,7 +185,7 @@ export function usePathGroupMemberRole() {
 export function usePathRemoveGroupMemberRole() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: { id: string; userId: string }) =>
+    mutationFn: (data: { id: number; userId: string }) =>
       groupService.pathRemoveGroupMemberRole(data.id, data.userId),
     onSuccess: (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["groups", variables.id, "members"] });
@@ -169,7 +196,7 @@ export function usePathRemoveGroupMemberRole() {
 export function usePathQuitGroupRole() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => groupService.pathQuitGroupRole(id),
+    mutationFn: (id: number) => groupService.pathQuitGroupRole(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["groups"] });
     },
