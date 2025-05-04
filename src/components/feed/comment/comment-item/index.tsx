@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import ReplyIcon from '@mui/icons-material/Reply';
 import { Comentario } from '@/hooks/posts/useComments';
-import { CommentForm } from './comment-form';
+import { CommentForm } from '../comment-form';
 
 interface CommentItemProps {
   comment: Comentario;

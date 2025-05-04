@@ -4,8 +4,8 @@
 import React from 'react';
 import { Box, CircularProgress, Typography, Button } from '@mui/material';
 import { useCommentsTree } from '@/hooks/posts/useComments';
-import { CommentForm } from './comment-form';
-import { CommentItem } from './comment-item';
+import { CommentForm } from '../comment-form';
+import { CommentItem } from '../comment-item';
 
 
 interface CommentsTreeProps {
