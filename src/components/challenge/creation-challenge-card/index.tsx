@@ -1,8 +1,8 @@
 'use client';
 
 import { usePostChallenge } from '@/hooks/challenge/useChallenge';
-import { ChallengeToPost } from '@/types/challenge';
-import { challengeTypesLabels } from '@/types/challengeTypes';
+import { ChallengeToPost } from '@/types/challenge/challenge';
+import { challengeTypesLabels } from '@/types/challenge/challengeTypes';
 import {
   Alert,
   Button,

@@ -1,11 +1,28 @@
 import { axiosInstance } from "@/service/api";
-import { Challenge, ChallengeStage, ChallengeToPost } from "@/types";
+import {
+  Challenge,
+  ChallengesCountsCompany,
+  ChallengesCountsUser,
+  ChallengeStage,
+  ChallengeToPost
+} from "@/types";
 
 export class ChallengeService {
   async getChallenges() {
-    const response = await axiosInstance.get<Challenge[]>(`/desafios`, { withCredentials: true });
+    const response = await axiosInstance.get<Challenge[]>(`/desafios`, {
+      withCredentials: true,
+    });
     return response.data;
   }
+
+  async getChallengeById(id: string) {
+    const response = await axiosInstance.get<Challenge>(
+      `/desafios/${id}`,
+      { withCredentials: true }
+    );
+    return response.data;
+  }
+  
 
   async postChallenge(empresaId: string, desafio: ChallengeToPost) {
     const response = await axiosInstance.post(
@@ -18,11 +35,11 @@ export class ChallengeService {
 
   async patchChallenge(desafioId: string, desafio: Partial<Challenge>) {
     const response = await axiosInstance.patch(
-      `/desafios/${desafioId}`,
+      `/desafios/${desafioId}/editar`,
       desafio,
       { withCredentials: true }
     );
-    return response.status;
+    return response.data;
   }
 
   async postChallengeStage(desafioId: string, stage: ChallengeStage) {
@@ -55,6 +72,32 @@ export class ChallengeService {
     return response.data;
   }
 
+  async postChallengeRegistrationSolo(desafioId: string) {
+    const response = await axiosInstance.post(
+      `/desafios/${desafioId}/candidatar`,
+      {},
+      { withCredentials: true }
+    );
+    return response.data;
+  }
+
+  async getMyChallengeRegistration(desafioId: string) {
+    const response = await axiosInstance.get(
+      `/desafios/${desafioId}/inscricao-minha`,
+      { withCredentials: true }
+    );
+    return response.data;
+  }
+
+  async postChallengeWinner(desafioId: string, participantId: string) {
+    const response = await axiosInstance.post(
+      `/desafios/${desafioId}/vencedores/${participantId}`,
+      {},
+      { withCredentials: true }
+    );
+    return response.status;
+  }
+
   async getChallengeStageParticipants(stageId: string) {
     const response = await axiosInstance.get(
       `/estagios-recrutamento/${stageId}/participantes`,
@@ -64,35 +107,34 @@ export class ChallengeService {
   }
 
   async getChallengesCountsCompany(companyId: string) {
-    const resp = await axiosInstance.get<{
-      criados: number;
-      ativos: number;
-      encerrados: number;
-    }>(
+    const response = await axiosInstance.get<ChallengesCountsCompany>(
       `/desafios/contagem`,
       {
         params: { empresaId: companyId },
-        withCredentials: true
+        withCredentials: true,
       }
     );
-    return resp.data;
+    return response.data;
   }
 
   async getChallengesCountsUser(userId: string) {
-    const resp = await axiosInstance.get<{
-      participados: number;
-      ativos: number;
-      concluidos: number;
-    }>(
+    const response = await axiosInstance.get<ChallengesCountsUser>(
       `/desafios/contagem/usuario`,
       {
         params: { usuarioId: userId },
-        withCredentials: true
+        withCredentials: true,
       }
     );
-    return resp.data;
+    return response.data;
+  }
+
+  async removeParticipant(desafioId: string, participanteId: string) {
+    const response = await axiosInstance.delete(
+      `/desafios/${desafioId}/participantes/${participanteId}`,
+      { withCredentials: true }
+    );
+    return response.status;
   }
 }
 
-// instância para ser usada em hooks
 export const challengeService = new ChallengeService();
