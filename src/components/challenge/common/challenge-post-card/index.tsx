@@ -19,7 +19,7 @@ import { format } from "date-fns";
 import CircleIcon from '@mui/icons-material/Circle';
 import { colors } from "@/theme/colors";
 import { useState } from "react";
-import { GroupRegistrationModal } from "@/components/challenge/group-registration-modal";
+import { GroupRegistrationModal } from "@/components/challenge/user/group-registration-modal";
 
 interface ChallengePostCardProps {
   desafio: Challenge;

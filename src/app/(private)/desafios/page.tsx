@@ -1,6 +1,6 @@
 'use client';
 
-import { ChallengePostCard } from "@/components/challenge/challenge-post-card";
+import { ChallengePostCard } from "@/components/challenge/common/challenge-post-card";
 import { useGetChallenges } from "@/hooks/challenge/useChallenge";
 import { Box, Divider } from "@mui/material";
 
