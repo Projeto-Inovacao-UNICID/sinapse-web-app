@@ -22,7 +22,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import MessageIcon from '@mui/icons-material/Message';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
-import { CompanyProfileImage } from '@/components/profile/company/avatar';
+import { CompanyProfileImage } from '@/components/common/company-avatar';
 import { EditCompanyProfileModal } from '@/components/profile/company/profile-edit-modal';
 import { ShareDialog } from '@/components/profile/utils/shareDialog';
 import { BoxInfo } from '@/components/profile/company/box-info/box-info';
