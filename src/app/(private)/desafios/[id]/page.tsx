@@ -1,17 +1,11 @@
-'use client';
+// src/app/(private)/desafios/[id]/page.tsx
+import React from 'react';
+import ChallengeDetailPage from '@/components/challenge/detail/challenge-detail-page';
 
-import { use } from "react";
-
-interface DesafioProps {
-  params: Promise<{
-    id: string;
-  }>;
+interface PageProps {
+  params: { id: string };
 }
 
-export default function Desafio ({ params }: DesafioProps) {
-  const resolvedParams = use(params); 
-
-  return (
-    <></>
-  );
+export default function DesafioPage({ params }: PageProps) {
+  return <ChallengeDetailPage id={params.id} />;
 }
