@@ -31,19 +31,19 @@ export function SidebarMenu() {
         bgcolor: 'var(--card)',
         borderRadius: 2,
         width: 260,
-        height: '100vh',
         p: 3,
         boxSizing: 'border-box',
         display: 'flex',
         flexDirection: 'column',
+        height: 'auto',
+        alignSelf: 'start',
       }}
     >
-      {/* Título com o "Z" em laranja */}
       <Typography
         variant="h4"
-        sx={{ 
-          color: 'var(--foreground)', 
-          fontWeight: 'bold', 
+        sx={{
+          color: 'var(--foreground)',
+          fontWeight: 'bold',
           mb: 4,
           lineHeight: 1,
         }}

@@ -239,7 +239,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
             variant="outlined"
             onClick={() => setShareOpen(true)}
             sx={{
-              borderColor: 'var(--muted)',
+              borderColor: 'var(--secondary)',
               color: 'var(--foreground)',
               textTransform: 'none',
               ':hover': { opacity: 0.8 }
@@ -254,7 +254,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
                 startIcon={<EditIcon />}
                 variant="outlined"
                 onClick={handleEdit}
-                sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
+                sx={{ borderColor: 'var(--secondary)', color: 'var(--foreground)', textTransform: 'none' }}
               >
                 Editar Perfil
               </Button>
@@ -263,7 +263,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
                 startIcon={<AddIcon />}
                 variant="outlined"
                 onClick={() => setOpenModalCreateGroup(true)}
-                sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
+                sx={{ borderColor: 'var(--secondary)', color: 'var(--foreground)', textTransform: 'none' }}
               >
                 Criar Grupo
               </Button>

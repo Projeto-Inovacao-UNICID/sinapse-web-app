@@ -3,62 +3,59 @@
 
 import React from 'react';
 import { Box } from '@mui/material';
-import { PostCreator } from './post-creator';
-import { PostCard } from './post-card';
-import { ChatSidebar } from './chat-sidebar';
-import { useGetPosts } from '@/hooks/posts/useGetPosts';
-import { useChatContacts } from '@/hooks/chat/useChatContacts';
+import { PostCreator } from './post/post-creator';
+import { PostCard }    from './post/post-card';
+import { useGetPosts, Post } from '@/hooks/posts/useGetPosts';
+import { useChatContacts }   from '@/hooks/chat/useChatContacts';
 import { SidebarMenu } from '../common/side-bar-menu';
-import { AdsPanel } from '../common/ads-panel';
+import { AdsPanel }     from '../common/ads-panel';
+import { ChatSidebar }  from '../common/chat-sidebar';
 
 export function Feed() {
-  const { data: posts = [] } = useGetPosts();
+  const { data: posts = [] }    = useGetPosts();
   const { data: contacts = [] } = useChatContacts();
 
   return (
     <Box
       sx={{
         display: 'grid',
-        gridTemplateColumns: 'auto 1fr auto',
+        gridTemplateColumns: '260px minmax(0, 1fr) 300px',
+        alignItems: 'start',
         gap: 2,
         minHeight: '100vh',
+        p: 2,
       }}
     >
-      {/* Menu lateral */}
+      {/* menu lateral */}
       <SidebarMenu />
 
-      {/* Feed central */}
-      <Box sx={{ p: 2 }}>
+      {/* coluna do meio: criador + lista de posts */}
+      <Box>
         <PostCreator />
+
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
-          {posts.map(post => (
+          {posts.map((p: Post) => (
             <PostCard
-              key={post.id}
+              key={p.id}
               post={{
-                id: post.id,
-                autorNome: post.autorNome,
-                autorAvatarUrl: post.autorAvatarUrl,
-                localizacao: '',
-                texto: post.conteudo,
-                createdAt: post.createdAt,
-                imagemUrl: post.imagemUrl,
-                comentarios: 0,
-                isCompany: false,
+                id:             p.id,
+                autorId:        p.autorId,
+                autorNome:      p.autorNome,
+                autorAvatarUrl: p.autorAvatarUrl,
+                localizacao:    '',
+                texto:          p.conteudo,
+                createdAt:      p.createdAt,
+                imagemUrl:      p.imagemUrl,
+                isCompany:      p.isCompany,
+                comentarios:    0,
               }}
             />
           ))}
         </Box>
       </Box>
 
-      {/* Anúncios + Chat */}
-      <Box
-        sx={{
-          p: 2,
-          width: 300,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      {/* anúncios + chat */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         <AdsPanel />
         <ChatSidebar contacts={contacts} onSelect={() => {}} />
       </Box>

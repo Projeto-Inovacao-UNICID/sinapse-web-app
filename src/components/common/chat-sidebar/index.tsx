@@ -193,10 +193,10 @@ export function ChatSidebar({
 
       {/* Rodapé */}
       <Box sx={{ bgcolor: 'var(--card)', p: 2, textAlign: 'center' }}>
-        <Typography variant="body2" sx={{ color: 'var(--sidebar-foreground)' }}>
+        <Typography variant="body2" sx={{ color: 'var(--muted)' }}>
           Conecte-se com seus amigos e troque umas ideias
         </Typography>
-        <RocketLaunchIcon sx={{ mt: 1, color: 'var(--sidebar-foreground)' }} />
+        <RocketLaunchIcon sx={{ mt: 1, color: 'var(--muted)' }} />
       </Box>
     </Box>
   );

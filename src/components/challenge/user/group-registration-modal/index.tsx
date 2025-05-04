@@ -1,7 +1,7 @@
 "use client";
 
-import { useGetGroups } from "@/hooks/group/useGroup";
 import { usePostChallengeRegistrationGroup } from "@/hooks/challenge/useChallenge";
+import { useGetMyGroups } from "@/hooks/group/useGroup";
 import { useSession } from "@/hooks/session/useSession";
 import { Group } from "@/types";
 import { Box, Button, Card, List, ListItem, Modal, Typography } from "@mui/material";
@@ -17,22 +17,22 @@ interface GroupRegistrationModalProps {
 
 export function GroupRegistrationModal({ open, onClose, desafioId }: GroupRegistrationModalProps) {
   const { session } = useSession();
-  const { data: groups = [], isLoading } = useGetGroups();
+  const { data: groups, isLoading } = useGetMyGroups();
   const { mutate: registerGroup, isPending } = usePostChallengeRegistrationGroup();
 
-  const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
+  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
 
   const userId = session?.id;
 
-  // Filtra apenas grupos em que o usuário é o líder
-  const myGroups = groups.filter((group: Group) => group.liderId === userId);
+  const myGroups = groups ? groups.content.filter((group: Group) => group.liderId === userId) : [];
+
 
   const handleRegister = () => {
     if (!selectedGroupId) return;
     registerGroup({ desafioId, groupId: selectedGroupId }, { onSuccess: onClose });
   };
 
-  const handleSelectGroup = (id: string) => {
+  const handleSelectGroup = (id: number) => {
     setSelectedGroupId(id);
   };
 
@@ -56,7 +56,7 @@ export function GroupRegistrationModal({ open, onClose, desafioId }: GroupRegist
             boxShadow: 24,
           }}
         >
-          <Typography variant="h5" mb={2} fontWeight="bold" color="var(--foreground)">
+          <Typography variant="h5" color="var--foreground" sx={{ mb: 2, fontWeight: 'bold' }}>
             Inscrever grupo no desafio
           </Typography>
 
