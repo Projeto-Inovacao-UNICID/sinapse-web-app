@@ -30,7 +30,7 @@ export function ChallengeStageItem({
     }
   };
   
-  const isStageInitial = inscricao ? stage.id < inscricao.estagioRecrutamentoId : false;
+  const isStageInitial = inscricao ? stage.id <= inscricao.estagioRecrutamentoId : false;
 
   return (
     <MotionBox
