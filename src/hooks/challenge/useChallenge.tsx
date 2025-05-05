@@ -25,6 +25,15 @@ export function useGetChallenges(params?: {
   });
 }
 
+export function useGetMyInscriptions(desafioId: number) {
+  return useQuery<ParticipantResponseDto | null>({
+    queryKey: ["challengeRegistration", desafioId],
+    queryFn: () => ChallengeService.getMyInscriptions(desafioId),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+}
+
 export function useGetChallengeById(id: number) {
   return useQuery<ChallengeResponseDto>({
     queryKey: ["challenges", id],
@@ -100,9 +109,9 @@ export function usePostChallengeStage() {
 
 export function usePostChallengeRegistrationGroup() {
   const queryClient = useQueryClient();
-  return useMutation<ParticipantResponseDto, Error, { challengeId: number; groupId: number; message: string }>({
-    mutationFn: ({ challengeId, groupId, message }) =>
-      ChallengeService.applyGroup(challengeId, groupId, { mensagem: message }),
+  return useMutation<ParticipantResponseDto, Error, { challengeId: number; groupId: number; mensagem: string }>({
+    mutationFn: ({ challengeId, groupId, mensagem }) =>
+      ChallengeService.applyGroup(challengeId, groupId, mensagem),
     onSuccess: (_, { challengeId }) => {
       queryClient.invalidateQueries({ queryKey: ["challengeRegistration", challengeId] });
     },
@@ -111,9 +120,9 @@ export function usePostChallengeRegistrationGroup() {
 
 export function usePostChallengeRegistrationSolo() {
   const queryClient = useQueryClient();
-  return useMutation<ParticipantResponseDto, Error, { challengeId: number; message: string }>({
-    mutationFn: ({ challengeId, message }) =>
-      ChallengeService.applySolo(challengeId, { mensagem: message }),
+  return useMutation<ParticipantResponseDto, Error, { challengeId: number; mensagem: string }>({
+    mutationFn: ({ challengeId, mensagem }) =>
+      ChallengeService.applySolo(challengeId, mensagem),
     onSuccess: (_, { challengeId }) => {
       queryClient.invalidateQueries({ queryKey: ["challengeRegistration", challengeId] });
     },

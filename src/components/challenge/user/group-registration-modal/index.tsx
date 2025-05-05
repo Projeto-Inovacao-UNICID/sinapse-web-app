@@ -59,10 +59,11 @@ export function RegisterModal({ open, onClose, desafioId }: RegisterModalProps) 
       },
     };
 
-    if (typeof selectedId === "string") {
-      registerSolo({ challengeId: desafioId, message: "" }, commonCallbacks);
-    } else {
-      registerGroup({ challengeId: desafioId, groupId: selectedId, message: "" }, commonCallbacks);
+    if  (typeof selectedId === "string" ) {
+      registerSolo({ challengeId: desafioId, mensagem: "Inscricao solo" }, commonCallbacks);
+    } 
+    else {
+      registerGroup({ challengeId: desafioId, groupId: selectedId, mensagem: "Inscricao grupo" }, commonCallbacks);
     }
   };
 

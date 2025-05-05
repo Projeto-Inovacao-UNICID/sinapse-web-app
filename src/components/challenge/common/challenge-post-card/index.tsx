@@ -21,6 +21,7 @@ import { format } from 'date-fns';
 import { RegisterModal } from '@/components/challenge/user/group-registration-modal';
 import { useGetChallengeStages } from '@/hooks/challenge/useStageChallenge';
 import { useRouter } from 'next/navigation';
+import { useGetMyInscriptions } from '@/hooks/challenge/useChallenge';
 
 interface ChallengePostCardProps {
   desafio: ChallengeResponseDto;
@@ -35,9 +36,12 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
   const [openModal, setOpenModal] = useState(false);
   const { data: stages, isLoading: loadingStages } = useGetChallengeStages(desafio.id);
   const { data: company, isLoading } = useGetCompanyProfile(desafio.empresaId);
+  const { data: inscricoes, isLoading: loadingInscricoes, isError: errorInscricoes } = useGetMyInscriptions(desafio.id);
 
   const contStages = stages?.length ?? 0;
   const haveStages = contStages > 0;
+
+  const inscrito = inscricoes !== null && inscricoes !== undefined;
 
   if (isLoading) {
     return (
@@ -199,7 +203,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
             <Button
               size="small"
               variant="contained"
-              disabled={loadingStages || !haveStages}
+              disabled={loadingStages || !haveStages || loadingInscricoes || inscrito}
               sx={{
                 textTransform: 'none',
                 bgcolor: 'var(--primary)',
