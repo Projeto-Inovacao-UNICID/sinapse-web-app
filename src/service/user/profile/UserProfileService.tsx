@@ -12,8 +12,25 @@ export class UserProfileService {
     return response.status;
   }
 
-  async uploadUserProfileImage(userId: string, image: File) {
+  async uploadUserProfileImage2(userId: string, image: File) {
     const response = await axiosInstance.post(`/profile/user/${userId}/imagem`, image, { withCredentials: true });
+    return response.status;
+  }
+
+  async uploadUserProfileImage(userId: string, image: File) {
+    const formData = new FormData();
+    formData.append('imagem', image);
+  
+    const response = await axiosInstance.post(
+      `/profile/user/${userId}/imagem`,
+      formData,
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+    );
     return response.status;
   }
 

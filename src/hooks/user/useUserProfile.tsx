@@ -13,6 +13,8 @@ export function useUserProfile(userId: string) {
   });
 }
 
+
+
 export function useUserProfileImage(userId: string, enabled: boolean = true) {
   return useQuery<string, Error>({
     queryKey: ['user-profile-image', userId],
@@ -28,5 +30,21 @@ export function usePatchUserProfile() {
     mutationFn: ({ userId, nome, username, email }: { userId: string; nome: string, username: string, email: string}) => 
       userProfileService.patchUserProfile(userId, nome, username, email
       ),
+  });
+}
+
+export function useUploadUserProfileImage() {
+  const userProfileService = new UserProfileService();
+  return useMutation({
+    mutationFn: ({ userId, file }: { userId: string, file: File }) =>
+      userProfileService.uploadUserProfileImage(userId, file),
+  });
+}
+
+export function useDeleteUserProfileImage() {
+  const userProfileService = new UserProfileService();
+  return useMutation({
+    mutationFn: (userId: string) =>
+      userProfileService.deleteUserProfileImage(userId),
   });
 }
