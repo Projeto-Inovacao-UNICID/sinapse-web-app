@@ -18,6 +18,8 @@ export default function Desafios() {
       }}>
       <ChallengePostCard desafio={desafio} key={desafio.id} gridColumn={2}/>
       <Divider />
+
+      <h1>Hello world</h1>
     </Box>
   );
 }
