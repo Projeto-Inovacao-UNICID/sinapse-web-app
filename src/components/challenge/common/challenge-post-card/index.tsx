@@ -22,7 +22,7 @@ import { GroupRegistrationModal } from '@/components/challenge/user/group-regist
 
 interface ChallengePostCardProps {
   desafio: ChallengeResponseDto;
-  onEdit?: () => void; // ✅ Nova prop para abrir modal de edição
+  onEdit?: () => void;
 }
 
 export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
