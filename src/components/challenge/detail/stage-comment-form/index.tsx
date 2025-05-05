@@ -1,3 +1,4 @@
+// src/components/challenge/detail/stage-comment-form/index.tsx
 'use client';
 
 import React, { ChangeEvent, useState } from 'react';
@@ -36,11 +37,15 @@ export function StageCommentForm({
 
   const handleSubmit = async () => {
     if (file) {
-      await upload.mutateAsync(file);
-      setFile(null);
+      try {
+        await upload.mutateAsync(file);
+        setFile(null);
+        onSent?.();
+      } catch (err) {
+        console.error("Falha no upload:", err);
+      }
     }
     setText('');
-    onSent?.();
   };
 
   return (
