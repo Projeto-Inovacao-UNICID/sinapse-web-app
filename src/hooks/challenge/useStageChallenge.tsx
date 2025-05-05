@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { stagesChallengeService } from "@/service/challenge/StagesChallengeService";
 import type {
   RecruitmentStageCreateDto,
+  RecruitmentStagePatchDto,
   RecruitmentStageResponseDto,
 } from "@/types";
 
@@ -55,6 +56,24 @@ export function useUploadStageFile(stageId: number, participantId: string) {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["challengeStages", stageId],
+      });
+    },
+  });
+}
+
+// 4) Editar um estágio em um desafio
+export function usePatchChallengeStage() {
+  const queryClient = useQueryClient();
+  return useMutation<
+    RecruitmentStageResponseDto,
+    Error,
+    { stageId: number; stage: RecruitmentStagePatchDto }
+  >({
+    mutationFn: (data) =>
+      stagesChallengeService.patchStage(data.stageId, data.stage),
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({
+        queryKey: ["challengeStages", variables.stageId],
       });
     },
   });

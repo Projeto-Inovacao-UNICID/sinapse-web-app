@@ -45,6 +45,8 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
   } = useGetChallengeById(id);
 
   const empresaId = challenge?.empresaId ?? "";
+  const isChallengeOwner = session ? session.id === empresaId : false;
+
   const {
     data: company,
     isLoading: loadingCompany,
@@ -115,7 +117,7 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
         completedStageIds={completedStageIds}
         currentStageId={currentStageId}
         inscricao={inscricao}
-        isCompanyUser={isCompanyUser}
+        isChallengeOwner={isChallengeOwner}
         onSelect={stage => setCurrentStageId(stage.id)}
       />
       }

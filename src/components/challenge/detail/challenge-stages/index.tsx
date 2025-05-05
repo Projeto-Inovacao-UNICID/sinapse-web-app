@@ -7,14 +7,14 @@ export function ChallengeStages({
   completedStageIds,
   currentStageId,
   inscricao,
-  isCompanyUser,
+  isChallengeOwner,
   onSelect
 }: {
   stages: RecruitmentStageResponseDto[];
   completedStageIds: number[];
   currentStageId?: number;
   inscricao: ParticipantResponseDto | null | undefined;
-  isCompanyUser: boolean;
+  isChallengeOwner: boolean;
   onSelect?: (stage: RecruitmentStageResponseDto) => void;
 }) {
   return (
@@ -29,7 +29,7 @@ export function ChallengeStages({
           isCompleted={completedStageIds.includes(stage.id)}
           isCurrent={stage.id === currentStageId}
           inscricao={inscricao}
-          isCompanyUser={isCompanyUser}
+          isChallengeOwner={isChallengeOwner}
           onSelect={onSelect}
         />
       ))}
