@@ -20,6 +20,7 @@ import {
 import { format } from 'date-fns';
 import { GroupRegistrationModal } from '@/components/challenge/user/group-registration-modal';
 import { useGetChallengeStages } from '@/hooks/challenge/useChallenge';
+import { useRouter } from 'next/navigation';
 
 interface ChallengePostCardProps {
   desafio: ChallengeResponseDto;
@@ -28,15 +29,15 @@ interface ChallengePostCardProps {
 
 export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
   const theme = useTheme();
+  const router = useRouter();
   const { session } = useSession();
   const isCompanyUser = session?.roles.includes('ROLE_COMPANY');
   const [openModal, setOpenModal] = useState(false);
   const { data: stages, isLoading: loadingStages } = useGetChallengeStages(desafio.id);
+  const { data: company, isLoading } = useGetCompanyProfile(desafio.empresaId);
 
   const contStages = stages?.length ?? 0;
   const haveStages = contStages > 0;
-
-  const { data: company, isLoading } = useGetCompanyProfile(desafio.empresaId);
 
   if (isLoading) {
     return (
@@ -48,7 +49,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
 
   const inicio = format(new Date(desafio.dataInicio), 'dd/MM/yyyy');
   const fim = format(new Date(desafio.dataFim), 'dd/MM/yyyy');
-  const status = !haveStages ? "EM ESPERA" : desafio.status;
+  const status = !haveStages ? 'EM ESPERA' : desafio.status;
   const statusColor =
     status === 'ABERTO'
       ? theme.palette.success.main
@@ -66,11 +67,17 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
     <>
       <Card
         elevation={3}
+        onClick={() => router.push(`/desafios/${desafio.id}`)}
         sx={{
           bgcolor: 'var(--card)',
           borderRadius: 3,
           overflow: 'visible',
           position: 'relative',
+          cursor: 'pointer',
+          transition: 'transform 0.15s ease-in-out',
+          '&:hover': {
+            transform: 'scale(1.05)',
+          },
         }}
       >
         {/* Faixa lateral com a cor do status */}
@@ -87,7 +94,6 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
           }}
         />
 
-        {/* Cabeçalho com avatar e nome da empresa */}
         <CardHeader
           avatar={
             <Avatar
@@ -112,7 +118,6 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
 
         <Divider sx={{ my: 1, borderColor: 'var(--border)' }} />
 
-        {/* Conteúdo do desafio */}
         <CardContent sx={{ pt: 0, px: 2, pb: 1 }}>
           <Typography variant="h6" gutterBottom sx={{ color: 'var(--foreground)', fontWeight: 600 }}>
             {desafio.titulo}
@@ -143,9 +148,9 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
           </Box>
 
           <Box sx={{ mb: 1 }}>
-            <Typography variant='caption' sx={{ color: 'var(--muted)' }}>
+            <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
               {!haveStages ? 'Sem estágios' : `${contStages} estágio${contStages > 1 ? 's' : ''}`}
-            </Typography>         
+            </Typography>
           </Box>
 
           <Box
@@ -168,7 +173,6 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
 
         <Divider sx={{ borderColor: 'var(--border)' }} />
 
-        {/* Ações: Editar ou Inscrever-se */}
         <CardActions sx={{ justifyContent: 'flex-end', p: 2, pt: 1 }}>
           {isCompanyUser ? (
             <Button
@@ -180,7 +184,10 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
                 borderColor: 'var(--primary)',
                 color: 'var(--primary)',
               }}
-              onClick={onEdit}
+              onClick={e => {
+                e.stopPropagation(); // impede redirecionamento
+                onEdit?.();
+              }}
             >
               Editar
             </Button>
@@ -195,7 +202,10 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
                 borderRadius: 2,
                 '&:hover': { bgcolor: 'var(--primary)' },
               }}
-              onClick={() => setOpenModal(true)}
+              onClick={e => {
+                e.stopPropagation(); // impede redirecionamento
+                setOpenModal(true);
+              }}
             >
               Inscrever‑se
             </Button>
@@ -203,7 +213,6 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
         </CardActions>
       </Card>
 
-      {/* Modal de inscrição apenas para usuários normais */}
       {!isCompanyUser && (
         <GroupRegistrationModal
           open={openModal}
