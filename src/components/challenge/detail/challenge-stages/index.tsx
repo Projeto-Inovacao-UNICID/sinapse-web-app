@@ -1,16 +1,20 @@
 import { Box, Typography } from "@mui/material";
 import { ChallengeStageItem } from "../challenge-stage-item";
-import { RecruitmentStageResponseDto } from "@/types";
+import { ParticipantResponseDto, RecruitmentStageResponseDto } from "@/types";
 
 export function ChallengeStages({
   stages,
   completedStageIds,
   currentStageId,
+  inscricao,
+  isCompanyUser,
   onSelect
 }: {
   stages: RecruitmentStageResponseDto[];
   completedStageIds: number[];
   currentStageId?: number;
+  inscricao: ParticipantResponseDto | null | undefined;
+  isCompanyUser: boolean;
   onSelect?: (stage: RecruitmentStageResponseDto) => void;
 }) {
   return (
@@ -24,6 +28,8 @@ export function ChallengeStages({
           stage={stage}
           isCompleted={completedStageIds.includes(stage.id)}
           isCurrent={stage.id === currentStageId}
+          inscricao={inscricao}
+          isCompanyUser={isCompanyUser}
           onSelect={onSelect}
         />
       ))}

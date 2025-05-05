@@ -3,7 +3,7 @@
 import { useGetChallengeById, useGetMyInscriptions } from "@/hooks/challenge/useChallenge";
 import { useGetCompanyProfile } from "@/hooks/profile/company/useCompanyProfile";
 import { useSession } from "@/hooks/session/useSession";
-import { Box, Button, Container, useTheme } from "@mui/material";
+import { Box, Button, Container, Divider, useTheme } from "@mui/material";
 import { format } from "date-fns";
 import { useState } from "react";
 
@@ -12,6 +12,8 @@ import { ChallengeDescription } from "../challenge-description.tsx";
 import { ChallengeDetailHeader } from "../challenge-detail-header";
 import { ChallengeDetailInfo } from "../challenge-detail-info";
 import { ChallengeStages } from "../challenge-stages";
+import { EditChallengeModal } from "../../company/edit-challenge-modal";
+
 
 interface ChallengeDetailPageProps { id: number; }
 
@@ -29,6 +31,8 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
   const currentId = inscricao?.estagioRecrutamentoId;
 
   const [currentStageId, setCurrentStageId] = useState<number | undefined>(currentId);
+
+  const [openModal, setOpenModal] = useState(false);
 
   const isCompanyUser = session?.roles.includes("ROLE_COMPANY") ?? false;
 
@@ -90,23 +94,31 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
 
       <ChallengeDescription text={challenge.descricao} />
 
+      {isCompanyUser && (
+        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
+          <Button variant="contained" sx={{ bgcolor: "var(--primary)", textTransform: "none", color: "white", ":hover": { opacity: 0.8 } }} onClick={() => setOpenModal(true)}>
+            Editar desafio
+          </Button>
+          <Button variant="outlined" sx={{ color: "var(--foreground)", textTransform: "none", borderColor: "var(--muted)", ":hover": { opacity: 0.8 } }}>
+            Criar novo estágio
+          </Button>
+        </Box>
+      )}
+
+      <Divider sx={{ my: 4, borderColor: "var(--muted)" }} />
+
       {haveStages &&
         <ChallengeStages
         stages={stages ?? []}
         completedStageIds={completedStageIds}
         currentStageId={currentStageId}
+        inscricao={inscricao}
+        isCompanyUser={isCompanyUser}
         onSelect={stage => setCurrentStageId(stage.id)}
       />
       }
 
-      {isCompanyUser && (
-        <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
-          <Button variant="outlined">Salvar</Button>
-          <Button variant="contained" sx={{ bgcolor: "var(--primary)", textTransform: "none" }}>
-            Bora pro Desafio!
-          </Button>
-        </Box>
-      )}
+      {isCompanyUser && <EditChallengeModal challenge={challenge} open={openModal} onClose={() => setOpenModal(false)} />}
     </Container>
   );
 }

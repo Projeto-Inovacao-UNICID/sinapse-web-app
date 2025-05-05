@@ -1,4 +1,4 @@
-import { RecruitmentStageResponseDto } from "@/types";
+import { ParticipantResponseDto, RecruitmentStageResponseDto } from "@/types";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import { Box, Typography, useTheme } from "@mui/material";
 import { motion } from "framer-motion";
@@ -10,11 +10,15 @@ export function ChallengeStageItem({
   stage,
   isCompleted,
   isCurrent,
+  inscricao,
+  isCompanyUser,
   onSelect,
 }: {
   stage: RecruitmentStageResponseDto;
   isCompleted: boolean;
   isCurrent: boolean;
+  inscricao: ParticipantResponseDto | null | undefined;
+  isCompanyUser: boolean;
   onSelect?: (stage: RecruitmentStageResponseDto) => void;
 }) {
   const theme = useTheme();
@@ -25,6 +29,8 @@ export function ChallengeStageItem({
       onSelect?.(stage);
     }
   };
+  
+  const isStageInitial = inscricao ? stage.id < inscricao.estagioRecrutamentoId : false;
 
   return (
     <MotionBox
@@ -63,8 +69,8 @@ export function ChallengeStageItem({
         sx={{ color: "var(--muted)", mb: isCurrent ? 2 : 0 }}
       >
         {stage.anotacoes}
-      </Typography>
-      {isCurrent && <StageCommentForm />}
+      </Typography> 
+      {(isCurrent && isStageInitial && !isCompanyUser) && <StageCommentForm />}
     </MotionBox>
   );
 }
