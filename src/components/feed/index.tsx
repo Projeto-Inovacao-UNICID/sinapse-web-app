@@ -35,24 +35,28 @@ export function Feed() {
         <PostCreator />
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
-          {posts.map((p: Post) => (
-            <PostCard
-              key={p.id}
-              post={{
-                id:             p.id,
-                autorId:        p.autorId,
-                autorNome:      p.autorNome,
-                autorAvatarUrl: p.autorAvatarUrl,
-                localizacao:    '',
-                texto:          p.conteudo,
-                createdAt:      p.createdAt,
-                imagemUrl:      p.imagemUrl,
-                isCompany:      p.isCompany,
-                comentarios:    0,
-              }}
-            />
-          ))}
+          {posts
+            .slice() // cria uma cópia para evitar mutar o array original
+            .reverse() // inverte a ordem
+            .map((p: Post) => (
+              <PostCard
+                key={p.id}
+                post={{
+                  id:             p.id,
+                  autorId:        p.autorId,
+                  autorNome:      p.autorNome,
+                  autorAvatarUrl: p.autorAvatarUrl,
+                  localizacao:    '',
+                  texto:          p.conteudo,
+                  createdAt:      p.createdAt,
+                  imagemUrl:      p.imagemUrl,
+                  isCompany:      p.isCompany,
+                  comentarios:    0,
+                }}
+              />
+            ))}
         </Box>
+
       </Box>
 
       {/* anúncios + chat */}

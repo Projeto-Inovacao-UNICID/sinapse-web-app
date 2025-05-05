@@ -128,21 +128,24 @@ export function ChallengeFeed() {
 
           {/* Lista de desafios */}
           <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3 }}>
-            {filtered.map(desafio => (
-              <Box key={desafio.id} sx={{ width: '100%', maxWidth: 600 }}>
-                <ChallengePostCard
-                  desafio={desafio}
-                  onEdit={
-                    isCompanyUser
-                      ? () => {
-                          setSelectedChallenge(desafio);
-                          setOpenEditModal(true);
-                        }
-                      : undefined
-                  }
-                />
-              </Box>
-            ))}
+            {filtered
+              .slice() // evita mutação
+              .reverse() // inverte a ordem
+              .map(desafio => (
+                <Box key={desafio.id} sx={{ width: '100%', maxWidth: 600 }}>
+                  <ChallengePostCard
+                    desafio={desafio}
+                    onEdit={
+                      isCompanyUser
+                        ? () => {
+                            setSelectedChallenge(desafio);
+                            setOpenEditModal(true);
+                          }
+                        : undefined
+                    }
+                  />
+                </Box>
+              ))}
           </Box>
 
           {/* Ads + Chat */}
