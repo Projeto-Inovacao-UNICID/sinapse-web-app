@@ -1,139 +1,102 @@
-import { axiosInstance } from "@/service/api";
+// services/ChallengeService.ts
+
+import { axiosInstance } from "../api";
 import {
-  Challenge,
-  ChallengesCountsCompany,
-  ChallengesCountsUser,
-  ChallengeStage,
-  ChallengeToPost
+  ChallengeCreateDto,
+  ChallengePatchDto,
+  ChallengeResponseDto,
+  ChallengeCountDto,
+  RecruitmentStageCreateDto,
+  RecruitmentStageResponseDto,
+  StageApplicationDto,
+  ParticipantResponseDto,
+  UserChallengeCountDto,
 } from "@/types";
 
-export class ChallengeService {
-  async getChallenges() {
-    const response = await axiosInstance.get<Challenge[]>(`/desafios`, {
-      withCredentials: true,
-    });
-    return response.data;
-  }
+export const ChallengeService = {
+  async getById(id: number): Promise<ChallengeResponseDto> {
+    const res = await axiosInstance.get(`/desafios/${id}`, { withCredentials: true });
+    return res.data;
+  },
 
-  async getChallengeById(id: string) {
-    const response = await axiosInstance.get<Challenge>(
-      `/desafios/${id}`,
-      { withCredentials: true }
-    );
-    return response.data;
-  }
-  
-  async postChallenge(empresaId: string, desafio: ChallengeToPost) {
-    const response = await axiosInstance.post(
-      `/desafios/${empresaId}/criar`,
-      desafio,
-      { withCredentials: true }
-    );
-    return response.data;
-  }
+  async list(params?: {
+    companyId?: string;
+    modality?: string;
+    status?: string;
+    internal?: boolean;
+  }): Promise<ChallengeResponseDto[]> {
+    const res = await axiosInstance.get("/desafios", { withCredentials: true, params: { ...params } });
+    return res.data;
+  },
 
-  async patchChallenge(desafioId: string, desafio: Partial<Challenge>) {
-    const response = await axiosInstance.patch(
-      `/desafios/${desafioId}/editar`,
-      desafio,
-      { withCredentials: true }
-    );
-    return response.data;
-  }
+  async create(
+    companyId: string,
+    dto: ChallengeCreateDto
+  ): Promise<ChallengeResponseDto> {
+    const res = await axiosInstance.post(`/desafios/${companyId}/criar`, dto, { withCredentials: true });
+    return res.data;
+  },
 
-  async postChallengeStage(desafioId: string, stage: ChallengeStage) {
-    const response = await axiosInstance.post(
-      `/desafios/${desafioId}/estagios`,
-      stage,
-      { withCredentials: true }
-    );
-    return response.data;
-  }
+  async update(
+    id: number,
+    dto: ChallengePatchDto
+  ): Promise<ChallengeResponseDto> {
+    const res = await axiosInstance.patch(`/desafios/${id}/editar`, dto, { withCredentials: true });
+    return res.data;
+  },
 
-  async getChallengeStages(desafioId: string) {
-    const response = await axiosInstance.get(
-      `/desafios/${desafioId}/estagios`,
-      { withCredentials: true }
-    );
-    return response.data;
-  }
+  async countByCompany(companyId: string): Promise<ChallengeCountDto> {
+    const res = await axiosInstance.get("/desafios/contagem", { params: { empresaId: companyId }, withCredentials: true });
+    return res.data;
+  },
 
-  async postChallengeRegistrationGroup(
-    desafioId: string,
+  async countByUser(userId: string): Promise<UserChallengeCountDto> {
+    const res = await axiosInstance.get("/desafios/contagem/usuario", { params: { usuarioId: userId }, withCredentials: true });
+    return res.data;
+  },
+
+  async listStages(challengeId: number): Promise<RecruitmentStageResponseDto[]> {
+    const res = await axiosInstance.get(`/desafios/${challengeId}/estagios`, { withCredentials: true });
+    return res.data;
+  },
+
+  async createStage(
+    challengeId: number,
+    dto: RecruitmentStageCreateDto
+  ): Promise<RecruitmentStageResponseDto> {
+    const res = await axiosInstance.post(`/desafios/${challengeId}/estagios`, dto, { withCredentials: true });
+    return res.data;
+  },
+
+  async applySolo(
+    challengeId: number,
+    dto: StageApplicationDto
+  ): Promise<ParticipantResponseDto> {
+    const res = await axiosInstance.post(`/desafios/${challengeId}/candidatar`, dto, { withCredentials: true });
+    return res.data;
+  },
+
+  async applyGroup(
+    challengeId: number,
     groupId: number,
-    mensagem: string = ""
-  ) {
-    const response = await axiosInstance.post(
-      `/desafios/${desafioId}/candidatar/${groupId}`,
-      { mensagem },
-      { withCredentials: true }
-    );
-    return response.data;
-  }
+    dto: StageApplicationDto
+  ): Promise<ParticipantResponseDto> {
+    const res = await axiosInstance.post(`/desafios/${challengeId}/candidatar/${groupId}`, dto, { withCredentials: true });
+    return res.data;
+  },
 
-  async postChallengeRegistrationSolo(desafioId: string) {
-    const response = await axiosInstance.post(
-      `/desafios/${desafioId}/candidatar`,
-      {},
-      { withCredentials: true }
-    );
-    return response.data;
-  }
+  async myApplication(
+    challengeId: number
+  ): Promise<ParticipantResponseDto> {
+    const res = await axiosInstance.get(`/desafios/${challengeId}/inscricao-minha`, { withCredentials: true });
+    return res.data;
+  },
 
-  async getMyChallengeRegistration(desafioId: string) {
-    const response = await axiosInstance.get(
-      `/desafios/${desafioId}/inscricao-minha`,
-      { withCredentials: true }
-    );
-    return response.data;
-  }
+  async electWinner(challengeId: number, participantId: string): Promise<void> {
+    await axiosInstance.post(`/desafios/${challengeId}/vencedores/${participantId}`, { withCredentials: true });
+  },
 
-  async postChallengeWinner(desafioId: string, participantId: string) {
-    const response = await axiosInstance.post(
-      `/desafios/${desafioId}/vencedores/${participantId}`,
-      {},
-      { withCredentials: true }
-    );
-    return response.status;
-  }
-
-  async getChallengeStageParticipants(stageId: string) {
-    const response = await axiosInstance.get(
-      `/estagios-recrutamento/${stageId}/participantes`,
-      { withCredentials: true }
-    );
-    return response.data;
-  }
-
-  async getChallengesCountsCompany(companyId: string) {
-    const response = await axiosInstance.get<ChallengesCountsCompany>(
-      `/desafios/contagem`,
-      {
-        params: { empresaId: companyId },
-        withCredentials: true,
-      }
-    );
-    return response.data;
-  }
-
-  async getChallengesCountsUser(userId: string) {
-    const response = await axiosInstance.get<ChallengesCountsUser>(
-      `/desafios/contagem/usuario`,
-      {
-        params: { usuarioId: userId },
-        withCredentials: true,
-      }
-    );
-    return response.data;
-  }
-
-  async removeParticipant(desafioId: string, participanteId: string) {
-    const response = await axiosInstance.delete(
-      `/desafios/${desafioId}/participantes/${participanteId}`,
-      { withCredentials: true }
-    );
-    return response.status;
-  }
-}
-
-export const challengeService = new ChallengeService();
+  async removeParticipant(challengeId: number, participantId: string): Promise<void> {
+    await axiosInstance.delete(`/desafios/${challengeId}/participantes/${participantId}`, { withCredentials: true });
+  },
+};

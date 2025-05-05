@@ -11,13 +11,14 @@ import {
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { LoginService } from "@/service/auth/LoginService";
+import { LoginService } from "@/service/auth/AuthService";
 import { SessionService } from "@/service/session/SessionService";
 import {
   buttonFormStyle, inputFormStyle, radioStyle
 } from "@/theme/components-styles";
 import { useQueryClient } from "@tanstack/react-query";
 import { ModalError } from "../modal-error";
+import { LoginDto } from "@/types";
 
 interface CardLoginProps {
   onOpenModal: () => void;
@@ -51,7 +52,8 @@ export function CardLogin({ onOpenModal }: CardLoginProps) {
 
     try {
       const loginService = new LoginService();
-      await loginService.loginService(type, username, password);
+      const loginDto: LoginDto = { tipo: type, username, senha: password };
+      await loginService.loginService(loginDto);
 
       // Revalida a sessão
       const sessionService = new SessionService();

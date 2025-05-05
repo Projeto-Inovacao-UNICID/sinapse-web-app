@@ -9,7 +9,7 @@ import { CommentItem } from '../comment-item';
 
 
 interface CommentsTreeProps {
-  postagemId: string;
+  postagemId: number;
 }
 
 export function CommentsTree({ postagemId }: CommentsTreeProps) {

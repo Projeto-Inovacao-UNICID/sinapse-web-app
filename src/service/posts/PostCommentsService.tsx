@@ -1,34 +1,11 @@
 // src/service/PostCommentsService.ts
 import { axiosInstance } from "../api";
-
-export interface ComentarioDto {
-  id: number;
-  conteudo: string;
-  postagemId: number;
-  comentarioPaiId?: number;
-  autorId: string;
-  autorNome: string;
-  createdAt: string;
-  respostas: ComentarioDto[];
-}
-
-export interface CommentsTreeResponse {
-  content: ComentarioDto[];
-  page: number;
-  size: number;
-  totalElements: number;
-}
-
-export interface CreateCommentPayload {
-  conteudo: string;
-  postagemId: number;
-  comentarioPaiId?: number;
-}
-
-export interface UpdateCommentPayload {
-  comentarioId: number;
-  conteudo: string;
-}
+import {
+  CommentCreateDto,
+  CommentUpdateDto,
+  CommentTreeDto,
+  CommentTreePageResponse,
+} from "@/types";
 
 export class PostCommentsService {
   /** Lista a árvore de comentários para uma postagem, com paginação */
@@ -36,8 +13,8 @@ export class PostCommentsService {
     postagemId: number,
     page = 0,
     size = 10
-  ): Promise<CommentsTreeResponse> {
-    const { data } = await axiosInstance.get<CommentsTreeResponse>(
+  ): Promise<CommentTreePageResponse> {
+    const { data } = await axiosInstance.get<CommentTreePageResponse>(
       `/comentarios/arvore/${postagemId}`,
       {
         params: { page, size },
@@ -48,13 +25,12 @@ export class PostCommentsService {
   }
 
   /** Cria um novo comentário (ou resposta) */
-  async createComment(payload: CreateCommentPayload): Promise<ComentarioDto> {
-    const { data } = await axiosInstance.post<ComentarioDto>(
+  async createComment(payload: CommentCreateDto): Promise<CommentTreeDto> {
+    const { data } = await axiosInstance.post<CommentTreeDto>(
       `/comentarios`,
       {
         conteudo: payload.conteudo,
         postagemId: payload.postagemId,
-        // só inclua se for resposta a outro comentário
         ...(payload.comentarioPaiId !== undefined && {
           comentarioPaiId: payload.comentarioPaiId,
         }),
@@ -65,8 +41,8 @@ export class PostCommentsService {
   }
 
   /** Atualiza o texto de um comentário existente */
-  async updateComment(payload: UpdateCommentPayload): Promise<ComentarioDto> {
-    const { data } = await axiosInstance.patch<ComentarioDto>(
+  async updateComment(payload: CommentUpdateDto): Promise<CommentTreeDto> {
+    const { data } = await axiosInstance.patch<CommentTreeDto>(
       `/comentarios`,
       {
         comentarioId: payload.comentarioId,
@@ -79,12 +55,9 @@ export class PostCommentsService {
 
   /** Remove um comentário, enviando o ID no body da requisição DELETE */
   async deleteComment(comentarioId: number): Promise<void> {
-    await axiosInstance.delete(
-      `/comentarios`,
-      {
-        data: { comentarioId },
-        withCredentials: true,
-      }
-    );
+    await axiosInstance.delete(`/comentarios`, {
+      data: { comentarioId },
+      withCredentials: true,
+    });
   }
 }

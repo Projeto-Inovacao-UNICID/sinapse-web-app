@@ -1,7 +1,7 @@
 'use client';
 
 import { CreationChallengeCard } from "@/components/challenge/company/creation-challenge-card";
-import { useGetCompanyProfile } from "@/hooks/company/useCompanyProfile";
+import { useGetCompanyProfile } from "@/hooks/profile/company/useCompanyProfile";
 import { useSession } from "@/hooks/session/useSession";
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';

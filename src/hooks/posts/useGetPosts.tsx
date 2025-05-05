@@ -1,31 +1,9 @@
 // src/hooks/posts/useGetPosts.ts
 import { useQuery } from '@tanstack/react-query'
 import { axiosInstance } from '@/service/api'
+import { Post, PostagemResponseDto } from '@/types'
 
-export interface Post {
-  id: string
-  autorId: string
-  autorNome: string
-  autorAvatarUrl: string
-  conteudo: string
-  createdAt: string
-  arquivoIds: number[]
-  imagemUrl?: string
-  publico: boolean
-  isCompany: boolean
-}
 
-interface PostagemResponseDto {
-  id: number
-  autorId: string
-  autorNome: string
-  autorAvatarUrl: string
-  conteudo: string
-  createdAt: string
-  arquivoIds: number[]
-  publico: boolean
-  isEmpresa: boolean
-}
 
 const API_BASE = (process.env.NEXT_PUBLIC_API_URL ?? '').replace(/\/$/, '')
 
@@ -43,7 +21,7 @@ async function fetchPosts(): Promise<Post[]> {
       : `${API_BASE}${p.autorAvatarUrl}`
 
     return {
-      id:             String(p.id),
+      id:             p.id,
       autorId:        p.autorId,
       autorNome:      p.autorNome,
       autorAvatarUrl: avatarUrl,

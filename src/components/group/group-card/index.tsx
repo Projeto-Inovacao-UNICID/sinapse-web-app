@@ -1,6 +1,6 @@
 import { UsersList } from "@/components/profile/user/users-list";
 import { useDeleteGroup, useGetGroupById, useGetGroupMembers, usePatchGroup, usePostQuitGroup } from "@/hooks/group/useGroup";
-import { useUserProfile } from "@/hooks/user/useUserProfile";
+import { useUserProfile } from "@/hooks/profile/user/useUserProfile";
 import { Box, Card, Divider, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -23,10 +23,10 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
   const leaderId = group ? group.liderId : '';
   const { data: leaderProfile } = useUserProfile(leaderId);
   const { data: groupMembers } = useGetGroupMembers(groupId);
-  const { mutateAsync: editGroup } = usePatchGroup();
+  const { mutateAsync: editGroup } = usePatchGroup(groupId);
   const { session } = useSession();
-  const { mutateAsync: deleteGroup } = useDeleteGroup();
-  const { mutateAsync: quitGroup } = usePostQuitGroup();
+  const { mutateAsync: deleteGroup } = useDeleteGroup(groupId);
+  const { mutateAsync: quitGroup } = usePostQuitGroup(groupId);
 
   const isLeader = session?.id === leaderId;
   const isUser = session ? session.roles.includes('ROLE_USER') : false;
@@ -54,12 +54,12 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
   });
 
   const handleDelete = async () => {
-    await deleteGroup(groupId);
+    await deleteGroup();
     setOpenDeleteModal(false);
   };
 
   const handleQuit = async () => {
-    await quitGroup(groupId);
+    await quitGroup();
     setOpenQuitModal(false);
   };
 
@@ -87,7 +87,7 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
             initialIsPublic={group?.publico || false}
             onCancel={() => setIsEditing(false)}
             onSave={async (name, desc, isPublic) => {
-              await editGroup({ id: groupId, nome: name, descricao: desc, publico: isPublic });
+              await editGroup({ nome: name, descricao: desc, publico: isPublic });
               setIsEditing(false);
             }}
           />

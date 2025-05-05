@@ -1,48 +1,58 @@
 import { axiosInstance } from "../api";
+import {
+  PostCreateDto,
+  PostResponseDto,
+  PrivacyDto
+} from "@/types";
 
 export class PostService {
-    async postPost(conteudo: string, repost_id: string | null, arquivos: any[]) {
-        const response = await axiosInstance.post(`/postagens`, { conteudo, repost_id, arquivos }, { withCredentials: true });
-        return response.status;
-    }
+  async postPost(
+    conteudo: string,
+    repost_id: string | null,
+    arquivos: any[]
+  ): Promise<PostResponseDto> {
+    const response = await axiosInstance.post<PostResponseDto>(
+      `/postagens`,
+      { conteudo, repost_id, arquivos },
+      { withCredentials: true }
+    );
+    return response.data;
+  }
 
-    async patchPost(postId: string, conteudo: string) {
-        const response = await axiosInstance.patch(`/postagens/${postId}`, { conteudo }, { withCredentials: true });
-        return response.status;
-    }
+  async patchPost(postId: string, conteudo: string): Promise<void> {
+    await axiosInstance.patch(`/postagens/${postId}`, { conteudo }, { withCredentials: true });
+  }
 
-    async deletePost(postId: string) {
-        const response = await axiosInstance.delete(`/postagens/${postId}`, { withCredentials: true });
-        return response.status;
-    }
+  async deletePost(postId: string): Promise<void> {
+    await axiosInstance.delete(`/postagens/${postId}`, { withCredentials: true });
+  }
 
-    async getPosts() {
-        const response = await axiosInstance.get(`/postagens`, { withCredentials: true });
-        return response.data;
-    }
+  async getPosts(): Promise<PostResponseDto[]> {
+    const response = await axiosInstance.get<PostResponseDto[]>(`/postagens`, { withCredentials: true });
+    return response.data;
+  }
 
-    async getPublicPosts() {
-        const response = await axiosInstance.get(`/postagens/publicas`, { withCredentials: true });
-        return response.data;
-    }
+  async getPublicPosts(): Promise<PostResponseDto[]> {
+    const response = await axiosInstance.get<PostResponseDto[]>(`/postagens/publicas`, { withCredentials: true });
+    return response.data;
+  }
 
-    async getPostById(postId: string) {
-        const response = await axiosInstance.get(`/postagens/${postId}`, { withCredentials: true });
-        return response.data;
-    }
+  async getPostById(postId: string): Promise<PostResponseDto> {
+    const response = await axiosInstance.get<PostResponseDto>(`/postagens/${postId}`, { withCredentials: true });
+    return response.data;
+  }
 
-    async getPostBySlug(slug: string) {
-        const response = await axiosInstance.get(`/postagens/s/${slug}`, { withCredentials: true });
-        return response.data;
-    }
+  async getPostBySlug(slug: string): Promise<PostResponseDto> {
+    const response = await axiosInstance.get<PostResponseDto>(`/postagens/s/${slug}`, { withCredentials: true });
+    return response.data;
+  }
 
-    async patchPostPrivacy(postId: string, isPublic: boolean) {
-        const response = await axiosInstance.patch(`/postagens/${postId}/privacidade`, { isPublic }, { withCredentials: true });
-        return response.status;
-    }
+  async patchPostPrivacy(postId: string, isPublic: boolean): Promise<void> {
+    await axiosInstance.patch(`/postagens/${postId}/privacidade`, { isPublic }, { withCredentials: true });
+  }
 
-    async getRecommendedPosts() {
-        const response = await axiosInstance.get(`/postagens/recomendadas`, { withCredentials: true });
-        return response.data;
-    }
+  async getRecommendedPosts(): Promise<PostResponseDto[]> {
+    const response = await axiosInstance.get<PostResponseDto[]>(`/postagens/recomendadas`, { withCredentials: true });
+    return response.data;
+  }
 }

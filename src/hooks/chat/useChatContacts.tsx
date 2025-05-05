@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
 import { ChatService } from '@/service/chat/ChatService';
 import { Contact } from '@/types';
+import { useQuery } from '@tanstack/react-query';
 
 export function useChatContacts() {
   return useQuery<Contact[], Error>({

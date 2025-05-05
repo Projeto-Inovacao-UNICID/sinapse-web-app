@@ -44,15 +44,15 @@ import {
   useMyReaction,
   useReactPost,
   useRemoveReaction,
-  ReactionType
 } from '@/hooks/posts/useReactions';
+import { ReactionType } from '@/types';
 import { usePostCommentsCount } from '@/hooks/posts/useComments';
 import { useQueryClient } from '@tanstack/react-query';
 import { CommentsTree } from '../../comment/comments-tree';
 
 interface PostCardProps {
   post: {
-    id: string;
+    id: number;
     autorId: string;
     autorNome: string;
     autorAvatarUrl: string;

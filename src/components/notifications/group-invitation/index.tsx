@@ -1,6 +1,6 @@
 import { usePostAcceptGroupInvite, usePostRejectGroupInvite } from '@/hooks/group/useGroup';
-import { useUserProfile } from '@/hooks/user/useUserProfile';
-import { GroupInvite } from '@/types';
+import { useUserProfile } from '@/hooks/profile/user/useUserProfile';
+import { GroupInviteDto } from '@/types';
 import CloseIcon from '@mui/icons-material/Close';
 import DoneIcon from '@mui/icons-material/Done';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -8,19 +8,19 @@ import { Box, Button, ListItemButton } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface GroupInvitationNotificationProps {
-  groupInvite: GroupInvite;
+  groupInvite: GroupInviteDto;
 }
 
 export function GroupInvitationNotification({ groupInvite }: GroupInvitationNotificationProps) {
   const { conviteId, grupoId, quemConvidou} = groupInvite; 
   const { data: invitedBy } = useUserProfile(quemConvidou);
-  const { mutateAsync: acceptInvite } = usePostAcceptGroupInvite();
-  const { mutateAsync: rejectInvite } = usePostRejectGroupInvite();
+  const { mutateAsync: acceptInvite } = usePostAcceptGroupInvite(grupoId, conviteId);
+  const { mutateAsync: rejectInvite } = usePostRejectGroupInvite(grupoId, conviteId);
   const queryClient = useQueryClient();
 
   const handleAccept = async () => {
     try {
-      await acceptInvite({ id: grupoId, inviteId: conviteId });
+      await acceptInvite();
       await queryClient.invalidateQueries({ queryKey: ['group-invitations'] });
     } catch (error) {
       console.error('Erro ao aceitar convite de grupo:', error);
@@ -29,7 +29,7 @@ export function GroupInvitationNotification({ groupInvite }: GroupInvitationNoti
 
   const handleDecline = async () => {
     try {
-      await rejectInvite({ id: grupoId, inviteId: conviteId });
+      await rejectInvite();
       await queryClient.invalidateQueries({ queryKey: ['group-invitations'] });
     } catch (error) {
       console.error('Erro ao recusar convite de grupo:', error);

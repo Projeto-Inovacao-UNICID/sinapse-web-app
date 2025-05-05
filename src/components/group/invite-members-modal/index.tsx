@@ -15,7 +15,7 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
-import { Friend } from "@/types/friend";
+import { Friend } from "@/types";
 
 interface InviteMembersModalProps {
   open: boolean;
@@ -25,7 +25,7 @@ interface InviteMembersModalProps {
 
 export function InviteMembersModal({ open, onClose, groupId }: InviteMembersModalProps) {
   const { data: friends = [], isLoading } = useFriendship();
-  const { mutateAsync: inviteToGroup, isPending } = usePostGroupInvite();
+  const { mutateAsync: inviteToGroup, isPending } = usePostGroupInvite(groupId);
 
   const [selectedFriends, setSelectedFriends] = useState<Friend[]>([]);
 
@@ -36,10 +36,7 @@ export function InviteMembersModal({ open, onClose, groupId }: InviteMembersModa
   const handleInvite = async () => {
     if (selectedFriends.length > 0) {
       for (const friend of selectedFriends) {
-        await inviteToGroup({
-          id: groupId,
-          convidadoId: friend.usuarioId,
-        });
+        await inviteToGroup(friend.usuarioId);
       }
       onClose();
     }
