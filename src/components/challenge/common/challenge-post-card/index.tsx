@@ -18,7 +18,7 @@ import {
   Divider,
 } from '@mui/material';
 import { format } from 'date-fns';
-import { GroupRegistrationModal } from '@/components/challenge/user/group-registration-modal';
+import { RegisterModal } from '@/components/challenge/user/group-registration-modal';
 import { useGetChallengeStages } from '@/hooks/challenge/useStageChallenge';
 import { useRouter } from 'next/navigation';
 
@@ -218,7 +218,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
       </Card>
 
       {!isCompanyUser && (
-        <GroupRegistrationModal
+        <RegisterModal
           open={openModal}
           onClose={() => setOpenModal(false)}
           desafioId={desafio.id}
