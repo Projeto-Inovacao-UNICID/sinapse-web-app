@@ -17,11 +17,13 @@ import {
   InputLabel,
   FormControl,
   Button,
+  Chip,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { StageCommentForm } from "../stage-comment-form";
 import { usePatchChallengeStage } from "@/hooks/challenge/useStageChallenge";
+import CircleIcon from "@mui/icons-material/Circle";
 
 const MotionBox = motion(Box);
 const MotionIcon = motion(EditIcon);
@@ -69,6 +71,19 @@ export function ChallengeStageItem({
     setIsEditing(false);
   };
 
+  
+  const statusColor = status === "ABERTO"
+    ? theme.palette.success.main
+    : status === "FECHADO"
+      ? theme.palette.error.main
+      : theme.palette.warning.main;
+
+  const statusBg = status === "ABERTO"
+    ? theme.palette.success.light
+    : status === "FECHADO"
+      ? theme.palette.error.light
+      : theme.palette.warning.light;
+
   return (
     <MotionBox
       onClick={handleClick}
@@ -91,7 +106,7 @@ export function ChallengeStageItem({
       <Box sx={{ display: "flex", alignItems: "center", mb: 1, justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
           <CheckCircleIcon
-            sx={{ color: isCompleted ? theme.palette.primary.main : "var(--muted)", mr: 1 }}
+            sx={{ color: isCompleted ? "var(--primary)" : "var(--muted)", mr: 1 }}
           />
           <Typography
             variant="subtitle1"
@@ -222,9 +237,17 @@ export function ChallengeStageItem({
         </>
       ) : (
         <>
-          <Typography variant="body2" sx={{ color: "var(--muted)", mb: isCurrent ? 2 : 0 }}>
-            {stage.status}
-          </Typography>
+          <Chip
+            label={status}
+            icon={<CircleIcon sx={{ color: statusColor, fontSize: 12 }} />}
+            sx={{
+              mb: 2,
+              backgroundColor: statusBg,
+              color: statusColor,
+              fontWeight: 500,
+              borderRadius: 1,
+            }}
+          />
           <Typography variant="body2" sx={{ color: "var(--muted)", mb: isCurrent ? 2 : 0 }}>
             {stage.anotacoes}
           </Typography>

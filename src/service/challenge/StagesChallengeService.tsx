@@ -18,7 +18,7 @@ export const stagesChallengeService = {
   },
 
   patchStage: async (stageId: number, stage: RecruitmentStagePatchDto): Promise<RecruitmentStageResponseDto> => {
-    const response = await axiosInstance.patch(`/desafios/estagios-recrutamento/${stageId}`, stage, { withCredentials: true });
+    const response = await axiosInstance.patch(`/estagios-recrutamento/${stageId}`, stage, { withCredentials: true });
     return response.data;
   },
 };
