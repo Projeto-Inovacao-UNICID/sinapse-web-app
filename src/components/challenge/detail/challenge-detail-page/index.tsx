@@ -1,62 +1,67 @@
-// src/components/challenge/detail/challenge-detail-page/index.tsx
 'use client';
 
-import React from "react";
-import { Box, Container, Button } from "@mui/material";
-import { useSession } from "@/hooks/session/useSession";
 import { useGetChallengeById } from "@/hooks/challenge/useChallenge";
 import { useGetCompanyProfile } from "@/hooks/profile/company/useCompanyProfile";
+import { useSession } from "@/hooks/session/useSession";
+import { Box, Button, Container, useTheme } from "@mui/material";
 import { format } from "date-fns";
-import { useTheme } from "@mui/material";
+import { useEffect, useState } from "react";
 
-import { ChallengeDetailHeader } from "../challenge-detail-header";
-import { ChallengeDetailInfo }   from "../challenge-detail-info";
-import { ChallengeDescription } from "../challenge-description.tsx";
 import { useGetChallengeStages } from "@/hooks/challenge/useStageChallenge";
+import { ChallengeDescription } from "../challenge-description.tsx";
+import { ChallengeDetailHeader } from "../challenge-detail-header";
+import { ChallengeDetailInfo } from "../challenge-detail-info";
+import { ChallengeStages } from "../challenge-stages";
 
 interface ChallengeDetailPageProps { id: number; }
 
 export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
   const { session } = useSession();
-  const { data: stages, isLoading: loadingStages } = useGetChallengeStages(id);
-
-  const contStages = stages?.length ?? 0;
-  const haveStages = contStages > 0;
-
-  const isCompanyUser = session?.roles.includes("ROLE_COMPANY") ?? false;
   const theme = useTheme();
 
-  // 1) Carrega o desafio
+  const { data: stages, isLoading: loadingStages } = useGetChallengeStages(id);
+  const contStages = stages?.length ?? 0;
+  const haveStages = stages && contStages > 0;
+  const completedStageIds = stages?.filter(s => s.status === 'FECHADO').map(s => s.id) ?? [];
+
+  const [currentStageId, setCurrentStageId] = useState<number | undefined>();
+
+  useEffect(() => {
+    if (stages && !currentStageId) {
+      const current = stages
+        .filter(s => s.status === 'ABERTO')
+        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
+      if (current) setCurrentStageId(current.id);
+    }
+  }, [stages, currentStageId]);
+
+  const isCompanyUser = session?.roles.includes("ROLE_COMPANY") ?? false;
+
   const {
     data: challenge,
     isLoading: loadingChallenge,
-    isError:   errorChallenge
+    isError: errorChallenge
   } = useGetChallengeById(id);
 
-  // 2) Sempre chamamos o hook de empresa, mas só executamos quando tivermos challenge.empresaId
   const empresaId = challenge?.empresaId ?? "";
   const {
     data: company,
     isLoading: loadingCompany,
-    isError:   errorCompany
+    isError: errorCompany
   } = useGetCompanyProfile(empresaId);
 
-  // 3) Controle de loading / error
-  if (loadingChallenge)   return <div>Carregando desafio…</div>;
-  if (errorChallenge || !challenge)
-                           return <div>Erro ao carregar desafio.</div>;
-  if (loadingCompany)     return <div>Carregando empresa…</div>;
-  if (errorCompany || !company)
-                           return <div>Erro ao carregar empresa.</div>;
+  if (loadingChallenge) return <div>Carregando desafio…</div>;
+  if (errorChallenge || !challenge) return <div>Erro ao carregar desafio.</div>;
+  if (loadingCompany) return <div>Carregando empresa…</div>;
+  if (errorCompany || !company) return <div>Erro ao carregar empresa.</div>;
 
   const status = !haveStages ? 'EM ESPERA' : challenge.status;
-
-  // cores do status
   const statusColor = status === "ABERTO"
     ? theme.palette.success.main
     : status === "FECHADO"
       ? theme.palette.error.main
       : theme.palette.warning.main;
+
   const statusBg = status === "ABERTO"
     ? theme.palette.success.light
     : status === "FECHADO"
@@ -69,9 +74,7 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
         company={{
           id: company.id,
           nome: company.nome,
-          avatarUrl: company.temImagem
-            ? `/api/empresa/avatar/${company.id}`
-            : undefined,
+          avatarUrl: company.temImagem ? `/api/empresa/avatar/${company.id}` : undefined,
           username: company.username
         }}
         onFollow={() => {}}
@@ -84,7 +87,7 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
         area={challenge.modalidade}
         location="—"
         start={format(new Date(challenge.dataInicio), "dd/MM/yyyy")}
-        end={format(new Date(challenge.dataFim),   "dd/MM/yyyy")}
+        end={format(new Date(challenge.dataFim), "dd/MM/yyyy")}
         status={status}
         statusColor={statusColor}
         statusBg={statusBg}
@@ -92,14 +95,14 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
 
       <ChallengeDescription text={challenge.descricao} />
 
-      {/* 
-      <ChallengeStages
-        stages={challenge.stages}
-        completedStageIds={challenge.completedStageIds}
-        currentStageId={challenge.currentStageId}
-        onSubmitComment={(stageId, text) => {}}
-      /> 
-      */}
+      {haveStages &&
+        <ChallengeStages
+        stages={stages ?? []}
+        completedStageIds={completedStageIds}
+        currentStageId={currentStageId}
+        onSelect={stage => setCurrentStageId(stage.id)}
+      />
+      }
 
       {isCompanyUser && (
         <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>

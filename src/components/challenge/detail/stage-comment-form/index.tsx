@@ -7,10 +7,10 @@ import {
   import AttachFileIcon from "@mui/icons-material/AttachFile";
   import { useState } from "react";
   
-  export function StageCommentForm({ onSubmit }: { onSubmit(text: string): void }) {
+  export function StageCommentForm() {
     const [text, setText] = useState("");
     return (
-      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1, width: "100%" }}>
         <TextField
           fullWidth
           multiline
@@ -30,7 +30,7 @@ import {
         </IconButton>
         <Button
           variant="contained"
-          onClick={() => { onSubmit(text); setText(""); }}
+          // onClick={() => { onSubmit(text); setText(""); }}
           sx={{ bgcolor: "var(--primary)", textTransform: "none" }}
         >
           Enviar
