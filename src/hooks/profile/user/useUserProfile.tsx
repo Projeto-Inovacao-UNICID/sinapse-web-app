@@ -29,6 +29,18 @@ export function useUserProfileImage(userId: string, enabled = true) {
   });
 }
 
+export function useUploadUserProfileImage(userId: string) {
+  return useMutation({
+    mutationFn: (image: File) => userProfileService.uploadUserProfileImage(userId, image),
+  });
+}
+
+export function useDeleteUserProfileImage(userId: string) {
+  return useMutation({
+    mutationFn: () => userProfileService.deleteUserProfileImage(userId),
+  });
+}
+
 export function usePatchUserProfile() {
   return useMutation({
     mutationFn: ({
