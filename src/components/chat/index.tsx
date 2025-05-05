@@ -29,12 +29,12 @@ export function Chat({
     <Box display="flex" flexDirection="column" height="100%">
       {/* Lista de mensagens */}
       <Box
-        flex={1}
-        p={2}
         sx={{
           overflowY: 'auto',
           backgroundColor: 'var(--card)',
-          borderRadius: 2
+          borderRadius: 2,
+          p: 2,
+          flex: 1
         }}
       >
         {messages.map(msg => {
@@ -44,7 +44,7 @@ export function Chat({
           const color  = isOther ? 'var(--foreground)' : 'white';
 
           return (
-            <Box key={msg.id} display="flex" justifyContent={justify} mb={1}>
+            <Box key={msg.id} sx={{ display: 'flex', justifyContent: justify, mb: 1 }}>
               <Paper
                 elevation={1}
                 sx={{
@@ -55,7 +55,7 @@ export function Chat({
                   borderRadius: 2
                 }}
               >
-                <Typography variant="body2" mb={0.5} sx={{ fontSize: '1rem' }}>{msg.conteudo}</Typography>
+                <Typography variant="body2" sx={{ fontSize: '1rem', mb: 0.5 }}>{msg.conteudo}</Typography>
                 <Divider/>
                 <Typography
                   variant="caption"
@@ -72,7 +72,7 @@ export function Chat({
 
       {conversaId !== null && (
         <ChatInput
-          conversasId={conversaId.toString()}
+          conversasId={conversaId}
           message={message}
           setMessage={setMessage}
           onSend={handleSend}

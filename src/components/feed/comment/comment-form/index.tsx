@@ -4,10 +4,11 @@
 import React, { useState } from 'react';
 import { Paper, Avatar, TextField, IconButton, useTheme } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
-import { useCreateComment, CreateCommentDto } from '@/hooks/posts/useComments';
+import { useCreateComment } from '@/hooks/posts/useComments';
+import { CommentCreateDto } from '@/types';
 
 interface CommentFormProps {
-  postagemId: string;
+  postagemId: number;
   comentarioPaiId?: number;
   onSubmitted?: () => void;
 }
@@ -23,7 +24,7 @@ export function CommentForm({ postagemId, comentarioPaiId, onSubmitted }: Commen
     if (!text.trim()) return;
     setSubmitting(true);
     try {
-      const payload: CreateCommentDto = {
+      const payload: CommentCreateDto = {
         conteudo: text,
         postagemId: Number(postagemId),
         comentarioPaiId

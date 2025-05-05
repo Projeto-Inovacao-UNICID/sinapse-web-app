@@ -11,12 +11,12 @@ import {
   useTheme
 } from '@mui/material';
 import ReplyIcon from '@mui/icons-material/Reply';
-import { Comentario } from '@/hooks/posts/useComments';
+import { Comment } from '@/types';
 import { CommentForm } from '../comment-form';
 
 interface CommentItemProps {
-  comment: Comentario;
-  postagemId: string;
+  comment: Comment;
+  postagemId: number;
   depth?: number;
   onReply: () => void;
 }

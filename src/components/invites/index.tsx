@@ -1,10 +1,10 @@
 import { List, ListItem, Typography } from "@mui/material";
 import { GroupInviteCard } from "./group-invite-card";
-import { FriendshipInvitationsResponse, GroupInvite } from "@/types";
+import { FriendshipInvitationsResponse, GroupInviteDto } from "@/types";
 import { FriendshipInviteCard } from "./friendship-invite-card";
 
 interface InviteListProps {
-  groupInvites: GroupInvite[];
+  groupInvites: GroupInviteDto[];
   friendshipInvitations: FriendshipInvitationsResponse["content"];
 }
 

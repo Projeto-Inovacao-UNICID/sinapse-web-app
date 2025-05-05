@@ -2,8 +2,8 @@
 'use client';
 
 import { usePostChallenge } from '@/hooks/challenge/useChallenge';
-import { ChallengeToPost } from '@/types/challenge/challenge';
-import { challengeTypesLabels } from '@/types/challenge/challengeTypes';
+import { ChallengeCreateDto } from '@/types';
+import { challengeTypesLabels } from '@/types';
 import {
   Alert,
   Button,
@@ -25,7 +25,7 @@ type Props = {
 };
 
 export function CreationChallengeCard({ empresaId }: Props) {
-  const [form, setForm] = useState<ChallengeToPost>({
+  const [form, setForm] = useState<ChallengeCreateDto>({
     titulo: '',
     descricao: '',
     dataInicio: '',
@@ -49,7 +49,7 @@ const { mutate: postChallenge, isPending, isSuccess, isError } = usePostChalleng
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    postChallenge({ empresaId, desafio: form });
+    postChallenge({ companyId: empresaId, dto: form });
   };
 
   return (

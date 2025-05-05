@@ -5,7 +5,7 @@ import { IconButton, Paper, TextField } from '@mui/material';
 import { useRef, useEffect, useState } from 'react';
 
 interface ChatInputProps {
-  conversasId: string;
+  conversasId: number;
   message: string;
   setMessage: (message: string) => void;
   onSend: (message: string) => void;

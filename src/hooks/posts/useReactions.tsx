@@ -1,15 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { axiosInstance } from '@/service/api';
-
-export type ReactionType = 'CURTIR' | 'AMAR' | 'HAHA' | 'TRISTE' | 'RAIVA';
-
-export interface ReactionsCount {
-  CURTIR: number;
-  AMAR:   number;
-  HAHA:   number;
-  TRISTE: number;
-  RAIVA:  number;
-}
+import { ReactionType, ReactionsCount, ReacaoResponse } from '@/types';
 
 const DEFAULT_COUNTS: ReactionsCount = {
   CURTIR: 0,
@@ -19,21 +10,12 @@ const DEFAULT_COUNTS: ReactionsCount = {
   RAIVA:  0,
 };
 
-export interface ReacaoRequest {
-  tipo: ReactionType;
-}
-
-export interface ReacaoResponse {
-  id:         string;
-  postagemId: string;
-  usuarioId:  string;
-  tipo:       ReactionType;
-}
+export interface ReacaoRequest { tipo: ReactionType }
 
 /**
  * Contagem de reações.
  */
-export function useReactionsCount(postagemId: string) {
+export function useReactionsCount(postagemId: number) {
   return useQuery<ReactionsCount, Error>({
     queryKey: ['reacoes', postagemId],
     queryFn: async () => {
@@ -51,7 +33,7 @@ export function useReactionsCount(postagemId: string) {
 /**
  * Minha reação atual.
  */
-export function useMyReaction(postagemId: string) {
+export function useMyReaction(postagemId: number) {
     return useQuery<ReactionType | null, Error>({
       queryKey: ['minha-reacao', postagemId],
       queryFn: async () => {
@@ -70,7 +52,7 @@ export function useMyReaction(postagemId: string) {
 /**
  * Curtir / reagir (com optimistic update).
  */
-export function useReactPost(postagemId: string) {
+export function useReactPost(postagemId: number) {
   const qc = useQueryClient();
   return useMutation<ReacaoResponse, Error, ReacaoRequest>({
     mutationFn: payload =>
@@ -110,7 +92,7 @@ export function useReactPost(postagemId: string) {
 /**
  * Remover minha reação (optimistic).
  */
-export function useRemoveReaction(postagemId: string) {
+export function useRemoveReaction(postagemId: number) {
   const qc = useQueryClient();
   return useMutation<void, Error, void>({
     mutationFn: () =>

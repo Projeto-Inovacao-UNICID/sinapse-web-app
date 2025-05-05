@@ -3,18 +3,15 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, IconButton, CircularProgress, Box } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { usePatchUserProfile } from "@/hooks/user/useUserProfile";
+import { usePatchUserProfile } from "@/hooks/profile/user/useUserProfile";
 import CloseIcon from "@mui/icons-material/Close"; // Ícone de fechar MUI
+import { UpdateUserProfileDto } from "@/types";
 
 interface EditProfileModalProps {
   open: boolean;
   onClose: () => void;
   userId: string;
-  defaultValues: {
-    nome: string | '';
-    username: string;
-    email: string;
-  };
+  defaultValues: UpdateUserProfileDto;
 }
 
 // Wrapper para integrar motion.div com o Paper do MUI
@@ -45,7 +42,7 @@ export function EditProfileModal({ open, onClose, userId, defaultValues }: EditP
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     patchUserProfile.mutate(
-      { userId, ...formData },
+      { userId, payload: formData },
       {
         onSuccess: () => {
           onClose();

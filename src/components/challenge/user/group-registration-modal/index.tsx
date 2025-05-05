@@ -3,7 +3,7 @@
 import { usePostChallengeRegistrationGroup } from "@/hooks/challenge/useChallenge";
 import { useGetMyGroups } from "@/hooks/group/useGroup";
 import { useSession } from "@/hooks/session/useSession";
-import { Group } from "@/types";
+import { Group, GroupResponseDto } from "@/types";
 import { Box, Button, Card, List, ListItem, Modal, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -12,7 +12,7 @@ import { useState } from "react";
 interface GroupRegistrationModalProps {
   open: boolean;
   onClose: () => void;
-  desafioId: string;
+  desafioId: number;
 }
 
 export function GroupRegistrationModal({ open, onClose, desafioId }: GroupRegistrationModalProps) {
@@ -29,8 +29,12 @@ export function GroupRegistrationModal({ open, onClose, desafioId }: GroupRegist
 
   const handleRegister = () => {
     if (!selectedGroupId) return;
-    registerGroup({ desafioId, groupId: selectedGroupId }, { onSuccess: onClose });
+    registerGroup(
+      { challengeId: desafioId, groupId: selectedGroupId, message: "" },
+      { onSuccess: onClose }
+    );
   };
+  
 
   const handleSelectGroup = (id: number) => {
     setSelectedGroupId(id);

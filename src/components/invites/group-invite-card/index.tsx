@@ -1,9 +1,9 @@
 import { useGetGroupById, usePostAcceptGroupInvite, usePostRejectGroupInvite } from "@/hooks/group/useGroup";
-import { useUserProfile } from "@/hooks/user/useUserProfile";
-import { Box, Button, Card, Typography } from "@mui/material";
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import { useUserProfile } from "@/hooks/profile/user/useUserProfile";
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import { Box, Button, Card, Typography } from "@mui/material";
 
 interface GroupInviteCardProps {
   groupId: number;
@@ -16,15 +16,15 @@ export function GroupInviteCard({ groupId, whoInvitedId, inviteId }: GroupInvite
   const { data: group } = useGetGroupById(groupId);
   const leaderId = group ? group.liderId : '';
   const { data: leaderProfile } = useUserProfile(leaderId);
-  const { mutateAsync: acceptGroupInvite } = usePostAcceptGroupInvite();
-  const { mutateAsync: rejectGroupInvite } = usePostRejectGroupInvite();
+  const { mutateAsync: acceptGroupInvite } = usePostAcceptGroupInvite(groupId, inviteId);
+  const { mutateAsync: rejectGroupInvite } = usePostRejectGroupInvite(groupId, inviteId);
 
   const handleAccept = async () => {
-    await acceptGroupInvite({ id: groupId, inviteId });
+    await acceptGroupInvite();
   };
 
   const handleReject = async () => {
-    await rejectGroupInvite({ id: groupId, inviteId });
+    await rejectGroupInvite();
   };
 
   return (

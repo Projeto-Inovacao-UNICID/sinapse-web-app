@@ -1,11 +1,11 @@
-import { FriendshipInvitationsResponse, GroupInvite } from "@/types";
+import { FriendshipInvitationsResponse, GroupInviteDto } from "@/types";
 import { Divider, List, ListSubheader } from "@mui/material";
 import { FriendshipInvitationNotification } from "./friendship-invitation";
 import { GroupInvitationNotification } from "./group-invitation";
 
 interface NotificationsProps {
   friendshipInvitations: FriendshipInvitationsResponse;
-  groupInvites: GroupInvite[];
+  groupInvites: GroupInviteDto[];
 }
 
 export function Notifications({ friendshipInvitations, groupInvites }: NotificationsProps) {

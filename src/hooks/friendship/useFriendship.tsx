@@ -1,36 +1,36 @@
 import { FriendshipService } from '@/service/friendship/FriendshipService';
-import { Friend, FriendshipInvitation, FriendshipInvitationsResponse, FriendshipInviteType } from '@/types';
+import {
+  Friend,
+  FriendshipInvitation,
+  FriendshipInvitationsResponse,
+  FriendshipInviteType,
+  UpdateFriendshipStatusDto,
+  RemoveFriendshipDto,
+} from '@/types';
 import { useMutation, useQuery } from '@tanstack/react-query';
+
+const service = new FriendshipService();
 
 export function useFriendship() {
   return useQuery<Friend[], Error>({
     queryKey: ['friendship'],
-    queryFn: async () => {
-      const service = new FriendshipService();
-      return service.getFriendship();
-    },
-    staleTime: 1000 * 60 * 5, // cache por 5 minutos
+    queryFn: () => service.getFriendship(),
+    staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
 }
 
 export function usePostFriendship() {
   return useMutation<FriendshipInvitation, Error, string>({
-    mutationFn: async (destinatarioId: string) => {
-      const service = new FriendshipService();
-      return service.postFriendship(destinatarioId);
-    },
+    mutationFn: (destinatarioId) => service.postFriendship(destinatarioId),
   });
 }
 
-export function useGetFriendshipInvitations(tipo: FriendshipInviteType, page?: number, size?: number) {
+export function useGetFriendshipInvitations(tipo: FriendshipInviteType, page = 0, size = 10) {
   return useQuery<FriendshipInvitationsResponse, Error>({
-    queryKey: ['friendship-invitations', tipo],
-    queryFn: async () => {
-      const service = new FriendshipService();
-      return service.getInvitations(tipo, page, size);
-    },
-    staleTime: 1000 * 60 * 5, // cache por 5 minutos
+    queryKey: ['friendship-invitations', tipo, page, size],
+    queryFn: () => service.getInvitations(tipo, page, size),
+    staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
 }
@@ -40,7 +40,7 @@ export function useAcceptFriendshipRequest(amizadeId?: number) {
     mutationFn: async () => {
       if (!amizadeId) throw new Error('amizadeId é obrigatório');
       const service = new FriendshipService();
-      return service.patchFriendship(amizadeId, 'aceito');
+      return service.patchFriendship({amizadeId: amizadeId, status: 'aceito'});
     },
   });
 }

@@ -54,6 +54,9 @@ export function ChallengeFeed() {
             exclusive
             onChange={(_, v) => v && setView(v)}
             sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
               '& > * + *': { ml: 1 },
               '& .MuiToggleButton-root': {
                 bgcolor: 'var(--input)',

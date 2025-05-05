@@ -1,6 +1,6 @@
 'use client';
 
-import { useGetCompanyProfileImage } from "@/hooks/company/useCompanyProfile";
+import { useGetCompanyProfileImage } from "@/hooks/profile/company/useCompanyProfile";
 import { Avatar, CircularProgress } from "@mui/material";
 
 

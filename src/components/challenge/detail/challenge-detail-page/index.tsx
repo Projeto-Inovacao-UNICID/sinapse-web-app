@@ -5,7 +5,7 @@ import React from "react";
 import { Box, Container, Button } from "@mui/material";
 import { useSession } from "@/hooks/session/useSession";
 import { useGetChallengeById } from "@/hooks/challenge/useChallenge";
-import { useGetCompanyProfile } from "@/hooks/company/useCompanyProfile";
+import { useGetCompanyProfile } from "@/hooks/profile/company/useCompanyProfile";
 import { format } from "date-fns";
 import { useTheme } from "@mui/material";
 
@@ -13,7 +13,7 @@ import { ChallengeDetailHeader } from "../challenge-detail-header";
 import { ChallengeDetailInfo }   from "../challenge-detail-info";
 import { ChallengeDescription } from "../challenge-description.tsx";
 
-interface ChallengeDetailPageProps { id: string; }
+interface ChallengeDetailPageProps { id: number; }
 
 export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
   const { session } = useSession();

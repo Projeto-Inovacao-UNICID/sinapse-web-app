@@ -1,10 +1,9 @@
-// src/components/challenge/common/challenge-post-card/index.tsx
 'use client';
 
 import React, { useState } from 'react';
-import { useGetCompanyProfile } from '@/hooks/company/useCompanyProfile';
+import { useGetCompanyProfile } from '@/hooks/profile/company/useCompanyProfile';
 import { useSession } from '@/hooks/session/useSession';
-import { Challenge } from '@/types';
+import type { ChallengeResponseDto } from '@/types';
 import {
   Avatar,
   Box,
@@ -22,7 +21,7 @@ import { format } from 'date-fns';
 import { GroupRegistrationModal } from '@/components/challenge/user/group-registration-modal';
 
 interface ChallengePostCardProps {
-  desafio: Challenge;
+  desafio: ChallengeResponseDto;
 }
 
 export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
@@ -32,6 +31,7 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
   const [openModal, setOpenModal] = useState(false);
 
   const { data: company, isLoading } = useGetCompanyProfile(desafio.empresaId);
+
   if (isLoading) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
@@ -42,8 +42,7 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
 
   const inicio = format(new Date(desafio.dataInicio), 'dd/MM/yyyy');
   const fim = format(new Date(desafio.dataFim), 'dd/MM/yyyy');
-  const status = desafio.status; // 'ABERTO' | 'FECHADO' | 'PENDENTE'
-  // cores MUI
+  const status = desafio.status;
   const statusColor =
     status === 'ABERTO'
       ? theme.palette.success.main
@@ -68,7 +67,6 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
           position: 'relative',
         }}
       >
-        {/* barra lateral colorida */}
         <Box
           sx={{
             position: 'absolute',

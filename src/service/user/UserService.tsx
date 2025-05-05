@@ -1,9 +1,9 @@
-import { User } from "@/types";
+import { UserDto } from "@/types";
 import { axiosInstance } from "../api";
 
 export class UsersService {
     async getUsers() {
-        const response = await axiosInstance.get<User[]>(`/usuarios`, { withCredentials: true });
+        const response = await axiosInstance.get<UserDto[]>(`/usuarios`, { withCredentials: true });
         return response.data;
     }
 }

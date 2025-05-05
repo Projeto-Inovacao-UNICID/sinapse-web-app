@@ -3,20 +3,15 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, IconButton, CircularProgress, Box } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { usePatchCompanyProfile } from "@/hooks/company/useCompanyProfile";
+import { usePatchCompanyProfile } from "@/hooks/profile/company/useCompanyProfile";
 import CloseIcon from "@mui/icons-material/Close";
+import { UpdateCompanyProfileDto } from "@/types";
 
 interface EditCompanyProfileModalProps {
   open: boolean;
   onClose: () => void;
   companyId: string;
-  defaultValues: {
-    nome: string;
-    username: string;
-    email: string;
-    descricao?: string;
-    website?: string;
-  };
+  defaultValues: UpdateCompanyProfileDto;
 }
 
 const MotionPaper = (props: any) => {
