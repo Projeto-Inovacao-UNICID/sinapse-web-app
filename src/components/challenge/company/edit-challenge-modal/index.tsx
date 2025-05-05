@@ -155,8 +155,8 @@ export function EditChallengeModal({ challenge, open, onClose }: Props) {
 
             <TextField
               select
-              label="Modalidade"
-              name="modalidade"
+              label="Área"
+              name="area"
               value={form.modalidade}
               onChange={handleChange}
               fullWidth
