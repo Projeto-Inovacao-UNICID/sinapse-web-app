@@ -70,7 +70,7 @@ export function ChallengeStageItem({
       >
         {stage.anotacoes}
       </Typography> 
-      {(isCurrent && isStageInitial && !isCompanyUser) && <StageCommentForm />}
+      {(isCurrent && isStageInitial && !isCompanyUser) && <StageCommentForm stageId={0} participantId={""} />}
     </MotionBox>
   );
 }
