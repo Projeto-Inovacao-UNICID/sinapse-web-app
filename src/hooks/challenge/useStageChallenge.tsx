@@ -3,6 +3,8 @@ import axios from "axios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { stagesChallengeService } from "@/service/challenge/StagesChallengeService";
 import type {
+  BatchMoveDto,
+  ParticipantResponseDto,
   RecruitmentStageCreateDto,
   RecruitmentStagePatchDto,
   RecruitmentStageResponseDto,
@@ -75,6 +77,28 @@ export function usePatchChallengeStage() {
       queryClient.invalidateQueries({
         queryKey: ["challengeStages", variables.stageId],
       });
+    },
+  });
+}
+
+// Lista de participantes
+export function useGetChallengeParticipants(stageId: number) {
+  return useQuery<ParticipantResponseDto[]>({
+    queryKey: ["challengeParticipants"],
+    queryFn: () => stagesChallengeService.getParticipants(stageId),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+}
+
+// Mover participantes
+export function useBatchMoveParticipants(stageId: number) {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, BatchMoveDto>({
+    mutationFn: (dto) =>
+      stagesChallengeService.batchMove(stageId, dto),
+    onSuccess: (_, dto) => {
+      queryClient.invalidateQueries({ queryKey: ["challengeParticipants"] });
     },
   });
 }

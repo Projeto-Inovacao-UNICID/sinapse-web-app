@@ -18,12 +18,14 @@ import {
   FormControl,
   Button,
   Chip,
+  Collapse,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { StageCommentForm } from "../stage-comment-form";
 import { usePatchChallengeStage } from "@/hooks/challenge/useStageChallenge";
 import CircleIcon from "@mui/icons-material/Circle";
+import { ChallengePrarticipantsList } from "../challenge-stage-participants";
 
 const MotionBox = motion(Box);
 const MotionIcon = motion(EditIcon);
@@ -54,8 +56,12 @@ export function ChallengeStageItem({
   const participantId = inscricao?.grupoId ?? inscricao?.usuarioId;
   const participanteIdStr = participantId ? participantId.toString() : "";
 
+  const [isOpen, setIsOpen] = useState(false);
+
   const handleClick = () => {
-    if (!isDisabled && !isEditing) {
+    if (isChallengeOwner) {
+      setIsOpen((prev) => !prev);
+    } else if (!isDisabled && !isEditing) {
       onSelect?.(stage);
     }
   };
@@ -71,16 +77,17 @@ export function ChallengeStageItem({
     setIsEditing(false);
   };
 
-  
-  const statusColor = status === "ABERTO"
-    ? theme.palette.success.main
-    : status === "FECHADO"
+  const statusColor =
+    status === "ABERTO"
+      ? theme.palette.success.main
+      : status === "FECHADO"
       ? theme.palette.error.main
       : theme.palette.warning.main;
 
-  const statusBg = status === "ABERTO"
-    ? theme.palette.success.light
-    : status === "FECHADO"
+  const statusBg =
+    status === "ABERTO"
+      ? theme.palette.success.light
+      : status === "FECHADO"
       ? theme.palette.error.light
       : theme.palette.warning.light;
 
@@ -256,6 +263,12 @@ export function ChallengeStageItem({
 
       {(isCurrent && isStageInitial && !isChallengeOwner) && (
         <StageCommentForm stageId={stage.id} participantId={participanteIdStr} />
+      )}
+
+      {isChallengeOwner && (
+        <Collapse in={isOpen}>
+          <ChallengePrarticipantsList stageId={stage.id} />
+        </Collapse>
       )}
     </MotionBox>
   );
