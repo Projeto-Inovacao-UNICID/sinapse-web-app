@@ -15,7 +15,7 @@ import {
 
 export const ChallengeService = {
   async getById(id: number): Promise<ChallengeResponseDto> {
-    const res = await axiosInstance.get(`/desafios/${id}`);
+    const res = await axiosInstance.get(`/desafios/${id}`, { withCredentials: true });
     return res.data;
   },
 
