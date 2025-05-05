@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 import { GroupRegistrationModal } from '@/components/challenge/user/group-registration-modal';
-import { useGetChallengeStages } from '@/hooks/challenge/useChallenge';
+import { useGetChallengeStages } from '@/hooks/challenge/useStageChallenge';
 import { useRouter } from 'next/navigation';
 
 interface ChallengePostCardProps {
@@ -122,6 +122,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
           <Typography variant="h6" gutterBottom sx={{ color: 'var(--foreground)', fontWeight: 600 }}>
             {desafio.titulo}
           </Typography>
+
           <Typography
             variant="body2"
             paragraph
@@ -135,15 +136,18 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
             {desafio.descricao}
           </Typography>
 
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
+              Área: {desafio.modalidade} 
+            </Typography>
+          </Box>
+
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1 }}>
             <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
               Início: {inicio}
             </Typography>
             <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
               Fim: {fim}
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
-              {desafio.modalidade}
             </Typography>
           </Box>
 

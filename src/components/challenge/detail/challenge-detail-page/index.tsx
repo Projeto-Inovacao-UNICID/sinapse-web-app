@@ -12,11 +12,17 @@ import { useTheme } from "@mui/material";
 import { ChallengeDetailHeader } from "../challenge-detail-header";
 import { ChallengeDetailInfo }   from "../challenge-detail-info";
 import { ChallengeDescription } from "../challenge-description.tsx";
+import { useGetChallengeStages } from "@/hooks/challenge/useStageChallenge";
 
 interface ChallengeDetailPageProps { id: number; }
 
 export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
   const { session } = useSession();
+  const { data: stages, isLoading: loadingStages } = useGetChallengeStages(id);
+
+  const contStages = stages?.length ?? 0;
+  const haveStages = contStages > 0;
+
   const isCompanyUser = session?.roles.includes("ROLE_COMPANY") ?? false;
   const theme = useTheme();
 
@@ -43,15 +49,17 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
   if (errorCompany || !company)
                            return <div>Erro ao carregar empresa.</div>;
 
+  const status = !haveStages ? 'EM ESPERA' : challenge.status;
+
   // cores do status
-  const statusColor = challenge.status === "ABERTO"
+  const statusColor = status === "ABERTO"
     ? theme.palette.success.main
-    : challenge.status === "FECHADO"
+    : status === "FECHADO"
       ? theme.palette.error.main
       : theme.palette.warning.main;
-  const statusBg = challenge.status === "ABERTO"
+  const statusBg = status === "ABERTO"
     ? theme.palette.success.light
-    : challenge.status === "FECHADO"
+    : status === "FECHADO"
       ? theme.palette.error.light
       : theme.palette.warning.light;
 
@@ -77,7 +85,7 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
         location="—"
         start={format(new Date(challenge.dataInicio), "dd/MM/yyyy")}
         end={format(new Date(challenge.dataFim),   "dd/MM/yyyy")}
-        status={challenge.status}
+        status={status}
         statusColor={statusColor}
         statusBg={statusBg}
       />
