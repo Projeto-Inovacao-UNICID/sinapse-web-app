@@ -1,11 +1,11 @@
 'use client';
 
-import { useGetChallengeById } from "@/hooks/challenge/useChallenge";
+import { useGetChallengeById, useGetMyInscriptions } from "@/hooks/challenge/useChallenge";
 import { useGetCompanyProfile } from "@/hooks/profile/company/useCompanyProfile";
 import { useSession } from "@/hooks/session/useSession";
 import { Box, Button, Container, useTheme } from "@mui/material";
 import { format } from "date-fns";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useGetChallengeStages } from "@/hooks/challenge/useStageChallenge";
 import { ChallengeDescription } from "../challenge-description.tsx";
@@ -24,16 +24,11 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
   const haveStages = stages && contStages > 0;
   const completedStageIds = stages?.filter(s => s.status === 'FECHADO').map(s => s.id) ?? [];
 
-  const [currentStageId, setCurrentStageId] = useState<number | undefined>();
+  const { data: inscricao } = useGetMyInscriptions(id);
 
-  useEffect(() => {
-    if (stages && !currentStageId) {
-      const current = stages
-        .filter(s => s.status === 'ABERTO')
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())[0];
-      if (current) setCurrentStageId(current.id);
-    }
-  }, [stages, currentStageId]);
+  const currentId = inscricao?.estagioRecrutamentoId;
+
+  const [currentStageId, setCurrentStageId] = useState<number | undefined>(currentId);
 
   const isCompanyUser = session?.roles.includes("ROLE_COMPANY") ?? false;
 
