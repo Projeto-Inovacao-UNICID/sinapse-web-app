@@ -22,9 +22,10 @@ import { GroupRegistrationModal } from '@/components/challenge/user/group-regist
 
 interface ChallengePostCardProps {
   desafio: ChallengeResponseDto;
+  onEdit?: () => void; // ✅ Nova prop para abrir modal de edição
 }
 
-export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
+export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
   const theme = useTheme();
   const { session } = useSession();
   const isCompanyUser = session?.roles.includes('ROLE_COMPANY');
@@ -67,6 +68,7 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
           position: 'relative',
         }}
       >
+        {/* Faixa lateral com a cor do status */}
         <Box
           sx={{
             position: 'absolute',
@@ -80,6 +82,7 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
           }}
         />
 
+        {/* Cabeçalho com avatar e nome da empresa */}
         <CardHeader
           avatar={
             <Avatar
@@ -104,6 +107,7 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
 
         <Divider sx={{ my: 1, borderColor: 'var(--border)' }} />
 
+        {/* Conteúdo do desafio */}
         <CardContent sx={{ pt: 0, px: 2, pb: 1 }}>
           <Typography variant="h6" gutterBottom sx={{ color: 'var(--foreground)', fontWeight: 600 }}>
             {desafio.titulo}
@@ -153,6 +157,7 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
 
         <Divider sx={{ borderColor: 'var(--border)' }} />
 
+        {/* Ações: Editar ou Inscrever-se */}
         <CardActions sx={{ justifyContent: 'flex-end', p: 2, pt: 1 }}>
           {isCompanyUser ? (
             <Button
@@ -164,9 +169,7 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
                 borderColor: 'var(--primary)',
                 color: 'var(--primary)',
               }}
-              onClick={() => {
-                /* abrir edição */
-              }}
+              onClick={onEdit} // ✅ Ação de editar vem de props
             >
               Editar
             </Button>
@@ -188,6 +191,7 @@ export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
         </CardActions>
       </Card>
 
+      {/* Modal de inscrição apenas para usuários normais */}
       {!isCompanyUser && (
         <GroupRegistrationModal
           open={openModal}

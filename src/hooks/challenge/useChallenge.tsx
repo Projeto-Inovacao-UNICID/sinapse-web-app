@@ -1,16 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChallengeService } from "@/service/challenge/ChallengeService";
 import {
+  ChallengeCountDto,
   ChallengeCreateDto,
   ChallengePatchDto,
-  RecruitmentStageCreateDto,
-  StageApplicationDto,
   ChallengeResponseDto,
-  ChallengeCountDto,
-  UserChallengeCountDto,
-  RecruitmentStageResponseDto,
   ParticipantResponseDto,
+  RecruitmentStageCreateDto,
+  RecruitmentStageResponseDto,
+  UserChallengeCountDto
 } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // QUERIES
 
