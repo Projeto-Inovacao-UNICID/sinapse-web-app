@@ -13,6 +13,7 @@ import { ChallengeDetailHeader } from "../challenge-detail-header";
 import { ChallengeDetailInfo } from "../challenge-detail-info";
 import { ChallengeStages } from "../challenge-stages";
 import { EditChallengeModal } from "../../company/edit-challenge-modal";
+import { CreationStageModal } from "../../company/creation-stage-modal";
 
 
 interface ChallengeDetailPageProps { id: number; }
@@ -33,6 +34,7 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
   const [currentStageId, setCurrentStageId] = useState<number | undefined>(currentId);
 
   const [openModal, setOpenModal] = useState(false);
+  const [openStageModal, setOpenStageModal] = useState(false);
 
   const isCompanyUser = session?.roles.includes("ROLE_COMPANY") ?? false;
 
@@ -99,7 +101,7 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
           <Button variant="contained" sx={{ bgcolor: "var(--primary)", textTransform: "none", color: "white", ":hover": { opacity: 0.8 } }} onClick={() => setOpenModal(true)}>
             Editar desafio
           </Button>
-          <Button variant="outlined" sx={{ color: "var(--foreground)", textTransform: "none", borderColor: "var(--muted)", ":hover": { opacity: 0.8 } }}>
+          <Button variant="outlined" sx={{ color: "var(--foreground)", textTransform: "none", borderColor: "var(--muted)", ":hover": { opacity: 0.8 } }} onClick={() => setOpenStageModal(true)}>
             Criar novo estágio
           </Button>
         </Box>
@@ -119,6 +121,7 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
       }
 
       {isCompanyUser && <EditChallengeModal challenge={challenge} open={openModal} onClose={() => setOpenModal(false)} />}
+      {isCompanyUser && <CreationStageModal challengeId={id} open={openStageModal} stageOrder={contStages + 1} onClose={() => setOpenStageModal(false)} />}
     </Container>
   );
 }
