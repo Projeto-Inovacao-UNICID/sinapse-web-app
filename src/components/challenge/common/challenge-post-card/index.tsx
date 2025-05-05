@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import { format } from 'date-fns';
 import { GroupRegistrationModal } from '@/components/challenge/user/group-registration-modal';
+import { useGetChallengeStages } from '@/hooks/challenge/useChallenge';
 
 interface ChallengePostCardProps {
   desafio: ChallengeResponseDto;
@@ -30,6 +31,10 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
   const { session } = useSession();
   const isCompanyUser = session?.roles.includes('ROLE_COMPANY');
   const [openModal, setOpenModal] = useState(false);
+  const { data: stages, isLoading: loadingStages } = useGetChallengeStages(desafio.id);
+
+  const contStages = stages?.length ?? 0;
+  const haveStages = contStages > 0;
 
   const { data: company, isLoading } = useGetCompanyProfile(desafio.empresaId);
 
@@ -43,7 +48,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
 
   const inicio = format(new Date(desafio.dataInicio), 'dd/MM/yyyy');
   const fim = format(new Date(desafio.dataFim), 'dd/MM/yyyy');
-  const status = desafio.status;
+  const status = !haveStages ? "EM ESPERA" : desafio.status;
   const statusColor =
     status === 'ABERTO'
       ? theme.palette.success.main
@@ -137,6 +142,12 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
             </Typography>
           </Box>
 
+          <Box sx={{ mb: 1 }}>
+            <Typography variant='caption' sx={{ color: 'var(--muted)' }}>
+              {!haveStages ? 'Sem estágios' : `${contStages} estágio${contStages > 1 ? 's' : ''}`}
+            </Typography>         
+          </Box>
+
           <Box
             component="span"
             sx={{
@@ -169,7 +180,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
                 borderColor: 'var(--primary)',
                 color: 'var(--primary)',
               }}
-              onClick={onEdit} // ✅ Ação de editar vem de props
+              onClick={onEdit}
             >
               Editar
             </Button>
@@ -177,6 +188,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
             <Button
               size="small"
               variant="contained"
+              disabled={loadingStages || !haveStages}
               sx={{
                 textTransform: 'none',
                 bgcolor: 'var(--primary)',
