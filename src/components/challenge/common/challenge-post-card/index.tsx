@@ -1,8 +1,10 @@
+// src/components/challenge/common/challenge-post-card/index.tsx
 'use client';
 
-import { useGetCompanyProfile } from "@/hooks/company/useCompanyProfile";
-import { useSession } from "@/hooks/session/useSession";
-import { Challenge } from "@/types";
+import React, { useState } from 'react';
+import { useGetCompanyProfile } from '@/hooks/company/useCompanyProfile';
+import { useSession } from '@/hooks/session/useSession';
+import { Challenge } from '@/types';
 import {
   Avatar,
   Box,
@@ -12,55 +14,85 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
-  Divider,
   Typography,
-} from "@mui/material";
-import { format } from "date-fns";
-import CircleIcon from '@mui/icons-material/Circle';
-import { colors } from "@/theme/colors";
-import { useState } from "react";
-import { GroupRegistrationModal } from "@/components/challenge/user/group-registration-modal";
+  useTheme,
+  Divider,
+} from '@mui/material';
+import { format } from 'date-fns';
+import { GroupRegistrationModal } from '@/components/challenge/user/group-registration-modal';
 
 interface ChallengePostCardProps {
   desafio: Challenge;
-  gridColumn: number;
 }
 
-export function ChallengePostCard({ desafio, gridColumn }: ChallengePostCardProps) {
-  const empresaId = desafio.empresaId;
-  const { data: company, isLoading } = useGetCompanyProfile(empresaId);
+export function ChallengePostCard({ desafio }: ChallengePostCardProps) {
+  const theme = useTheme();
   const { session } = useSession();
+  const isCompanyUser = session?.roles.includes('ROLE_COMPANY');
   const [openModal, setOpenModal] = useState(false);
 
+  const { data: company, isLoading } = useGetCompanyProfile(desafio.empresaId);
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4, gridColumn: `${gridColumn} / span 1` }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
         <CircularProgress />
       </Box>
     );
   }
 
-  const inicio = format(new Date(desafio.dataInicio), "dd/MM/yyyy");
-  const fim = format(new Date(desafio.dataFim), "dd/MM/yyyy");
-  const status = desafio.status;
-  const statusColor = status === 'ABERTO' ? colors.green : status === 'FECHADO' ? "red" : "orange";
-
-  const hasUserRole = session?.roles.includes("ROLE_USER");
+  const inicio = format(new Date(desafio.dataInicio), 'dd/MM/yyyy');
+  const fim = format(new Date(desafio.dataFim), 'dd/MM/yyyy');
+  const status = desafio.status; // 'ABERTO' | 'FECHADO' | 'PENDENTE'
+  // cores MUI
+  const statusColor =
+    status === 'ABERTO'
+      ? theme.palette.success.main
+      : status === 'FECHADO'
+      ? theme.palette.error.main
+      : theme.palette.warning.main;
+  const statusBg =
+    status === 'ABERTO'
+      ? theme.palette.success.light
+      : status === 'FECHADO'
+      ? theme.palette.error.light
+      : theme.palette.warning.light;
 
   return (
     <>
-      <Card sx={{ bgcolor: 'var(--card)', borderRadius: 2, mb: 2, overflow: 'visible', gridColumn: `${gridColumn} / span 1` }}>
+      <Card
+        elevation={3}
+        sx={{
+          bgcolor: 'var(--card)',
+          borderRadius: 3,
+          overflow: 'visible',
+          position: 'relative',
+        }}
+      >
+        {/* barra lateral colorida */}
+        <Box
+          sx={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 6,
+            bgcolor: statusColor,
+            borderTopLeftRadius: theme.shape.borderRadius * 1.5,
+            borderBottomLeftRadius: theme.shape.borderRadius * 1.5,
+          }}
+        />
+
         <CardHeader
           avatar={
             <Avatar
-              src={company?.temImagem ? `/api/empresa/avatar/${empresaId}` : undefined}
-              alt={company?.nome}
+              src={company?.temImagem ? `/api/empresa/avatar/${company.id}` : undefined}
+              sx={{ width: 40, height: 40 }}
             >
               {!company?.temImagem && company?.nome?.[0]}
             </Avatar>
           }
           title={
-            <Typography variant="subtitle1" sx={{ color: 'white', fontWeight: 'bold' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: 'var(--foreground)' }}>
               {company?.nome}
             </Typography>
           }
@@ -69,18 +101,29 @@ export function ChallengePostCard({ desafio, gridColumn }: ChallengePostCardProp
               @{company?.username}
             </Typography>
           }
-          sx={{ pb: 0 }}
+          sx={{ pb: 0, pl: 2, pr: 2 }}
         />
 
-        <CardContent sx={{ pt: 1 }}>
-          <Typography variant="h6" sx={{ color: 'white', fontWeight: 'bold', mb: 1 }}>
+        <Divider sx={{ my: 1, borderColor: 'var(--border)' }} />
+
+        <CardContent sx={{ pt: 0, px: 2, pb: 1 }}>
+          <Typography variant="h6" gutterBottom sx={{ color: 'var(--foreground)', fontWeight: 600 }}>
             {desafio.titulo}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'white', mb: 2 }}>
+          <Typography
+            variant="body2"
+            paragraph
+            sx={{
+              color: 'var(--foreground)',
+              maxHeight: 60,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+            }}
+          >
             {desafio.descricao}
           </Typography>
 
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 1 }}>
             <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
               Início: {inicio}
             </Typography>
@@ -88,36 +131,72 @@ export function ChallengePostCard({ desafio, gridColumn }: ChallengePostCardProp
               Fim: {fim}
             </Typography>
             <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
-              Modalidade: {desafio.modalidade}
+              {desafio.modalidade}
             </Typography>
-            <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
-              Status: <CircleIcon sx={{ color: statusColor, fontSize: "0.75rem" }} /> {status}
-            </Typography>
+          </Box>
+
+          <Box
+            component="span"
+            sx={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              bgcolor: statusBg,
+              color: statusColor,
+              px: 1.5,
+              py: 0.5,
+              borderRadius: 2,
+              fontSize: '0.75rem',
+              fontWeight: 500,
+            }}
+          >
+            {status}
           </Box>
         </CardContent>
 
-        <Divider sx={{ bgcolor: 'var(--muted)' }} />
+        <Divider sx={{ borderColor: 'var(--border)' }} />
 
-        <CardActions disableSpacing sx={{ px: 1, py: 1, justifyContent: 'flex-end' }}>
-          {hasUserRole && (
+        <CardActions sx={{ justifyContent: 'flex-end', p: 2, pt: 1 }}>
+          {isCompanyUser ? (
+            <Button
+              size="small"
+              variant="outlined"
+              sx={{
+                textTransform: 'none',
+                borderRadius: 2,
+                borderColor: 'var(--primary)',
+                color: 'var(--primary)',
+              }}
+              onClick={() => {
+                /* abrir edição */
+              }}
+            >
+              Editar
+            </Button>
+          ) : (
             <Button
               size="small"
               variant="contained"
+              sx={{
+                textTransform: 'none',
+                bgcolor: 'var(--primary)',
+                borderRadius: 2,
+                '&:hover': { bgcolor: 'var(--primary)' },
+              }}
               onClick={() => setOpenModal(true)}
-              sx={{ bgcolor: "var(--primary)" }}
             >
-              Inscrever Grupo
+              Inscrever‑se
             </Button>
           )}
         </CardActions>
       </Card>
 
-      {/* Modal para inscrever grupo */}
-      <GroupRegistrationModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        desafioId={desafio.id}
-      />
+      {!isCompanyUser && (
+        <GroupRegistrationModal
+          open={openModal}
+          onClose={() => setOpenModal(false)}
+          desafioId={desafio.id}
+        />
+      )}
     </>
   );
 }

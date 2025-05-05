@@ -23,7 +23,6 @@ export class ChallengeService {
     return response.data;
   }
   
-
   async postChallenge(empresaId: string, desafio: ChallengeToPost) {
     const response = await axiosInstance.post(
       `/desafios/${empresaId}/criar`,
