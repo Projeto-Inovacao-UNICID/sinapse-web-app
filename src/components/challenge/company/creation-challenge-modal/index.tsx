@@ -146,7 +146,7 @@ export function CreationChallengeModal({ empresaId, open, onClose }: Props) {
             <TextField
               select
               label="Área"
-              name="area"
+              name="modalidade"
               value={form.modalidade}
               onChange={handleChange}
               fullWidth

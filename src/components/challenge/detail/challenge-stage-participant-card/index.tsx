@@ -32,7 +32,7 @@ export function ChallengeStageParticipantCard({ participant }: ChallengeStagePar
             <Box sx={{ width: '2rem', height: '2rem' }}>
               <UserProfileImage userId={participant.usuarioId} temImagem={user?.temImagem ?? false} />
             </Box>
-            <DeleteIcon sx={{ color: "var(--muted)" }} />
+            {/* <DeleteIcon sx={{ color: "var(--muted)" }} /> */}
           </Box>
           <Box>
             <Typography variant="h5" sx={{ color: "var(--foreground)", fontWeight: "bold" }}>
