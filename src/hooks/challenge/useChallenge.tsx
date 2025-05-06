@@ -1,16 +1,15 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ChallengeService } from "@/service/challenge/ChallengeService";
 import {
+  ChallengeCountDto,
   ChallengeCreateDto,
   ChallengePatchDto,
-  RecruitmentStageCreateDto,
-  StageApplicationDto,
   ChallengeResponseDto,
-  ChallengeCountDto,
-  UserChallengeCountDto,
-  RecruitmentStageResponseDto,
   ParticipantResponseDto,
+  RecruitmentStageCreateDto,
+  RecruitmentStageResponseDto,
+  UserChallengeCountDto
 } from "@/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // QUERIES
 
@@ -23,6 +22,15 @@ export function useGetChallenges(params?: {
   return useQuery<ChallengeResponseDto[]>({
     queryKey: ["challenges", params],
     queryFn: () => ChallengeService.list(params),
+  });
+}
+
+export function useGetMyInscriptions(desafioId: number) {
+  return useQuery<ParticipantResponseDto | null>({
+    queryKey: ["challengeRegistration", desafioId],
+    queryFn: () => ChallengeService.getMyInscriptions(desafioId),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   });
 }
 
@@ -101,9 +109,9 @@ export function usePostChallengeStage() {
 
 export function usePostChallengeRegistrationGroup() {
   const queryClient = useQueryClient();
-  return useMutation<ParticipantResponseDto, Error, { challengeId: number; groupId: number; message: string }>({
-    mutationFn: ({ challengeId, groupId, message }) =>
-      ChallengeService.applyGroup(challengeId, groupId, { mensagem: message }),
+  return useMutation<ParticipantResponseDto, Error, { challengeId: number; groupId: number; mensagem: string }>({
+    mutationFn: ({ challengeId, groupId, mensagem }) =>
+      ChallengeService.applyGroup(challengeId, groupId, mensagem),
     onSuccess: (_, { challengeId }) => {
       queryClient.invalidateQueries({ queryKey: ["challengeRegistration", challengeId] });
     },
@@ -112,9 +120,9 @@ export function usePostChallengeRegistrationGroup() {
 
 export function usePostChallengeRegistrationSolo() {
   const queryClient = useQueryClient();
-  return useMutation<ParticipantResponseDto, Error, { challengeId: number; message: string }>({
-    mutationFn: ({ challengeId, message }) =>
-      ChallengeService.applySolo(challengeId, { mensagem: message }),
+  return useMutation<ParticipantResponseDto, Error, { challengeId: number; mensagem: string }>({
+    mutationFn: ({ challengeId, mensagem }) =>
+      ChallengeService.applySolo(challengeId, mensagem),
     onSuccess: (_, { challengeId }) => {
       queryClient.invalidateQueries({ queryKey: ["challengeRegistration", challengeId] });
     },

@@ -1,5 +1,6 @@
 // services/ChallengeService.ts
 
+import axios from "axios";
 import { axiosInstance } from "../api";
 import {
   ChallengeCreateDto,
@@ -19,6 +20,20 @@ export const ChallengeService = {
     return res.data;
   },
 
+  async getMyInscriptions(desafioId: number): Promise<ParticipantResponseDto | null> {
+    try {
+      const res = await axiosInstance.get(`/desafios/${desafioId}/inscricao-minha`, {
+        withCredentials: true,
+      });
+      return res.data;
+    } catch (error: any) {
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        return null;
+      }
+      throw error;
+    }
+  },
+  
   async list(params?: {
     companyId?: string;
     modality?: string;
@@ -70,18 +85,18 @@ export const ChallengeService = {
 
   async applySolo(
     challengeId: number,
-    dto: StageApplicationDto
+    mensagem: string
   ): Promise<ParticipantResponseDto> {
-    const res = await axiosInstance.post(`/desafios/${challengeId}/candidatar`, dto, { withCredentials: true });
+    const res = await axiosInstance.post(`/desafios/${challengeId}/candidatar`, { mensagem }, { withCredentials: true });
     return res.data;
   },
 
   async applyGroup(
     challengeId: number,
     groupId: number,
-    dto: StageApplicationDto
+    mensagem: string
   ): Promise<ParticipantResponseDto> {
-    const res = await axiosInstance.post(`/desafios/${challengeId}/candidatar/${groupId}`, dto, { withCredentials: true });
+    const res = await axiosInstance.post(`/desafios/${challengeId}/candidatar/${groupId}`, { mensagem }, { withCredentials: true });
     return res.data;
   },
 

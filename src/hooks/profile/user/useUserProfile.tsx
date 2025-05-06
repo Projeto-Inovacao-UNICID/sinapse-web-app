@@ -1,12 +1,10 @@
 // src/hooks/user/useUserProfile.ts
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { UserProfileService } from "@/service/profile/user/UserProfileService";
 import {
   UpdateUserProfileDto,
-  UserPrivateProfileDto,
-  UserProfileResponse,
-  UserPublicProfileDto,
+  UserProfileResponse
 } from "@/types";
-import { UserProfileService } from "@/service/profile/user/UserProfileService";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 const userProfileService = new UserProfileService();
 

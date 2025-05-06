@@ -1,57 +1,73 @@
-// src/components/challenge/detail/challenge-detail-page/index.tsx
 'use client';
 
-import React from "react";
-import { Box, Container, Button } from "@mui/material";
-import { useSession } from "@/hooks/session/useSession";
-import { useGetChallengeById } from "@/hooks/challenge/useChallenge";
+import { useGetChallengeById, useGetMyInscriptions } from "@/hooks/challenge/useChallenge";
 import { useGetCompanyProfile } from "@/hooks/profile/company/useCompanyProfile";
+import { useSession } from "@/hooks/session/useSession";
+import { Box, Button, Container, Divider, useTheme } from "@mui/material";
 import { format } from "date-fns";
-import { useTheme } from "@mui/material";
+import { useState } from "react";
 
-import { ChallengeDetailHeader } from "../challenge-detail-header";
-import { ChallengeDetailInfo }   from "../challenge-detail-info";
+import { useGetChallengeStages } from "@/hooks/challenge/useStageChallenge";
 import { ChallengeDescription } from "../challenge-description.tsx";
+import { ChallengeDetailHeader } from "../challenge-detail-header";
+import { ChallengeDetailInfo } from "../challenge-detail-info";
+import { ChallengeStages } from "../challenge-stages";
+import { EditChallengeModal } from "../../company/edit-challenge-modal";
+import { CreationStageModal } from "../../company/creation-stage-modal";
+
 
 interface ChallengeDetailPageProps { id: number; }
 
 export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
   const { session } = useSession();
-  const isCompanyUser = session?.roles.includes("ROLE_COMPANY") ?? false;
   const theme = useTheme();
 
-  // 1) Carrega o desafio
+  const { data: stages, isLoading: loadingStages } = useGetChallengeStages(id);
+  const contStages = stages?.length ?? 0;
+  const haveStages = stages && contStages > 0;
+  const completedStageIds = stages?.filter(s => s.status === 'FECHADO').map(s => s.id) ?? [];
+
+  const { data: inscricao } = useGetMyInscriptions(id);
+
+  const currentId = inscricao?.estagioRecrutamentoId;
+
+  const [currentStageId, setCurrentStageId] = useState<number | undefined>(currentId);
+
+  const [openModal, setOpenModal] = useState(false);
+  const [openStageModal, setOpenStageModal] = useState(false);
+
+  const isCompanyUser = session?.roles.includes("ROLE_COMPANY") ?? false;
+
   const {
     data: challenge,
     isLoading: loadingChallenge,
-    isError:   errorChallenge
+    isError: errorChallenge
   } = useGetChallengeById(id);
 
-  // 2) Sempre chamamos o hook de empresa, mas só executamos quando tivermos challenge.empresaId
   const empresaId = challenge?.empresaId ?? "";
+  const isChallengeOwner = session ? session.id === empresaId : false;
+
   const {
     data: company,
     isLoading: loadingCompany,
-    isError:   errorCompany
+    isError: errorCompany
   } = useGetCompanyProfile(empresaId);
 
-  // 3) Controle de loading / error
-  if (loadingChallenge)   return <div>Carregando desafio…</div>;
-  if (errorChallenge || !challenge)
-                           return <div>Erro ao carregar desafio.</div>;
-  if (loadingCompany)     return <div>Carregando empresa…</div>;
-  if (errorCompany || !company)
-                           return <div>Erro ao carregar empresa.</div>;
+  if (loadingChallenge) return <div>Carregando desafio…</div>;
+  if (errorChallenge || !challenge) return <div>Erro ao carregar desafio.</div>;
+  if (loadingCompany) return <div>Carregando empresa…</div>;
+  if (errorCompany || !company) return <div>Erro ao carregar empresa.</div>;
 
-  // cores do status
-  const statusColor = challenge.status === "ABERTO"
+  const status = !haveStages ? 'EM ESPERA' : challenge.status;
+  const statusColor = status === "ABERTO"
     ? theme.palette.success.main
-    : challenge.status === "FECHADO"
+    : status === "FECHADO"
       ? theme.palette.error.main
       : theme.palette.warning.main;
-  const statusBg = challenge.status === "ABERTO"
+
+  const statusBg = status === "ABERTO"
     ? theme.palette.success.light
-    : challenge.status === "FECHADO"
+    : status === "FECHADO"
       ? theme.palette.error.light
       : theme.palette.warning.light;
 
@@ -61,9 +77,7 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
         company={{
           id: company.id,
           nome: company.nome,
-          avatarUrl: company.temImagem
-            ? `/api/empresa/avatar/${company.id}`
-            : undefined,
+          avatarUrl: company.temImagem ? `/api/empresa/avatar/${company.id}` : undefined,
           username: company.username
         }}
         onFollow={() => {}}
@@ -76,31 +90,40 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
         area={challenge.modalidade}
         location="—"
         start={format(new Date(challenge.dataInicio), "dd/MM/yyyy")}
-        end={format(new Date(challenge.dataFim),   "dd/MM/yyyy")}
-        status={challenge.status}
+        end={format(new Date(challenge.dataFim), "dd/MM/yyyy")}
+        status={status}
         statusColor={statusColor}
         statusBg={statusBg}
       />
 
       <ChallengeDescription text={challenge.descricao} />
 
-      {/* 
-      <ChallengeStages
-        stages={challenge.stages}
-        completedStageIds={challenge.completedStageIds}
-        currentStageId={challenge.currentStageId}
-        onSubmitComment={(stageId, text) => {}}
-      /> 
-      */}
-
       {isCompanyUser && (
         <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
-          <Button variant="outlined">Salvar</Button>
-          <Button variant="contained" sx={{ bgcolor: "var(--primary)", textTransform: "none" }}>
-            Bora pro Desafio!
+          <Button variant="contained" sx={{ bgcolor: "var(--primary)", textTransform: "none", color: "white", ":hover": { opacity: 0.8 } }} onClick={() => setOpenModal(true)}>
+            Editar desafio
+          </Button>
+          <Button variant="outlined" sx={{ color: "var(--foreground)", textTransform: "none", borderColor: "var(--muted)", ":hover": { opacity: 0.8 } }} onClick={() => setOpenStageModal(true)}>
+            Criar novo estágio
           </Button>
         </Box>
       )}
+
+      <Divider sx={{ my: 4, borderColor: "var(--muted)" }} />
+
+      {haveStages &&
+        <ChallengeStages
+        stages={stages ?? []}
+        completedStageIds={completedStageIds}
+        currentStageId={currentStageId}
+        inscricao={inscricao}
+        isChallengeOwner={isChallengeOwner}
+        onSelect={stage => setCurrentStageId(stage.id)}
+      />
+      }
+
+      {isCompanyUser && <EditChallengeModal challenge={challenge} open={openModal} onClose={() => setOpenModal(false)} />}
+      {isCompanyUser && <CreationStageModal challengeId={id} open={openStageModal} stageOrder={contStages + 1} onClose={() => setOpenStageModal(false)} />}
     </Container>
   );
 }

@@ -20,7 +20,7 @@ export function ChallengeDetailInfo({
       </Typography>
       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 4, mt: 1, color: "var(--muted)" }}>
         <Typography>Área: {area}</Typography>
-        <Typography>Localização: {location}</Typography>
+        {/* <Typography>Localização: {location}</Typography> */}
         <Typography>Início: {start}</Typography>
         <Typography>Fim: {end}</Typography>
       </Box>

@@ -1,127 +1,174 @@
-"use client";
-
-import { usePostChallengeRegistrationGroup } from "@/hooks/challenge/useChallenge";
+import { UserProfileImage } from "@/components/common/user-avatar";
+import {
+  usePostChallengeRegistrationGroup,
+  usePostChallengeRegistrationSolo,
+} from "@/hooks/challenge/useChallenge";
 import { useGetMyGroups } from "@/hooks/group/useGroup";
+import { useUserProfile } from "@/hooks/profile/user/useUserProfile";
 import { useSession } from "@/hooks/session/useSession";
-import { Group, GroupResponseDto } from "@/types";
-import { Box, Button, Card, List, ListItem, Modal, Typography } from "@mui/material";
-import { motion } from "framer-motion";
-import Link from "next/link";
+import { Group } from "@/types";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  List,
+  ListItem,
+  Typography,
+} from "@mui/material";
 import { useState } from "react";
 
-interface GroupRegistrationModalProps {
+interface RegisterModalProps {
   open: boolean;
   onClose: () => void;
   desafioId: number;
 }
 
-export function GroupRegistrationModal({ open, onClose, desafioId }: GroupRegistrationModalProps) {
+export function RegisterModal({ open, onClose, desafioId }: RegisterModalProps) {
   const { session } = useSession();
-  const { data: groups, isLoading } = useGetMyGroups();
-  const { mutate: registerGroup, isPending } = usePostChallengeRegistrationGroup();
-
-  const [selectedGroupId, setSelectedGroupId] = useState<number | null>(null);
-
   const userId = session?.id;
 
+  const { data: userProfile } = useUserProfile(userId ?? "");
+  const { data: groups } = useGetMyGroups();
   const myGroups = groups ? groups.content.filter((group: Group) => group.liderId === userId) : [];
 
+  const { mutate: registerSolo, isPending: isRegisteringSolo } = usePostChallengeRegistrationSolo();
+  const { mutate: registerGroup, isPending: isRegisteringGroup } = usePostChallengeRegistrationGroup();
+
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isError, setIsError] = useState(false);
+
+  const isRegistering = isRegisteringSolo || isRegisteringGroup;
 
   const handleRegister = () => {
-    if (!selectedGroupId) return;
-    registerGroup(
-      { challengeId: desafioId, groupId: selectedGroupId, message: "" },
-      { onSuccess: onClose }
-    );
-  };
-  
+    if (!selectedId) return;
+    setIsSuccess(false);
+    setIsError(false);
 
-  const handleSelectGroup = (id: number) => {
-    setSelectedGroupId(id);
+    const commonCallbacks = {
+      onSuccess: () => {
+        setIsSuccess(true);
+        setTimeout(onClose, 1500); // fecha o modal após sucesso
+      },
+      onError: () => {
+        setIsError(true);
+      },
+    };
+
+    if  (typeof selectedId === "string" ) {
+      registerSolo({ challengeId: desafioId, mensagem: "Inscricao solo" }, commonCallbacks);
+    } 
+    else {
+      registerGroup({ challengeId: desafioId, groupId: selectedId, mensagem: "Inscricao grupo" }, commonCallbacks);
+    }
   };
 
   return (
-    <Modal open={open} onClose={onClose}>
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.95 }}
-        transition={{ duration: 0.3 }}
-      >
-        <Box
-          sx={{
-            bgcolor: "var(--card)",
-            borderRadius: 4,
-            p: 4,
-            m: "auto",
-            mt: 10,
-            width: "90%",
-            maxWidth: 500,
-            boxShadow: 24,
-          }}
-        >
-          <Typography variant="h5" color="var--foreground" sx={{ mb: 2, fontWeight: 'bold' }}>
-            Inscrever grupo no desafio
-          </Typography>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: {
+          bgcolor: "var(--card)",
+          borderRadius: 4,
+          boxShadow: "none",
+          p: 4,
+        },
+      }}
+    >
+      <DialogTitle sx={{ fontWeight: "bold", color: "var(--foreground)", px: 0 }}>
+        Inscrever-se no desafio
+      </DialogTitle>
+      <DialogContent sx={{ px: 0 }}>
+        {isError && <Alert severity="error" sx={{ mb: 2 }}>Erro ao se inscrever no desafio.</Alert>}
+        {isSuccess && <Alert severity="success" sx={{ mb: 2 }}>Inscrição realizada com sucesso!</Alert>}
 
-          {isLoading ? (
-            <Typography variant="body1" color="var(--muted)">
-              Carregando grupos...
-            </Typography>
-          ) : myGroups.length === 0 ? (
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-              <Typography variant="body1" color="var(--muted)">
-                Você ainda não é líder de nenhum grupo.
-              </Typography>
-              <Link href={`/profile/me/${userId}/criar-grupo`} passHref>
-                <Button variant="contained" sx={{ bgcolor: "var(--primary)" }}>
-                  Criar grupo
-                </Button>
-              </Link>
-            </Box>
-          ) : (
-            <List disablePadding>
-              {myGroups.map((group: Group) => (
-                <ListItem key={group.id} disableGutters disablePadding sx={{ mb: 1 }}>
-                  <Card
-                    onClick={() => handleSelectGroup(group.id)}
-                    sx={{
-                      p: 2,
-                      width: "100%",
-                      cursor: "pointer",
-                      borderRadius: 2,
-                      border: selectedGroupId === group.id ? "2px solid var(--primary)" : "2px solid transparent",
-                      bgcolor: "var(--cardSecondary)",
-                      "&:hover": {
-                        borderColor: "var(--primary)",
-                      },
-                    }}
-                  >
-                    <Typography variant="subtitle1" fontWeight="bold" color="var(--foreground)">
-                      {group.nome}
-                    </Typography>
-                    <Typography variant="body2" color="var(--muted)">
-                      {group.publico ? "Público" : "Privado"}
-                    </Typography>
-                  </Card>
-                </ListItem>
-              ))}
-            </List>
-          )}
+        <Typography variant="body2" sx={{ color: "var(--muted)", mb: 2 }}>
+          Você pode se inscrever sozinho ou com um grupo.
+        </Typography>
 
-          {myGroups.length > 0 && (
-            <Button
-              variant="contained"
-              fullWidth
-              sx={{ mt: 3, bgcolor: "var(--primary)", ":hover": { opacity: 0.8 }, cursor: "pointer" }}  
-              disabled={!selectedGroupId || isPending}
-              onClick={handleRegister}
+        <List disablePadding>
+          {/* Solo */}
+          <ListItem disableGutters disablePadding sx={{ mb: 1 }}>
+            <Card
+              onClick={() => setSelectedId(userId!)}
+              sx={{
+                p: 2,
+                width: "100%",
+                cursor: "pointer",
+                borderRadius: 2,
+                border: selectedId === userId ? "2px solid var(--primary)" : "2px solid transparent",
+                bgcolor: "var(--cardSecondary)",
+                "&:hover": { borderColor: "var(--primary)" },
+              }}
             >
-              {isPending ? "Inscrevendo..." : "Inscrever grupo"}
-            </Button>
-          )}
-        </Box>
-      </motion.div>
-    </Modal>
+              <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 1, width: "2rem", height: "2rem" }}>
+                <UserProfileImage
+                  userId={userId ?? ""}
+                  temImagem={userProfile?.temImagem ?? false}
+                />
+                <Typography variant="subtitle1" fontWeight="bold" color="var(--foreground)">
+                  {userProfile?.nome ?? ""}
+                </Typography>
+              </Box>
+              <Typography variant="body2" color="var(--muted)">
+                Inscreva-se solo no desafio
+              </Typography>
+            </Card>
+          </ListItem>
+
+          {/* Grupos */}
+          {myGroups.map((group: Group) => (
+            <ListItem key={group.id} disableGutters disablePadding sx={{ mb: 1 }}>
+              <Card
+                onClick={() => setSelectedId(group.id)}
+                sx={{
+                  p: 2,
+                  width: "100%",
+                  cursor: "pointer",
+                  borderRadius: 2,
+                  border: selectedId === group.id ? "2px solid var(--primary)" : "2px solid transparent",
+                  bgcolor: "var(--cardSecondary)",
+                  "&:hover": { borderColor: "var(--primary)" },
+                }}
+              >
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold", color: "var(--foreground)" }}>
+                  {group.nome}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "var(--muted)" }}>
+                  {group.publico ? "Público" : "Privado"}
+                </Typography>
+              </Card>
+            </ListItem>
+          ))}
+        </List>
+
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{
+            mt: 3,
+            bgcolor: "var(--primary)",
+            color: "white",
+            ":hover": { opacity: 0.8 },
+            textTransform: "none",
+          }}
+          disabled={!selectedId || isRegistering}
+          onClick={handleRegister}
+        >
+          {isRegistering
+            ? "Inscrevendo..."
+            : typeof selectedId === "string"
+              ? "Inscrever-se solo"
+              : "Inscrever grupo"}
+        </Button>
+      </DialogContent>
+    </Dialog>
   );
 }
