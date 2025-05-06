@@ -5,13 +5,14 @@ import { Box, Card, Divider, Typography } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import DeleteIcon from '@mui/icons-material/Delete';
-import CloseIcon from '@mui/icons-material/Close';
+import LogoutIcon from '@mui/icons-material/Logout';
 import { motion } from "framer-motion";
 import { GroupCardEditor } from "../group-card-editor";
 import { useState } from "react";
 import { InviteMembersModal } from "@/components/group/invite-members-modal";
 import { useSession } from "@/hooks/session/useSession";
 import { ConfirmationDialog } from "@/components/group/confirmation-dialog";
+import IconButton from "@/components/common/icon-button";
 
 interface GroupCardProps {
   groupId: number;
@@ -99,57 +100,21 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
               </Typography>
               {isLeader && (
                 <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                  <motion.button
-                    whileHover={{ scale: 1.3 }}
-                    whileTap={{ scale: 0.9 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                  <IconButton
+                    icon={<EditIcon />}
                     onClick={() => setIsEditing(true)}
-                    style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
-                  >
-                    <EditIcon
-                      sx={{
-                        color: 'var(--muted)',
-                        ':hover': { color: 'var(--primary)' },
-                        width: '1.5rem',
-                        height: '1.5rem',
-                      }}
-                    />
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.3 }}
-                    whileTap={{ scale: 0.9 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                  />
+                  <IconButton
+                    icon={<DeleteIcon />}
                     onClick={() => setOpenDeleteModal(true)}
-                    style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
-                  >
-                    <DeleteIcon
-                      sx={{
-                        color: 'var(--muted)',
-                        ':hover': { color: 'var(--primary)' },
-                        width: '1.5rem',
-                        height: '1.5rem',
-                      }}
-                    />
-                  </motion.button>
+                  />
                 </Box>
               )}
               {!isLeader && isUser && (
-                <motion.button
-                  whileHover={{ scale: 1.3 }}
-                  whileTap={{ scale: 0.9 }}
-                  transition={{ type: 'spring', stiffness: 300 }}
+                <IconButton
+                  icon={<LogoutIcon />}
                   onClick={() => setOpenQuitModal(true)}
-                  style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
-                >
-                  <CloseIcon
-                    sx={{
-                      color: 'var(--muted)',
-                      ':hover': { color: 'var(--primary)' },
-                      width: '1.5rem',
-                      height: '1.5rem',
-                    }}
-                  />
-                </motion.button>
+                />
               )}
             </Box>
 
@@ -201,22 +166,10 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
                       Membros:
                     </Typography>
                     {isLeader && (
-                      <motion.button
-                        whileHover={{ scale: 1.3 }}
-                        whileTap={{ scale: 0.9 }}
-                        transition={{ type: 'spring', stiffness: 300 }}
+                      <IconButton
+                        icon={<GroupAddIcon />}
                         onClick={() => setIsMembersModalOpen(true)}
-                        style={{ backgroundColor: 'transparent', border: 'none', padding: 0, cursor: 'pointer' }}
-                      >
-                        <GroupAddIcon
-                          sx={{
-                            color: 'var(--muted)',
-                            ':hover': { color: 'var(--primary)' },
-                            width: '1.5rem',
-                            height: '1.5rem',
-                          }}
-                        />
-                      </motion.button>
+                      />
                     )}
                   </Box>
                   <Box sx={{ width: "100%" }}>
