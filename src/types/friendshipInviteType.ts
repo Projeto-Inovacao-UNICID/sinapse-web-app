@@ -1,1 +1,0 @@
-export type FriendshipInviteType = "enviados" | "recebidos";

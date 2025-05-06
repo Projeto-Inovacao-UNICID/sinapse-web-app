@@ -18,7 +18,7 @@ export function FriendshipInvitationNotification({ friendshipContent }: Friendsh
 
   const handleAccept = async () => {
     try {
-      const res = await service.patchFriendship(amizadeId, 'aceito');
+      const res = await service.patchFriendship({amizadeId, status: 'aceito'});
       console.log('Convite de amizade aceito com sucesso:', res);
 
       // Invalida as notificações
@@ -31,7 +31,7 @@ export function FriendshipInvitationNotification({ friendshipContent }: Friendsh
 
   const handleDecline = async () => {
     try {
-      const res = await service.patchFriendship(amizadeId, 'rejeitado');
+      const res = await service.patchFriendship({amizadeId, status: 'rejeitado'});
       console.log('Convite de amizade recusado com sucesso:', res);
 
       // Invalida as notificações

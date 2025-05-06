@@ -5,7 +5,8 @@ import React from 'react';
 import { Box } from '@mui/material';
 import { PostCreator } from './post/post-creator';
 import { PostCard }    from './post/post-card';
-import { useGetPosts, Post } from '@/hooks/posts/useGetPosts';
+import { useGetPosts } from '@/hooks/posts/useGetPosts';
+import { Post } from '@/types';
 import { useChatContacts }   from '@/hooks/chat/useChatContacts';
 import { SidebarMenu } from '../common/side-bar-menu';
 import { AdsPanel }     from '../common/ads-panel';
@@ -34,24 +35,28 @@ export function Feed() {
         <PostCreator />
 
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
-          {posts.map((p: Post) => (
-            <PostCard
-              key={p.id}
-              post={{
-                id:             p.id,
-                autorId:        p.autorId,
-                autorNome:      p.autorNome,
-                autorAvatarUrl: p.autorAvatarUrl,
-                localizacao:    '',
-                texto:          p.conteudo,
-                createdAt:      p.createdAt,
-                imagemUrl:      p.imagemUrl,
-                isCompany:      p.isCompany,
-                comentarios:    0,
-              }}
-            />
-          ))}
+          {posts
+            .slice() // cria uma cópia para evitar mutar o array original
+            .reverse() // inverte a ordem
+            .map((p: Post) => (
+              <PostCard
+                key={p.id}
+                post={{
+                  id:             p.id,
+                  autorId:        p.autorId,
+                  autorNome:      p.autorNome,
+                  autorAvatarUrl: p.autorAvatarUrl,
+                  localizacao:    '',
+                  texto:          p.conteudo,
+                  createdAt:      p.createdAt,
+                  imagemUrl:      p.imagemUrl,
+                  isCompany:      p.isCompany,
+                  comentarios:    0,
+                }}
+              />
+            ))}
         </Box>
+
       </Box>
 
       {/* anúncios + chat */}

@@ -14,16 +14,16 @@ interface CreateGroupModalProps {
 export function CreateGroupModal({ open, onClose }: CreateGroupModalProps) {
   const [nome, setNome] = useState('');
   const [descricao, setDescricao] = useState('');
-  const [isPublic, setIsPublic] = useState(false);
+  const [publico, setPublico] = useState(false);
 
   const { mutate: createGroup, isPending, isSuccess, isError } = usePostGroup();
 
   const handleCreateGroup = () => {
-    createGroup({ nome, descricao, isPublic }, {
+    createGroup({ nome, descricao, publico }, {
       onSuccess: () => {
         setNome('');
         setDescricao('');
-        setIsPublic(false);
+        setPublico(false);
         onClose(); // fecha o modal quando criar com sucesso
       }
     });
@@ -133,17 +133,17 @@ export function CreateGroupModal({ open, onClose }: CreateGroupModalProps) {
 
           <Box display="flex" alignItems="center" className="mb-4">
             <Button
-              variant={isPublic ? 'contained' : 'outlined'}
-              onClick={() => setIsPublic(!isPublic)}
+              variant={publico ? 'contained' : 'outlined'}
+              onClick={() => setPublico(!publico)}
               sx={{ 
                 marginRight: 2, 
-                color: isPublic ? "white" : "var(--muted)",
-                bgcolor: isPublic ? "var(--primary)" : "var(--cardSecondary)",
+                color: publico ? "white" : "var(--muted)",
+                bgcolor: publico ? "var(--primary)" : "var(--cardSecondary)",
                 borderRadius: 2,
                 borderColor: "var(--border)",
               }}
             >
-              {isPublic ? 'Público' : 'Privado'}
+              {publico ? 'Público' : 'Privado'}
             </Button>
             <Typography variant="body2" sx={{ color: 'var(--muted)' }}>
               Visibilidade do grupo

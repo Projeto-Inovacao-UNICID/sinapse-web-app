@@ -1,4 +1,4 @@
-import { useUserProfile } from "@/hooks/user/useUserProfile";
+import { useUserProfile } from "@/hooks/profile/user/useUserProfile";
 import { Box, Button, Card, Typography } from "@mui/material";
 import { UserProfileImage } from "@/components/common/user-avatar";
 import PersonRemoveIcon from '@mui/icons-material/PersonRemove';

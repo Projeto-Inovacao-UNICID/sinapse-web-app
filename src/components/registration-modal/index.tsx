@@ -1,8 +1,8 @@
 'use client';
 
-import { usePostGroup } from "@/hooks/group/useGroup";
-import { RegisterService } from "@/service/auth/RegisterService";
+import { RegisterService } from "@/service/auth/AuthService";
 import { buttonFormStyle, inputFormStyle, modalStyle, radioStyle } from "@/theme/components-styles";
+import { RegisterDto } from "@/types";
 import { Box, Button, Fade, FormControlLabel, Modal, Radio, RadioGroup, TextField, Alert } from "@mui/material";
 import { useState } from "react";
 
@@ -36,7 +36,8 @@ export function RegistrationModal({ open, handleClose }: RegistrationModalProps)
 
     try {
       const service = new RegisterService();
-      const data = await service.registerService(type, name, username, email, password);
+      const registerDto: RegisterDto = { tipo: type, nome: name, username, email, senha: password };
+      const data = await service.registerService(registerDto);
       setMessage({ text: 'Cadastro bem-sucedido!', type: 'success' });
       handleClose();
     } catch (error) {

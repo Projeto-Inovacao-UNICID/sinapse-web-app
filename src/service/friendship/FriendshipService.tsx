@@ -1,32 +1,46 @@
-import { Friend, FriendshipInvitation, FriendshipInvitationsResponse } from "@/types";
+import {
+  Friend,
+  FriendshipInvitation,
+  FriendshipInvitationsResponse,
+  UpdateFriendshipStatusDto
+} from "@/types";
 import { axiosInstance } from "../api";
-
-export class FriendshipService {
-    async postFriendship(destinatarioId: string) {
-        const response = await axiosInstance.post<FriendshipInvitation>(`/amizades`, { destinatarioId }, { withCredentials: true });
-        return response.data;
+  
+  export class FriendshipService {
+    async postFriendship(destinatarioId: string): Promise<FriendshipInvitation> {
+      const response = await axiosInstance.post(`/amizades`, destinatarioId, {
+        withCredentials: true,
+      });
+      return response.data;
     }
-
-    async getFriendship() {
-        const response = await axiosInstance.get<Friend[]>(`/amizades`, { withCredentials: true });
-        return response.data;
+  
+    async getFriendship(): Promise<Friend[]> {
+      const response = await axiosInstance.get(`/amizades`, {
+        withCredentials: true,
+      });
+      return response.data;
     }
-
-    async getInvitations(tipo: "enviados" | "recebidos", page: number = 0, size: number = 10) {
-        const response = await axiosInstance.get<FriendshipInvitationsResponse>(`/amizades/convites?tipo=${tipo}&page=${page}&size=${size}`, {
-            withCredentials: true
-        });
-        return response.data;
+  
+    async getInvitations(tipo: "enviados" | "recebidos", page = 0, size = 10): Promise<FriendshipInvitationsResponse> {
+      const response = await axiosInstance.get(
+        `/amizades/convites?tipo=${tipo}&page=${page}&size=${size}`,
+        { withCredentials: true }
+      );
+      return response.data;
     }
-
-    async getRecomendations() {
-        const response = await axiosInstance.get(`/amizades/recomendacoes/comum`, { withCredentials: true });
-        return response.data;
+  
+    async getRecomendations(): Promise<Friend[]> {
+      const response = await axiosInstance.get(`/amizades/recomendacoes/comum`, {
+        withCredentials: true,
+      });
+      return response.data;
     }
-
-    async patchFriendship(amizadeId: number, status: string) {
-        const response = await axiosInstance.patch(`/amizades/atualizar`, { amizadeId, status }, { withCredentials: true });
-        return response.data;
+  
+    async patchFriendship(data: UpdateFriendshipStatusDto): Promise<FriendshipInvitation> {
+      const response = await axiosInstance.patch(`/amizades/atualizar`, data, {
+        withCredentials: true,
+      });
+      return response.data;
     }
 
     async deleteFriendship(amizadeId: number) {
@@ -36,4 +50,5 @@ export class FriendshipService {
         });
         return response.status;
     }
-}
+  }
+  

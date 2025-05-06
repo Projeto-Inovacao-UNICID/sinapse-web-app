@@ -8,9 +8,9 @@ import { useAcceptFriendshipRequest, useDeleteFriendshipRequest, useFriendship, 
 import { useGetGroupInvites, useGetMyGroups } from "@/hooks/group/useGroup";
 import { useGetPosts } from "@/hooks/posts/usePosts";
 import { useSession } from "@/hooks/session/useSession";
-import { useUserProfile, useUserProfileImage } from "@/hooks/user/useUserProfile";
+import { useUserProfile, useUserProfileImage } from "@/hooks/profile/user/useUserProfile";
 import { ChatService } from "@/service/chat/ChatService";
-import { Group } from "@/types";
+import {  Group, GroupResponseDto } from "@/types";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';

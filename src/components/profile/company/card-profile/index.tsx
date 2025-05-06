@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useSession } from '@/hooks/session/useSession';
-import { useGetCompanyProfile } from '@/hooks/company/useCompanyProfile';
+import { useGetCompanyProfile } from '@/hooks/profile/company/useCompanyProfile';
 import { useGetFollowersCount } from '@/hooks/company/useFollowers';
 import {
   Box,

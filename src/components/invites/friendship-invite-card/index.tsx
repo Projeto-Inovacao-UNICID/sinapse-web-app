@@ -17,7 +17,7 @@ export function FriendshipInviteCard({ friendshipContent }: FriendshipInviteCard
 
   const handleAccept = async () => {
     try {
-      await service.patchFriendship(amizadeId, 'aceito');
+      await service.patchFriendship({amizadeId, status: 'aceito'});
       await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
     } catch (error) {
       console.error('Erro ao aceitar convite de amizade:', error);
@@ -26,7 +26,7 @@ export function FriendshipInviteCard({ friendshipContent }: FriendshipInviteCard
 
   const handleDecline = async () => {
     try {
-      await service.patchFriendship(amizadeId, 'rejeitado');
+      await service.patchFriendship({amizadeId, status: 'rejeitado'});
       await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
     } catch (error) {
       console.error('Erro ao recusar convite de amizade:', error);
