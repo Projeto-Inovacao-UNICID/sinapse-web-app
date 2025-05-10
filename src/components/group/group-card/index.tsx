@@ -1,18 +1,17 @@
+import IconButton from "@/components/common/icon-buttons";
+import DeleteButton from "@/components/common/icon-buttons/delete-button";
+import EditButton from "@/components/common/icon-buttons/edit-button";
+import { ConfirmationDialog } from "@/components/group/confirmation-dialog";
+import { InviteMembersModal } from "@/components/group/invite-members-modal";
 import { UsersList } from "@/components/profile/user/users-list";
 import { useDeleteGroup, useGetGroupById, useGetGroupMembers, usePatchGroup, usePostQuitGroup } from "@/hooks/group/useGroup";
 import { useUserProfile } from "@/hooks/profile/user/useUserProfile";
-import { Box, Card, Divider, Typography } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import DeleteIcon from '@mui/icons-material/Delete';
-import LogoutIcon from '@mui/icons-material/Logout';
-import { motion } from "framer-motion";
-import { GroupCardEditor } from "../group-card-editor";
-import { useState } from "react";
-import { InviteMembersModal } from "@/components/group/invite-members-modal";
 import { useSession } from "@/hooks/session/useSession";
-import { ConfirmationDialog } from "@/components/group/confirmation-dialog";
-import IconButton from "@/components/common/icon-button";
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Box, Card, Divider, Typography } from "@mui/material";
+import { useState } from "react";
+import { GroupCardEditor } from "../group-card-editor";
 
 interface GroupCardProps {
   groupId: number;
@@ -81,6 +80,24 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
           minWidth: "100%",
         }}
       >
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography variant="h6" color="var(--foreground)" className="font-bold">
+            {!isEditing && group?.nome}
+          </Typography>
+          {isLeader && (
+            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+              <EditButton size="small" onClick={() => setIsEditing(!isEditing)} isEditing={isEditing} />
+              <DeleteButton size="small" onClick={() => setOpenDeleteModal(true)} />
+            </Box>
+          )}
+          {!isLeader && isUser && (
+            <IconButton
+              icon={<LogoutIcon />}
+              onClick={() => setOpenQuitModal(true)}
+            />
+          )}
+        </Box>
+
         {isEditing ? (
           <GroupCardEditor
             initialName={group?.nome || ""}
@@ -94,30 +111,6 @@ export function GroupCard({ groupId, viewDescription }: GroupCardProps) {
           />
         ) : (
           <>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography variant="h6" color="var(--foreground)" className="font-bold">
-                {group?.nome}
-              </Typography>
-              {isLeader && (
-                <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-                  <IconButton
-                    icon={<EditIcon />}
-                    onClick={() => setIsEditing(true)}
-                  />
-                  <IconButton
-                    icon={<DeleteIcon />}
-                    onClick={() => setOpenDeleteModal(true)}
-                  />
-                </Box>
-              )}
-              {!isLeader && isUser && (
-                <IconButton
-                  icon={<LogoutIcon />}
-                  onClick={() => setOpenQuitModal(true)}
-                />
-              )}
-            </Box>
-
             <Divider sx={{ bgcolor: 'var(--muted)', my: 2 }} />
 
             <Box sx={{ display: 'flex', gap: 1, flexDirection: 'column' }}>

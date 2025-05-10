@@ -1,34 +1,31 @@
+import EditButton from "@/components/common/icon-buttons/edit-button";
+import { usePatchChallengeStage } from "@/hooks/challenge/useStageChallenge";
 import {
   ParticipantResponseDto,
   RecruitmentStagePatchDto,
   RecruitmentStageResponseDto,
 } from "@/types";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import EditIcon from "@mui/icons-material/Edit";
-import CloseIcon from "@mui/icons-material/Close";
+import CircleIcon from "@mui/icons-material/Circle";
 import {
   Box,
-  IconButton,
-  Typography,
-  useTheme,
-  TextField,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
   Button,
   Chip,
   Collapse,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+  useTheme,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { StageCommentForm } from "../stage-comment-form";
-import { usePatchChallengeStage } from "@/hooks/challenge/useStageChallenge";
-import CircleIcon from "@mui/icons-material/Circle";
 import { ChallengePrarticipantsList } from "../challenge-stage-participants";
+import { StageCommentForm } from "../stage-comment-form";
 
 const MotionBox = motion(Box);
-const MotionIcon = motion(EditIcon);
 
 export function ChallengeStageItem({
   stage,
@@ -124,20 +121,7 @@ export function ChallengeStageItem({
         </Box>
         {isChallengeOwner && (
           <Box sx={{ display: "flex", gap: 1 }}>
-            {isEditing && (
-              <IconButton onClick={handleCancel} size="small">
-                <CloseIcon sx={{ color: "var(--muted)" }} />
-              </IconButton>
-            )}
-            <IconButton onClick={() => setIsEditing(true)} size="small" disabled={isEditing}>
-              <MotionIcon
-                animate={{
-                  rotate: isEditing ? 90 : 0,
-                  color: isEditing ? "var(--primary)" : "var(--muted)",
-                }}
-                transition={{ duration: 0.3 }}
-              />
-            </IconButton>
+            <EditButton size="small" isEditing={isEditing} onClick={() => setIsEditing(!isEditing)} />
           </Box>
         )}
       </Box>

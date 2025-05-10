@@ -3,7 +3,6 @@ import { useGetGroupById } from "@/hooks/group/useGroup";
 import { useUserProfile } from "@/hooks/profile/user/useUserProfile";
 import { ParticipantResponseDto } from "@/types";
 import { Box, Divider, ListItem, Typography } from "@mui/material";
-import DeleteIcon from '@mui/icons-material/Delete';
 
 interface ChallengeStageParticipantCardProps {
   participant: ParticipantResponseDto;
