@@ -131,7 +131,7 @@ export function usePostChallengeRegistrationSolo() {
 
 export function usePostChallengeWinner() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { challengeId: number; participantId: string }>({
+  return useMutation<void, Error, { challengeId: number; participantId: number }>({
     mutationFn: ({ challengeId, participantId }) =>
       ChallengeService.electWinner(challengeId, participantId),
     onSuccess: (_, { challengeId }) => {
@@ -142,7 +142,7 @@ export function usePostChallengeWinner() {
 
 export function useRemoveParticipant() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { challengeId: number; participantId: string }>({
+  return useMutation<void, Error, { challengeId: number; participantId: number }>({
     mutationFn: ({ challengeId, participantId }) =>
       ChallengeService.removeParticipant(challengeId, participantId),
     onSuccess: (_, { challengeId }) => {

@@ -107,11 +107,11 @@ export const ChallengeService = {
     return res.data;
   },
 
-  async electWinner(challengeId: number, participantId: string): Promise<void> {
+  async electWinner(challengeId: number, participantId: number): Promise<void> {
     await axiosInstance.post(`/desafios/${challengeId}/vencedores/${participantId}`, { withCredentials: true });
   },
 
-  async removeParticipant(challengeId: number, participantId: string): Promise<void> {
+  async removeParticipant(challengeId: number, participantId: number): Promise<void> {
     await axiosInstance.delete(`/desafios/${challengeId}/participantes/${participantId}`, { withCredentials: true });
   },
 };

@@ -24,6 +24,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { ChallengePrarticipantsList } from "../challenge-stage-participants";
 import { StageCommentForm } from "../stage-comment-form";
+import ButtonSecondary from "@/components/common/button-secondary";
 
 const MotionBox = motion(Box);
 
@@ -121,6 +122,7 @@ export function ChallengeStageItem({
         </Box>
         {isChallengeOwner && (
           <Box sx={{ display: "flex", gap: 1 }}>
+            <ButtonSecondary title="Mover participantes" onClick={() => setIsOpen(!isOpen)} />
             <EditButton size="small" isEditing={isEditing} onClick={() => setIsEditing(!isEditing)} />
           </Box>
         )}
@@ -250,8 +252,8 @@ export function ChallengeStageItem({
       )}
 
       {isChallengeOwner && (
-        <Collapse in={isOpen}>
-          <ChallengePrarticipantsList stageId={stage.id} />
+        <Collapse in={isOpen} style={{ width: '100%' }}>
+          <ChallengePrarticipantsList stageId={stage.id} challengeId={stage.desafioId} />
         </Collapse>
       )}
     </MotionBox>

@@ -4,9 +4,10 @@ import { ChallengeStageParticipantCard } from "../challenge-stage-participant-ca
 
 interface ChallengeStageParticipantsProps {
   stageId: number;
+  challengeId: number;
 }
 
-export function ChallengePrarticipantsList({ stageId }: ChallengeStageParticipantsProps) {
+export function ChallengePrarticipantsList({ stageId, challengeId }: ChallengeStageParticipantsProps) {
   const { data: participants, isLoading } = useGetChallengeParticipants(stageId);
 
   if (isLoading) {
@@ -20,9 +21,9 @@ export function ChallengePrarticipantsList({ stageId }: ChallengeStageParticipan
   }
 
   return (
-    <List sx={{ mt: 2 }}>
+    <List sx={{ mt: 2, width: '100%' }}>
       {filtered.map((participant) => (
-        <ChallengeStageParticipantCard participant={participant} key={participant.id} />
+        <ChallengeStageParticipantCard participant={participant} challengeId={challengeId} key={participant.id} />
       ))}
     </List>
   );
