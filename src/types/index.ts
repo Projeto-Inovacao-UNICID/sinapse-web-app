@@ -12,3 +12,4 @@ export * from "@/types/dto/response";
 export * from "@/types/dto/search";
 export * from "@/types/dto/user";
 export * from "@/types/session";
+export * from "@/types/dnd";

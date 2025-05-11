@@ -116,7 +116,7 @@ export interface RecruitmentStageResponseDto {
 
 // DTO para mover participantes de forma coletiva
 export interface BatchMoveDto {
-  participanteIds: number|string[];
+  participanteIds: number[]|string[];
   novoEstagioId: number;
   mensagem: string;
 }

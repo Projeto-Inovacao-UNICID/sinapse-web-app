@@ -22,7 +22,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ChallengePrarticipantsList } from "../challenge-stage-participants";
+import { ChallengeParticipantsList } from "../challenge-stage-participants";
 import { StageCommentForm } from "../stage-comment-form";
 import ButtonSecondary from "@/components/common/button-secondary";
 
@@ -253,7 +253,7 @@ export function ChallengeStageItem({
 
       {isChallengeOwner && (
         <Collapse in={isOpen} style={{ width: '100%' }}>
-          <ChallengePrarticipantsList stageId={stage.id} challengeId={stage.desafioId} />
+          <ChallengeParticipantsList stageId={stage.id} challengeId={stage.desafioId} />
         </Collapse>
       )}
     </MotionBox>
