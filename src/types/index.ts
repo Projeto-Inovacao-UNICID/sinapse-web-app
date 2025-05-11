@@ -3,6 +3,7 @@ export * from "@/types/dto/auth";
 export * from "@/types/dto/chat";
 export * from "@/types/dto/challenge";
 export * from "@/types/dto/company";
+export * from "@/types/dto/form";
 export * from "@/types/dto/friendship";
 export * from "@/types/dto/group";
 export * from "@/types/dto/notification";

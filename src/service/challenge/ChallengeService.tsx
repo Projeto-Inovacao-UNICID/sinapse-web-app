@@ -1,18 +1,17 @@
 // services/ChallengeService.ts
 
-import axios from "axios";
-import { axiosInstance } from "../api";
 import {
+  ChallengeCountDto,
   ChallengeCreateDto,
   ChallengePatchDto,
   ChallengeResponseDto,
-  ChallengeCountDto,
+  ParticipantResponseDto,
   RecruitmentStageCreateDto,
   RecruitmentStageResponseDto,
-  StageApplicationDto,
-  ParticipantResponseDto,
-  UserChallengeCountDto,
+  UserChallengeCountDto
 } from "@/types";
+import axios from "axios";
+import { axiosInstance } from "../api";
 
 export const ChallengeService = {
   async getById(id: number): Promise<ChallengeResponseDto> {
