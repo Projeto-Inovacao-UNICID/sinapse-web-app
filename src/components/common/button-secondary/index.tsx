@@ -3,12 +3,14 @@ import { motion } from "framer-motion";
 
 interface Props {
   title: string;
+  borderRadius?: number | string;
+  fontWeight?: number | string;
   icon?: React.ReactNode;
   disable?: boolean;
   onClick: () => void;
 }
 
-export default function ButtonSecondary({ title, icon, disable = false, onClick }: Props) {
+export default function ButtonSecondary({ title, borderRadius = 1, fontWeight = 400, icon, disable, onClick }: Props) {
   return (
     <motion.div
       whileHover={{ scale: 1.05 }}
@@ -23,7 +25,8 @@ export default function ButtonSecondary({ title, icon, disable = false, onClick 
         sx={{
           borderColor: "var(--secondary)",
           color: "var(--foreground)",
-          borderRadius: 1,
+          borderRadius: borderRadius,
+          fontWeight: fontWeight,
           textTransform: "none",
         }}
       >

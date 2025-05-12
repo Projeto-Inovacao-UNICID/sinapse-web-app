@@ -19,8 +19,13 @@ import { useChatContacts } from '@/hooks/chat/useChatContacts';
 import { CreationChallengeModal } from '../../company/creation-challenge-modal';
 import { EditChallengeModal } from '../../company/edit-challenge-modal';
 import { ChallengeResponseDto } from '@/types';
+import ButtonPrimary from '@/components/common/button-primary';
+import ButtonSecondary from '@/components/common/button-secondary';
+import { useRouter } from 'next/navigation';
 
 export function ChallengeFeed() {
+  const router = useRouter();
+
   const { session } = useSession();
   const isCompanyUser = session?.roles.includes('ROLE_COMPANY');
 
@@ -44,6 +49,10 @@ export function ChallengeFeed() {
       (!status || c.status === status)
     );
   }, [all, view, search, area, status]);
+
+  const handleCreateForm = () => {
+    router.push('/empresa/formularios');
+  }
 
   if (isLoading) return <Box>Carregando…</Box>;
 
@@ -91,24 +100,10 @@ export function ChallengeFeed() {
             <Box flexGrow={1} />
 
             {isCompanyUser && (
-              <Button
-                variant="contained"
-                onClick={() => setOpenCreateModal(true)}
-                sx={{
-                  bgcolor: 'var(--primary)',
-                  color: 'var(--primary-foreground)',
-                  textTransform: 'none',
-                  fontWeight: 600,
-                  borderRadius: '999px',
-                  px: 3,
-                  height: 36,
-                  ml: 2,
-                  transition: 'background-color 0.3s',
-                  '&:hover': { bgcolor: 'var(--primary)' }
-                }}
-              >
-                + Novo Desafio
-              </Button>
+              <Box sx={{ display: 'flex', gap: 2 }}>
+                <ButtonPrimary title='+ Novo Desafio' borderRadius={'999px'} fontWeight={600} onClick={() => setOpenCreateModal(true)} />
+                <ButtonSecondary title='+ Criar Formulário' borderRadius={'999px'} fontWeight={600} onClick={handleCreateForm} />
+              </Box>
             )}
           </Box>
         </Box>
