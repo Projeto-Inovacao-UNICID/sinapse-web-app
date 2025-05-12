@@ -8,7 +8,7 @@ export interface FormDto {
 export interface FormFieldDto {
   label: string;
   fieldType: "TEXT" | "NUMBER" | "SELECT";
-  category: "SOFT_SKILL" | "HARD_SKILL" | "CULTURE";
+  category: "SOFT_SKILL" | "HARD_SKILL" | "CULTURE" | "PESQUISA"| "OTHER";
   weight: number;
   required: boolean;
   options: FormFieldOptionDto[] | null;

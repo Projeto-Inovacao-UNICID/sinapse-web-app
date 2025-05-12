@@ -162,6 +162,8 @@ export function FormCreationCard({ empresaId }: Props) {
                   <MenuItem value="SOFT_SKILL">Soft Skill</MenuItem>
                   <MenuItem value="HARD_SKILL">Hard Skill</MenuItem>
                   <MenuItem value="CULTURE">Cultura</MenuItem>
+                  <MenuItem value="PESQUISA">Pesquisa</MenuItem>
+                  <MenuItem value="OTHER">Outro</MenuItem>
                 </TextField>
 
                 <TextField
@@ -178,7 +180,7 @@ export function FormCreationCard({ empresaId }: Props) {
                   sx={{ color: 'var(--muted)' }}
                   control={
                     <Checkbox
-                      sx={{ color: 'var(--muted)' }}
+                      sx={{ color: 'var(--muted)', '&.Mui-checked': { color: 'var(--primary)' } }}
                       checked={field.required}
                       onChange={(e) => handleFieldChange(index, 'required', e.target.checked)}
                     />
@@ -187,8 +189,64 @@ export function FormCreationCard({ empresaId }: Props) {
                 />
 
                 {field.fieldType === 'SELECT' && (
-                  <Alert severity="info">Adição de opções SELECT ainda não implementada aqui.</Alert>
+                  <Stack spacing={2}>
+                    <Typography variant="subtitle2" sx={{ color: 'var(--foreground)' }}>Opções</Typography>
+                
+                    {(field.options ?? []).map((option, optIndex) => (
+                      <Stack key={optIndex} direction="row" spacing={2} alignItems="center">
+                        <TextField
+                          label="Label"
+                          value={option.label}
+                          onChange={(e) => {
+                            const updatedOptions = [...(field.options ?? [])];
+                            updatedOptions[optIndex].label = e.target.value;
+                            handleFieldChange(index, 'options', updatedOptions);
+                          }}
+                          sx={{ ...textFieldSx, flex: 1 }}
+                        />
+                        <TextField
+                          label="Valor"
+                          value={option.value}
+                          onChange={(e) => {
+                            const updatedOptions = [...(field.options ?? [])];
+                            updatedOptions[optIndex].value = e.target.value;
+                            handleFieldChange(index, 'options', updatedOptions);
+                          }}
+                          sx={{ ...textFieldSx, flex: 1 }}
+                        />
+                        <TextField
+                          label="Pontuação"
+                          type="number"
+                          value={option.score}
+                          onChange={(e) => {
+                            const updatedOptions = [...(field.options ?? [])];
+                            updatedOptions[optIndex].score = +e.target.value;
+                            handleFieldChange(index, 'options', updatedOptions);
+                          }}
+                          sx={{ ...textFieldSx, width: 100 }}
+                        />
+                        <IconButton onClick={() => {
+                          const updatedOptions = (field.options ?? []).filter((_, i) => i !== optIndex);
+                          handleFieldChange(index, 'options', updatedOptions);
+                        }} color="error">
+                          <Delete />
+                        </IconButton>
+                      </Stack>
+                    ))}
+                
+                    <Button
+                      onClick={() => {
+                        const newOption = { label: '', value: '', score: 0 };
+                        handleFieldChange(index, 'options', [...(field.options ?? []), newOption]);
+                      }}
+                      startIcon={<Add />}
+                      sx={{ color: 'var(--primary)', alignSelf: 'flex-start' }}
+                    >
+                      Adicionar opção
+                    </Button>
+                  </Stack>
                 )}
+                
               </Stack>
             ))}
 
