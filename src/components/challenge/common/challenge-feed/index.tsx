@@ -5,7 +5,6 @@ import {
   Box,
   Container,
   Typography,
-  Button,
   ToggleButton,
   ToggleButtonGroup,
 } from '@mui/material';
@@ -113,7 +112,10 @@ export function ChallengeFeed() {
           {/* Filtros */}
           <ChallengeFilter
             areaOptions={Array.from(new Set((all ?? []).map(c => c.modalidade)))}
-            statusOptions={Array.from(new Set((all ?? []).map(c => c.status)))}
+            statusOptions={[
+              "EM ESPERA",
+              ...Array.from(new Set((all ?? []).map(c => c.status)))
+            ]}
             onSearch={setSearch}
             onAreaChange={setArea}
             onStatusChange={setStatus}
