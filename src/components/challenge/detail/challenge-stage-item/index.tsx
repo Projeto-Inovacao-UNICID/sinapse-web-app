@@ -25,6 +25,7 @@ import { useState } from "react";
 import { ChallengeParticipantsList } from "../challenge-stage-participants";
 import { StageCommentForm } from "../stage-comment-form";
 import ButtonSecondary from "@/components/common/button-secondary";
+import { MoveParticipantsModal } from "../move-participants-modal";
 
 const MotionBox = motion(Box);
 
@@ -55,6 +56,7 @@ export function ChallengeStageItem({
   const participanteIdStr = participantId ? participantId.toString() : "";
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isMoveModalOpen, setMoveModalOpen] = useState(false);
 
   const handleClick = () => {
     if (isChallengeOwner) {
@@ -116,11 +118,13 @@ export function ChallengeStageItem({
         </Box>
         {isChallengeOwner && (
           <Box sx={{ display: "flex", gap: 1 }}>
-            <ButtonSecondary title="Mover participantes" onClick={() => setIsOpen(!isOpen)} />
+            {/* <ButtonSecondary title="Mover participantes" onClick={() => setMoveModalOpen(!isMoveModalOpen)} /> */}
             <EditButton size="small" isEditing={isEditing} onClick={() => setIsEditing(!isEditing)} />
           </Box>
         )}
       </Box>
+
+      {/* {isMoveModalOpen && <MoveParticipantsModal open={isMoveModalOpen} onClose={() => setMoveModalOpen(false)} stageId={stage.id} />} */}
 
       {isEditing ? (
         <>
