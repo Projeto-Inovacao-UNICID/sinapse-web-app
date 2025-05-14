@@ -50,7 +50,7 @@ export function ChallengeFeed() {
   }, [all, view, search, area, status]);
 
   const handleCreateForm = () => {
-    router.push('/empresa/formularios');
+    router.push('/empresa/formularios/criar');
   }
 
   if (isLoading) return <Box>Carregando…</Box>;
