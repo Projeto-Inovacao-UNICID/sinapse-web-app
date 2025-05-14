@@ -69,12 +69,6 @@ export function ChallengeStageItem({
     setIsEditing(false);
   };
 
-  const handleCancel = () => {
-    setStatus(stage.status);
-    setAnotacoes(stage.anotacoes);
-    setIsEditing(false);
-  };
-
   const statusColor =
     status === "ABERTO"
       ? theme.palette.success.main

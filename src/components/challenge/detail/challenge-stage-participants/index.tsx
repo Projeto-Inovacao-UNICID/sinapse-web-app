@@ -1,11 +1,11 @@
-import { useDrop } from 'react-dnd';
-import { List, Typography, Box } from '@mui/material';
-import InboxIcon from '@mui/icons-material/Inbox';
-import { ChallengeStageParticipantCard } from '../challenge-stage-participant-card';
-import { useGetChallengeParticipants } from '@/hooks/challenge/useStageChallenge';
 import { useBatchMoveParticipants } from '@/hooks/challenge/useStageChallenge';
-import { DND_ITEM_TYPES } from '@/types';
-import React from 'react';
+import { stagesChallengeService } from '@/service/challenge/StagesChallengeService';
+import { DND_ITEM_TYPES, ParticipantResponseDto } from '@/types';
+import InboxIcon from '@mui/icons-material/Inbox';
+import { Box, List, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useDrop } from 'react-dnd';
+import { ChallengeStageParticipantCard } from '../challenge-stage-participant-card';
 
 interface ChallengeStageParticipantsProps {
   stageId: number;
@@ -16,8 +16,28 @@ const ChallengeParticipantsListComponent = (
   { stageId, challengeId }: ChallengeStageParticipantsProps,
   ref: React.Ref<HTMLDivElement>
 ) => {
-  const { data: participants, isLoading } = useGetChallengeParticipants(stageId);
-  const { mutate: batchMove } = useBatchMoveParticipants();
+  const service = stagesChallengeService;
+  const [participants, setParticipants] = useState<ParticipantResponseDto[]>([]);
+
+  // Função para buscar os participantes da API
+  const fetchParticipants = async () => {
+    try {
+      const res = await service.getParticipants(stageId);
+      setParticipants(res ?? []);
+    } catch (error) {
+      console.error('Erro ao buscar participantes:', error);
+    }
+  };
+
+  // Busca inicial
+  useEffect(() => {
+    fetchParticipants();
+  }, [stageId]);
+
+  // Hook atualizado com callback
+  const { mutate: batchMove } = useBatchMoveParticipants(() => {
+    fetchParticipants(); // Recarrega os dados após movimentar
+  });
 
   const [{ isOver, canDrop }, dropRef] = useDrop({
     accept: DND_ITEM_TYPES.PARTICIPANT,
@@ -39,28 +59,22 @@ const ChallengeParticipantsListComponent = (
     }),
   });
 
-  // Combine o ref do Box com o ref do dropRef
   const combinedRef = (node: HTMLDivElement) => {
     if (ref) {
-      // Caso o componente pai tenha um ref, passamos ele aqui
       if (typeof ref === 'function') {
         ref(node);
       } else {
         ref.current = node;
       }
     }
-    dropRef(node); // Passamos o dropRef também para o componente
+    dropRef(node);
   };
 
-  if (isLoading) {
-    return <Typography sx={{ color: 'var(--muted)', mt: 2 }}>Carregando participantes...</Typography>;
-  }
-
-  const filtered = participants?.filter((p) => p.estagioRecrutamentoId === stageId) ?? [];
+  const filtered = participants.filter((p) => p.estagioRecrutamentoId === stageId);
 
   return (
     <Box
-      ref={combinedRef} // Usando o ref combinado
+      ref={combinedRef}
       sx={{
         width: '100%',
         minHeight: '150px',
@@ -92,7 +106,9 @@ const ChallengeParticipantsListComponent = (
       )}
 
       {!filtered.length && !isOver ? (
-        <Typography sx={{ color: 'var(--muted)', mt: 2 }}>Nenhum participante neste estágio.</Typography>
+        <Typography sx={{ color: 'var(--muted)', mt: 2 }}>
+          Nenhum participante neste estágio.
+        </Typography>
       ) : (
         <List sx={{ mt: 2, width: '100%' }}>
           {filtered.map((participant) => (
@@ -108,5 +124,4 @@ const ChallengeParticipantsListComponent = (
   );
 };
 
-// Usando forwardRef para permitir o uso de ref no componente
 export const ChallengeParticipantsList = React.forwardRef(ChallengeParticipantsListComponent);
