@@ -35,14 +35,14 @@ export const useGetPublicForm = (formId: string) =>
   });
 
 // Listar formulários inativos
-export const useGetInactiveForms = (empresaId: string, page = 1, size = 10) =>
+export const useGetInactiveForms = (empresaId: string, page = 0, size = 20) =>
   useQuery({
     queryKey: ["forms", "inactive", empresaId, page, size],
     queryFn: () => FormService.getInativeForms(empresaId, page, size),
   });
 
 // Listar formulários ativos
-export const useGetActiveForms = (empresaId: string, page = 1, size = 10) =>
+export const useGetActiveForms = (empresaId: string, page = 0, size = 20) =>
   useQuery({
     queryKey: ["forms", "active", empresaId, page, size],
     queryFn: () => FormService.getActiveForms(empresaId, page, size),

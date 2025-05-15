@@ -1,4 +1,5 @@
 export interface FormDto {
+  id?: string;
   nome: string;
   descricao: string;
   minScore: number;
@@ -6,6 +7,7 @@ export interface FormDto {
 }
 
 export interface FormFieldDto {
+  id?: string;
   label: string;
   fieldType: "TEXT" | "NUMBER" | "SELECT";
   category: "SOFT_SKILL" | "HARD_SKILL" | "CULTURE" | "PESQUISA"| "OTHER";

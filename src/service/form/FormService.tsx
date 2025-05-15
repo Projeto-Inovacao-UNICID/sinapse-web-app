@@ -1,4 +1,4 @@
-import { FormDto, FormResponseDto } from "@/types";
+import { FormDto, FormResponseDto, PageableResponse } from "@/types";
 import { axiosInstance } from "../api";
 
 export const FormService = {
@@ -22,13 +22,13 @@ export const FormService = {
     return res.data;
   },
 
-  async getInativeForms(empresaId: string, page: number = 1, size: number = 10) {
+  async getInativeForms(empresaId: string, page: number = 0, size: number = 20) {
     const res = await axiosInstance.get(`/forms/inactive?empresaId=${empresaId}&page=${page}&size=${size}`, { withCredentials: true });
     return res.data;
   },
 
-  async getActiveForms(empresaId: string, page: number = 1, size: number = 10) {
-    const res = await axiosInstance.get(`/forms/active?empresaId=${empresaId}&page=${page}&size=${size}`, { withCredentials: true });
+  async getActiveForms(empresaId: string, page: number = 0, size: number = 20) {
+    const res = await axiosInstance.get<PageableResponse<FormDto>>(`/forms/active?empresaId=${empresaId}&page=${page}&size=${size}`, { withCredentials: true });
     return res.data;
   },
 

@@ -14,3 +14,4 @@ export * from "@/types/dto/search";
 export * from "@/types/dto/user";
 export * from "@/types/session";
 export * from "@/types/dnd";
+export * from "@/types/pageable-response";
