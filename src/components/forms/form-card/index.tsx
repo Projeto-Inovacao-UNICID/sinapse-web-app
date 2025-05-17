@@ -8,13 +8,15 @@ const MotionBox = motion(Box);
 
 interface FormCardProps {
   form: FormDto;
+  onSelect?: (form: FormDto) => void;
 }
 
-export function FormCard({ form }: FormCardProps) {
+export function FormCard({ form, onSelect }: FormCardProps) {
   const [isOpen, setIsOpen] = useState(false);
   const handleClick = () => {
     setIsOpen((prev) => !prev);
-  };
+    onSelect?.(form);
+  }
 
   return (
     <MotionBox

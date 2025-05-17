@@ -13,7 +13,8 @@ const MotionBox = motion(Box);
 export function FormField({ field }: FormFieldProps) {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.stopPropagation();
     setIsOpen((prev) => !prev);
   };
   
@@ -22,7 +23,7 @@ export function FormField({ field }: FormFieldProps) {
   return (
     <MotionBox
       onClick={handleClick}
-      whileHover={ haveOptions ? { scale: 1.02 } : {} }
+      whileHover={haveOptions ? { scale: 1.02 } : {}}
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.2 }}
@@ -43,7 +44,7 @@ export function FormField({ field }: FormFieldProps) {
       <Typography variant="body1" sx={{ color: "var(--foreground)" }}>
         Tipo: {field.fieldType}
       </Typography>
-      <Typography variant="body1" sx={{ color: "var(--foreground)" }}>  
+      <Typography variant="body1" sx={{ color: "var(--foreground)" }}>
         Categoria: {field.category}
       </Typography>
       <Typography variant="body1" sx={{ color: "var(--foreground)" }}>
