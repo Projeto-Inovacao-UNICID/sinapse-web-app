@@ -1,5 +1,5 @@
 import { FormFieldOptionDto } from "@/types";
-import { Box, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 
 interface FormFieldOptionProps {
   option: FormFieldOptionDto;
@@ -11,9 +11,11 @@ export function FormFieldOption({ option }: FormFieldOptionProps) {
       <Typography variant="body1" sx={{ color: "var(--foreground)" }}>
         Label: {option.label}
       </Typography>
+      <Divider orientation="vertical" flexItem color="var(--muted)" />
       <Typography variant="body1" sx={{ color: "var(--foreground)" }}>
         Valor: {option.value}
       </Typography>
+      <Divider orientation="vertical" flexItem color="var(--muted)" />
       <Typography variant="body1" sx={{ color: "var(--foreground)" }}>  
         Pontuação: {option.score}
       </Typography>

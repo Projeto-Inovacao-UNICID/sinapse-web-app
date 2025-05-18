@@ -18,7 +18,7 @@ export function FormField({ field }: FormFieldProps) {
     setIsOpen((prev) => !prev);
   };
   
-  const haveOptions = field.options && field.options.length > 0;
+  const haveOptions = field.options ? field.options.length > 0 : false;
 
   return (
     <MotionBox
@@ -50,7 +50,7 @@ export function FormField({ field }: FormFieldProps) {
       <Typography variant="body1" sx={{ color: "var(--foreground)" }}>
         Peso: {field.weight}
       </Typography>
-      {field.options && (
+      {haveOptions && field.options && (
         <Collapse in={isOpen}>
           <FormOptions options={field.options} />
         </Collapse>
