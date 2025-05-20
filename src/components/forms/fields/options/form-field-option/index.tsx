@@ -7,16 +7,16 @@ interface FormFieldOptionProps {
 
 export function FormFieldOption({ option }: FormFieldOptionProps) {
   return (
-    <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-      <Typography variant="body1" sx={{ color: "var(--foreground)" }}>
-        Label: {option.label}
+    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+      <Typography variant="body2" sx={{ color: "var(--foreground" }}>
+        Rótulo: {option.label}
       </Typography>
-      <Divider orientation="vertical" flexItem color="var(--muted)" />
-      <Typography variant="body1" sx={{ color: "var(--foreground)" }}>
+      <Divider orientation="vertical" flexItem sx={{ borderColor: "var(--muted)" }} />
+      <Typography variant="body2" sx={{ color: "var(--foreground)" }}>
         Valor: {option.value}
       </Typography>
-      <Divider orientation="vertical" flexItem color="var(--muted)" />
-      <Typography variant="body1" sx={{ color: "var(--foreground)" }}>  
+      <Divider orientation="vertical" flexItem sx={{ borderColor: "var(--muted)" }} />
+      <Typography variant="body2" sx={{ color: "var(--foreground)" }}>  
         Pontuação: {option.score}
       </Typography>
     </Box>

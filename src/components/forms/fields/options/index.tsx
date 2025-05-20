@@ -9,11 +9,11 @@ interface FormOptionsProps {
 export function FormOptions({ options }: FormOptionsProps) {
   return (
     <>
-    <Typography variant="body1" sx={{ color: "var(--foreground)" }}>
+    <Typography variant="body1" sx={{ color: "var(--foreground)", fontWeight: 600 }}>
       Opções:
     </Typography>
       {options.map((opt: FormFieldOptionDto) => (
-        <Box key={opt.value}>
+        <Box key={opt.value} sx={{ display: "flex", flexDirection: "column", mt: 1, backgroundColor: "var(--cardSecondary)", p: 1, borderRadius: 2 }}>
           <FormFieldOption option={opt} />
         </Box>
       ))}

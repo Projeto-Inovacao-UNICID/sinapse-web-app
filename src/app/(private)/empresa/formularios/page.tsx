@@ -10,7 +10,17 @@ export default function Forms() {
 
   if (isCompany && id) {
     return (
-      <FormList companyId={id} />
+      <div
+      style={{  
+        display: 'grid',
+        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
+        minHeight: '100vh',
+      }}
+    >
+      <div style={{ gridColumn: 2 }}>
+        <FormList companyId={id} />
+      </div>
+    </div>
     );
   }
 

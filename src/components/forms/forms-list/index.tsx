@@ -20,7 +20,7 @@ export function FormList({ companyId }: FormListProps) {
     <>
       {forms.map((form: FormDto) => (
         <Box key={form.id}>
-          <FormCard form={form} />
+          <FormCard form={form} companyId={companyId} />
         </Box>
       ))}
     </>
