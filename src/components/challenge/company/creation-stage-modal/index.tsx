@@ -18,8 +18,10 @@ import {
 } from '@mui/material';
 import { forwardRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useGetActiveForms } from '@/hooks/forms/useForms';
 
 type Props = {
+  companyId: string;
   challengeId: number;
   stageOrder: number;
   open: boolean;
@@ -44,7 +46,7 @@ const MotionDialogPaper = forwardRef<HTMLDivElement, PaperProps>((props, ref) =>
   </motion.div>
 ));
 
-export function CreationStageModal({ challengeId, open, stageOrder, onClose }: Props) {
+export function CreationStageModal({ companyId, challengeId, open, stageOrder, onClose }: Props) {
   const [form, setForm] = useState<RecruitmentStageCreateDto>({
     estagio_atual: '',
     status: '',
@@ -53,6 +55,8 @@ export function CreationStageModal({ challengeId, open, stageOrder, onClose }: P
   });
 
   const { mutate: postStage, isPending, isError, isSuccess } = usePostChallengeStage();
+
+  const { data: formsData, isLoading: loadingForms } = useGetActiveForms(companyId);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;

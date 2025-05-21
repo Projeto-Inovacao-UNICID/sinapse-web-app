@@ -123,7 +123,7 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
       }
 
       {isCompanyUser && <EditChallengeModal challenge={challenge} open={openModal} onClose={() => setOpenModal(false)} />}
-      {isCompanyUser && <CreationStageModal challengeId={id} open={openStageModal} stageOrder={contStages + 1} onClose={() => setOpenStageModal(false)} />}
+      {isCompanyUser && <CreationStageModal companyId={session ? session.id : ""} challengeId={id} open={openStageModal} stageOrder={contStages + 1} onClose={() => setOpenStageModal(false)} />}
     </Container>
   );
 }
