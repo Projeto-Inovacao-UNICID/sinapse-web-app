@@ -4,25 +4,33 @@ import { FormDto } from "@/types";
 import { FormFields } from "../fields";
 import { useState } from "react";
 import ArchiveIcon from '@mui/icons-material/Archive';
+import UnarchiveIcon from '@mui/icons-material/Unarchive';
 import IconButton from "@/components/common/icon-buttons";
 import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
-import { useInactivateForm } from "@/hooks/forms/useForms";
+import { useActivateForm, useInactivateForm } from "@/hooks/forms/useForms";
 
 const MotionBox = motion(Box);
 
 interface FormCardProps {
   companyId: string;
   form: FormDto;
+  isActive: boolean;
   onSelect?: (form: FormDto) => void;
 }
 
-export function FormCard({ form, onSelect, companyId }: FormCardProps) {
+export function FormCard({ form, onSelect, companyId, isActive }: FormCardProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isConfirmArchiveOpen, setIsConfirmArchiveOpen] = useState(false);
+  const [isConfirmActivateOpen, setIsConfirmActivateOpen] = useState(false);
   const { mutateAsync: inactivateForm } = useInactivateForm(companyId);
+  const { mutateAsync: activateForm } = useActivateForm(companyId);
 
   const handleArchiveForm = () => {
     inactivateForm(form.id ?? "");
+  }
+
+  const handleActivateForm = () => {
+    activateForm(form.id ?? "");
   }
 
   const handleClick = () => {
@@ -57,10 +65,10 @@ export function FormCard({ form, onSelect, companyId }: FormCardProps) {
             {form.nome}
           </Typography>
           <IconButton
-            icon={<ArchiveIcon />}
+            icon={isActive ? <ArchiveIcon /> : <UnarchiveIcon />}
             onClick={(e) => {
               e?.stopPropagation();
-              setIsConfirmOpen(true);
+              isActive ? setIsConfirmArchiveOpen(true) : setIsConfirmActivateOpen(true);
             }}
           />
         </Box>
@@ -74,7 +82,8 @@ export function FormCard({ form, onSelect, companyId }: FormCardProps) {
           <FormFields formFields={form.fields} />
         </Collapse>
       </MotionBox>
-      <ConfirmationDialog open={isConfirmOpen} title="Deseja realmente arquivar este formulário?" description="Este formulário será inativado, mas poderá ser reativado posteriormente." onCancel={() => setIsConfirmOpen(false)} onConfirm={handleArchiveForm} confirmText="Arquivar" />
+      <ConfirmationDialog open={isConfirmArchiveOpen} title="Deseja realmente arquivar este formulário?" description="Este formulário será inativado, mas poderá ser reativado posteriormente." onCancel={() => setIsConfirmArchiveOpen(false)} onConfirm={handleArchiveForm} confirmText="Arquivar" />
+        <ConfirmationDialog open={isConfirmActivateOpen} title="Deseja ativar este formulário?" description="Este formulário será ativado, mas poderá ser inativado posteriormente." onCancel={() => setIsConfirmActivateOpen(false)} onConfirm={handleActivateForm} confirmText="Ativar" />
     </>
   );
 }

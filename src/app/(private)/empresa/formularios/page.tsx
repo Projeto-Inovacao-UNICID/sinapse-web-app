@@ -1,6 +1,6 @@
 'use client';
 
-import { FormList } from "@/components/forms/forms-list";
+import { FormsPage } from "@/components/forms/forms-page";
 import { useSession } from "@/hooks/session/useSession";
 
 export default function Forms() {
@@ -18,7 +18,7 @@ export default function Forms() {
       }}
     >
       <div style={{ gridColumn: 2 }}>
-        <FormList companyId={id} />
+        <FormsPage companyId={id} />
       </div>
     </div>
     );

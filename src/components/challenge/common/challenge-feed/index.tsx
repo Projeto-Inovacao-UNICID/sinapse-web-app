@@ -1,26 +1,25 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import { AdsPanel } from '@/components/common/ads-panel';
+import ButtonPrimary from '@/components/common/button-primary';
+import ButtonSecondary from '@/components/common/button-secondary';
+import { ChatSidebar } from '@/components/common/chat-sidebar';
+import { CustomToggleGroup } from '@/components/common/custom-toggle-group';
+import { useGetChallenges } from '@/hooks/challenge/useChallenge';
+import { useChatContacts } from '@/hooks/chat/useChatContacts';
+import { useSession } from '@/hooks/session/useSession';
+import { ChallengeResponseDto } from '@/types';
 import {
   Box,
   Container,
-  Typography,
-  ToggleButton,
-  ToggleButtonGroup,
+  Typography
 } from '@mui/material';
-import { useSession } from '@/hooks/session/useSession';
-import { useGetChallenges } from '@/hooks/challenge/useChallenge';
-import { ChallengePostCard } from '../challenge-post-card';
-import { ChallengeFilter } from '../challenge-filters';
-import { AdsPanel } from '@/components/common/ads-panel';
-import { ChatSidebar } from '@/components/common/chat-sidebar';
-import { useChatContacts } from '@/hooks/chat/useChatContacts';
+import { useRouter } from 'next/navigation';
+import { useMemo, useState } from 'react';
 import { CreationChallengeModal } from '../../company/creation-challenge-modal';
 import { EditChallengeModal } from '../../company/edit-challenge-modal';
-import { ChallengeResponseDto } from '@/types';
-import ButtonPrimary from '@/components/common/button-primary';
-import ButtonSecondary from '@/components/common/button-secondary';
-import { useRouter } from 'next/navigation';
+import { ChallengeFilter } from '../challenge-filters';
+import { ChallengePostCard } from '../challenge-post-card';
 
 export function ChallengeFeed() {
   const router = useRouter();
@@ -64,38 +63,18 @@ export function ChallengeFeed() {
             Desafios
           </Typography>
           <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
-            <ToggleButtonGroup
-              value={view}
-              exclusive
-              onChange={(_, v) => v && setView(v)}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 1,
-                '& > * + *': { ml: 1 },
-                '& .MuiToggleButton-root': {
-                  bgcolor: 'var(--input)',
-                  color: 'var(--muted)',
-                  border: 'none',
-                  textTransform: 'none',
-                  fontWeight: 600,
-                  borderRadius: '999px',
-                  px: 2,
-                  py: 0.5,
-                  transition: 'background-color 0.3s, color 0.3s',
-                  '&:hover': { bgcolor: 'var(--input)' }
-                },
-                '& .Mui-selected': {
-                  bgcolor: 'var(--primary)',
-                  color: 'var(--primary-foreground)',
-                  '&:hover': { bgcolor: 'var(--primary)' }
-                }
-              }}
-            >
-              <ToggleButton value="todos">Todos Desafios</ToggleButton>
-              <ToggleButton value="meus">Meus Desafios</ToggleButton>
-            </ToggleButtonGroup>
 
+            {view && (
+              <CustomToggleGroup
+                value={view}
+                onChange={setView}
+                options={[
+                  { value: 'todos', label: 'Todos Desafios' },
+                  { value: 'meus', label: 'Meus Desafios' },
+                ]}
+              />
+            )}
+            
             <Box flexGrow={1} />
 
             {isCompanyUser && (
