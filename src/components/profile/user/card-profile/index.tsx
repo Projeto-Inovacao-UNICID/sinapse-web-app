@@ -110,7 +110,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const handleAddFriendship = async () => {
     try {
       const res = await sendFriendRequest(userId);
-      console.log('Pedido de amizade enviado com sucesso:', res);
+      alert(`Convite de amizade enviado para ${res.solicitante} com sucesso!`);
       await queryClient.invalidateQueries({ queryKey: ['friendship-invitations'] });
     } catch (err) {
       console.error('Erro ao adicionar amizade:', err);
@@ -120,14 +120,14 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const handleAcceptFriendshipRequest = async () => {
     if (!amizadeId) return;
     const res = await acceptFriendship();
-    console.log('Convite de amizade aceito com sucesso:', res);
+    alert(`Convite de amizade de ${res.solicitante} aceito com sucesso!`);
     await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
   }
   
   const handleDeleteFriendshipRequest = async () => {
     if (!amizadeId) return;
     const res = await deleteFriendship();
-    console.log('Convite de amizade recusado com sucesso:', res);
+    alert(`Amigo deletado com sucesso!`);
     await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
   }
   

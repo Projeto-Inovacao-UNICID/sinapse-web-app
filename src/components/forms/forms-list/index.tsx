@@ -14,8 +14,6 @@ export function FormList({ companyId }: FormListProps) {
 
   if (isLoading) return <Typography>Carregando…</Typography>;
 
-  console.log(forms);
-
   return (
     <>
       {forms.map((form: FormDto) => (

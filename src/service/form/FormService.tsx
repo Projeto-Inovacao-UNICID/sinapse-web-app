@@ -33,12 +33,12 @@ export const FormService = {
   },
 
   async inativateForm(formId: string, empresaId: string) {
-    const res = await axiosInstance.patch(`/forms/${formId}/inactive?empresaId=${empresaId}`, { withCredentials: true });
+    const res = await axiosInstance.patch(`/forms/${formId}/inactive?empresaId=${empresaId}`, {}, { withCredentials: true });
     return res.data;
   },
 
   async activateForm(formId: string, empresaId: string) {
-    const res = await axiosInstance.patch(`/forms/${formId}/active?empresaId=${empresaId}`, { withCredentials: true });
+    const res = await axiosInstance.patch(`/forms/${formId}/active?empresaId=${empresaId}`, {}, { withCredentials: true });
     return res.data;
   },
 };
