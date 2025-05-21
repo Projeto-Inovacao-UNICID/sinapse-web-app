@@ -1,12 +1,12 @@
+'use client';
+
+import ButtonPrimary from "@/components/common/button-primary";
+import { CustomToggleGroup } from "@/components/common/custom-toggle-group";
 import { useGetActiveForms, useGetInactiveForms } from "@/hooks/forms/useForms";
-import { FormDto } from "@/types";
+import { Box } from "@mui/material";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { FormList } from "../forms-list";
-import { Box } from "@mui/material";
-import ButtonSecondary from "@/components/common/button-secondary";
-import ButtonPrimary from "@/components/common/button-primary";
-import { CustomToggleGroup } from "@/components/common/custom-toggle-group";
 
 interface FormsPageProps {
   companyId: string;

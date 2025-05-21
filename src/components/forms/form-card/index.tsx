@@ -58,6 +58,7 @@ export function FormCard({ form, onSelect, companyId, isActive }: FormCardProps)
           cursor: "pointer",
           opacity: 1,
           outline: "none",
+          boxShadow: 3,
         }}
       >
         <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>

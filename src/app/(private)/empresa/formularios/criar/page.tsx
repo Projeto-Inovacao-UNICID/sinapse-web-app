@@ -1,6 +1,6 @@
 'use client';
 
-import { FormCreationCard } from "@/components/forms/create-forms-card";
+import { CreateFormsPage } from "@/components/forms/create-forms/create-forms-page";
 import { useSession } from "@/hooks/session/useSession";
 
 export default function Forms() {
@@ -10,7 +10,17 @@ export default function Forms() {
 
   if (isCompany && id) {
     return (
-      <FormCreationCard empresaId={id} />
+      <div
+      style={{  
+        display: 'grid',
+        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
+        minHeight: '100vh',
+      }}
+    >
+      <div style={{ gridColumn: 2 }}>
+        <CreateFormsPage companyId={id} />
+      </div>
+    </div>
     );
   }
 

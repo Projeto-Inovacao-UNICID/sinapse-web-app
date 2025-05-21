@@ -71,19 +71,15 @@ export function FormCreationCard({ empresaId }: Props) {
     <Card
       variant="outlined"
       sx={{
-        backgroundColor: 'var(--card)',
-        borderRadius: 'var(--radius)',
-        p: 3,
-        maxWidth: 1000,
+        backgroundColor: 'var(--background)',
+        p: 1,
+        width: '100%',
         margin: '0 auto',
-        boxShadow: 3,
+        boxShadow: 0,
+        border: 'none',
       }}
     >
       <CardContent>
-        <Typography variant="h5" sx={{ fontWeight: 600, mb: 2, color: 'var(--foreground)' }}>
-          Criar Novo Formulário
-        </Typography>
-
         <form onSubmit={handleSubmit}>
           <Stack spacing={3}>
             {isError && <Alert severity="error">Erro ao criar formulário.</Alert>}
@@ -123,7 +119,7 @@ export function FormCreationCard({ empresaId }: Props) {
             />
 
             {form.fields.map((field, index) => (
-              <Stack spacing={2} key={index} sx={{ border: '1px solid var(--border)', p: 2, borderRadius: 2 }}>
+              <Stack spacing={2} key={index} sx={{ border: '1px solid var(--border)', p: 2, boxShadow: 3, borderRadius: 2, backgroundColor: 'var(--cardTertiary)' }}>
                 <Stack direction="row" justifyContent="space-between" alignItems="center">
                   <Typography variant="subtitle1" sx={{ color: 'var(--foreground)' }}>Campo {index + 1}</Typography>
                   <IconButton onClick={() => handleRemoveField(index)} color="error">
@@ -281,6 +277,9 @@ export function FormCreationCard({ empresaId }: Props) {
 
 const textFieldSx = {
   backgroundColor: 'var(--card)',
+  border: 'none',
+  borderRadius: 2,
+  boxShadow: 3,
   color: 'var(--foreground)',
   '& label': {
     color: 'var(--muted)',
@@ -290,7 +289,7 @@ const textFieldSx = {
   },
   '& .MuiOutlinedInput-root': {
     '& fieldset': {
-      borderColor: 'var(--border)',
+      borderColor: 'none',
     },
     '&:hover fieldset': {
       borderColor: 'var(--primary)',
