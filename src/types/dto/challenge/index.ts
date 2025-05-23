@@ -93,7 +93,7 @@ export interface RecruitmentStageCreateDto {
   status: string;
   anotacoes: string;
   ordem: number;
-  formDefinitionId?: number;
+  formDefinitionId?: string;
 }
 
 // Atualização parcial de uma etapa
