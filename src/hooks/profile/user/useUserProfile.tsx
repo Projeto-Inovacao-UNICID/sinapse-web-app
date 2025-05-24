@@ -50,3 +50,12 @@ export function usePatchUserProfile() {
     }) => userProfileService.patchUserProfile(userId, payload),
   });
 }
+
+export function useListUserChallenges(userId: string) {
+  return useQuery({
+    queryKey: ["user-challenges", userId],
+    queryFn: () => userProfileService.listUserChallenges(userId),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+}
