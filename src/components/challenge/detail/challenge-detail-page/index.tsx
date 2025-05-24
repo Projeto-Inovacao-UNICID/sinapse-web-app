@@ -98,7 +98,7 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
 
       <ChallengeDescription text={challenge.descricao} />
 
-      {isCompanyUser && (
+      {isChallengeOwner && (
         <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2, mt: 4 }}>
           <Button variant="contained" sx={{ bgcolor: "var(--primary)", textTransform: "none", color: "white", ":hover": { opacity: 0.8 } }} onClick={() => setOpenModal(true)}>
             Editar desafio
@@ -122,8 +122,8 @@ export default function ChallengeDetailPage({ id }: ChallengeDetailPageProps) {
       />
       }
 
-      {isCompanyUser && <EditChallengeModal challenge={challenge} open={openModal} onClose={() => setOpenModal(false)} />}
-      {isCompanyUser && <CreationStageModal companyId={session ? session.id : ""} challengeId={id} open={openStageModal} stageOrder={contStages + 1} onClose={() => setOpenStageModal(false)} />}
+      {isChallengeOwner && <EditChallengeModal challenge={challenge} open={openModal} onClose={() => setOpenModal(false)} />}
+      {isChallengeOwner && <CreationStageModal companyId={session ? session.id : ""} challengeId={id} open={openStageModal} stageOrder={contStages + 1} onClose={() => setOpenStageModal(false)} />}
     </Container>
   );
 }
