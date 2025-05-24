@@ -5,7 +5,7 @@ import ButtonPrimary from '@/components/common/button-primary';
 import ButtonSecondary from '@/components/common/button-secondary';
 import { ChatSidebar } from '@/components/common/chat-sidebar';
 import { CustomToggleGroup } from '@/components/common/custom-toggle-group';
-import { useGetChallenges } from '@/hooks/challenge/useChallenge';
+import { useGetChallenges, useGetMyChallenges } from '@/hooks/challenge/useChallenge';
 import { useChatContacts } from '@/hooks/chat/useChatContacts';
 import { useSession } from '@/hooks/session/useSession';
 import { ChallengeResponseDto } from '@/types';
@@ -28,6 +28,9 @@ export function ChallengeFeed() {
   const isCompanyUser = session?.roles.includes('ROLE_COMPANY');
 
   const { data: all, isLoading } = useGetChallenges();
+  const { data: myChallenges, isLoading: loadingMyChallenges } = useGetMyChallenges({ empresaId: session?.id ?? '' });
+  
+
   const { data: contacts = [] } = useChatContacts();
 
   const [search, setSearch] = useState('');
@@ -39,14 +42,19 @@ export function ChallengeFeed() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedChallenge, setSelectedChallenge] = useState<ChallengeResponseDto | null>(null);
 
+  console.log(`todos: ${all}`);
+  console.log(`meus: ${myChallenges}`);
+
   const filtered = useMemo(() => {
-    return (all ?? []).filter(c =>
-      view === 'todos' &&
+    const challenges = view === 'meus' ? myChallenges : all;
+
+    return (challenges ?? []).filter(c =>
       (!search || c.titulo.toLowerCase().includes(search.toLowerCase())) &&
       (!area || c.modalidade === area) &&
       (!status || c.status === status)
     );
-  }, [all, view, search, area, status]);
+  }, [view, all, myChallenges, search, area, status]);
+
 
   const handleCreateForm = () => {
     router.push('/empresa/formularios/criar');

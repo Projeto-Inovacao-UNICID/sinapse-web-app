@@ -34,10 +34,10 @@ export const ChallengeService = {
   },
   
   async list(params?: {
-    companyId?: string;
-    modality?: string;
+    empresaId?: string;
+    modalidade?: string;
     status?: string;
-    internal?: boolean;
+    interno?: boolean;
   }): Promise<ChallengeResponseDto[]> {
     const res = await axiosInstance.get("/desafios", { withCredentials: true, params: { ...params } });
     return res.data;

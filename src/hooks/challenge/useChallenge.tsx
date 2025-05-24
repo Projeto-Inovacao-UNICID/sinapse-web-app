@@ -13,12 +13,32 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // QUERIES
 
-export function useGetChallenges(params?: {
-  companyId?: string;
-  modality?: string;
-  status?: string;
-  internal?: boolean;
-}) {
+export function useGetChallenges(
+  params?: {
+    empresaId?: string;
+    modalidade?: string;
+    status?: string;
+    interno?: boolean;
+  },
+  options?: {
+    enabled?: boolean;
+  }
+) {
+  return useQuery<ChallengeResponseDto[]>({
+    queryKey: ["challenges", params],
+    queryFn: () => ChallengeService.list(params),
+    enabled: options?.enabled ?? true,
+  });
+}
+
+export function useGetMyChallenges(
+  params: {
+    empresaId: string;
+    modalidade?: string;
+    status?: string;
+    interno?: boolean;
+  },
+) {
   return useQuery<ChallengeResponseDto[]>({
     queryKey: ["challenges", params],
     queryFn: () => ChallengeService.list(params),
