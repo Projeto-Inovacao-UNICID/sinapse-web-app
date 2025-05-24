@@ -57,6 +57,7 @@ export function CreationStageModal({ companyId, challengeId, open, stageOrder, o
     status: '',
     anotacoes: '',
     ordem: stageOrder,
+    formDefinitionId: '',
   });
 
   const { mutate: postStage, isPending, isError, isSuccess } = usePostChallengeStage();
@@ -172,14 +173,36 @@ export function CreationStageModal({ companyId, challengeId, open, stageOrder, o
               fullWidth
               sx={textFieldSx}
             />
-            <Box sx={{ display: 'flex', gap: 1, border: '1px solid var(--border)', borderRadius: 2, p: 1, alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer', ':hover':{border: '1px solid var(--primary)'} }} onClick={() => setAssignForm((prev) => !prev)}>
-              <Typography variant='body1' sx={{ color: 'var(--primary)', fontWeight: '400' }}>
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 1,
+                border: '1px solid var(--border)',
+                borderRadius: 2,
+                p: 1,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                ':hover': { border: '1px solid var(--primary)' },
+              }}
+              onClick={() => setAssignForm((prev) => !prev)}
+            >
+              <Typography variant="body1" sx={{ color: 'var(--primary)', fontWeight: 400 }}>
                 Atribuir formulário
-              </Typography> 
-              {assignForm ? <ArrowDropUpIcon sx={{ alignSelf: 'center', color: 'var(--muted)' }} /> : <ArrowDropDownIcon sx={{ alignSelf: 'center', color: 'var(--muted)' }} />}
+              </Typography>
+              {assignForm ? (
+                <ArrowDropUpIcon sx={{ alignSelf: 'center', color: 'var(--muted)' }} />
+              ) : (
+                <ArrowDropDownIcon sx={{ alignSelf: 'center', color: 'var(--muted)' }} />
+              )}
             </Box>
+
             <Collapse in={assignForm}>
-              <ChallengeFormsList forms={forms} />
+              <ChallengeFormsList
+                forms={forms}
+                value={form.formDefinitionId}
+                onChange={(id) => setForm((prev) => ({ ...prev, formDefinitionId: id }))}
+              />
             </Collapse>
 
             <Button
