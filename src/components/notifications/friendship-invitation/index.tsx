@@ -19,9 +19,9 @@ export function FriendshipInvitationNotification({ friendshipContent }: Friendsh
   const handleAccept = async () => {
     try {
       const res = await service.patchFriendship({amizadeId, status: 'aceito'});
-      console.log('Convite de amizade aceito com sucesso:', res);
+      alert(`Convite de amizade de ${res.solicitante} aceito com sucesso!`);
 
-      // Invalida as notificações
+      // Invalida as notificaçõess
       await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
 
     } catch (error) {
@@ -32,7 +32,7 @@ export function FriendshipInvitationNotification({ friendshipContent }: Friendsh
   const handleDecline = async () => {
     try {
       const res = await service.patchFriendship({amizadeId, status: 'rejeitado'});
-      console.log('Convite de amizade recusado com sucesso:', res);
+      alert(`Convite de amizade de ${res.solicitante} rejeitado com sucesso!`);
 
       // Invalida as notificações
       await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });

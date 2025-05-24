@@ -1,0 +1,351 @@
+'use client';
+
+import { useCreateForm } from '@/hooks/forms/useForms';
+import { CreateFormDto, CreateFormFieldDto, FormFieldDto } from '@/types';
+import { Add, Delete } from '@mui/icons-material';
+import {
+  Alert,
+  Button,
+  Card,
+  CardContent,
+  Checkbox,
+  CircularProgress,
+  FormControlLabel,
+  IconButton,
+  MenuItem,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { useState } from 'react';
+
+type Props = {
+  empresaId: string;
+};
+
+const emptyField: CreateFormFieldDto = {
+  label: '',
+  fieldType: 'TEXT',
+  category: 'SOFT_SKILL',
+  weight: 1,
+  required: false,
+  options: null,
+};
+
+export function FormCreationCard({ empresaId }: Props) {
+  const [form, setForm] = useState<CreateFormDto>({
+    nome: '',
+    descricao: '',
+    minScore: 0,
+    fields: [structuredClone(emptyField)],
+  });
+
+  const { mutate: createForm, isPending, isSuccess, isError } = useCreateForm(empresaId);
+
+  const handleFieldChange = (index: number, key: keyof FormFieldDto, value: any) => {
+    const updatedFields = [...form.fields];
+    (updatedFields[index] as any)[key] = value;
+    if (key === 'fieldType' && value !== 'SELECT') {
+      updatedFields[index].options = null;
+    }
+    setForm((prev) => ({ ...prev, fields: updatedFields }));
+  };
+
+  const handleAddField = () => {
+    setForm((prev) => ({ ...prev, fields: [...prev.fields, structuredClone(emptyField)] }));
+  };
+
+  const handleRemoveField = (index: number) => {
+    setForm((prev) => ({
+      ...prev,
+      fields: prev.fields.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    createForm(form);
+  };
+
+  return (
+    <Card
+      variant="outlined"
+      sx={{
+        backgroundColor: 'var(--background)',
+        p: 1,
+        width: '100%',
+        margin: '0 auto',
+        boxShadow: 0,
+        border: 'none',
+      }}
+    >
+      <CardContent>
+        <form onSubmit={handleSubmit}>
+          <Stack spacing={3}>
+            {isError && <Alert severity="error">Erro ao criar formulário.</Alert>}
+            {isSuccess && <Alert severity="success">Formulário criado com sucesso!</Alert>}
+
+            <TextField
+              label="Nome"
+              name="nome"
+              value={form.nome}
+              onChange={(e) => setForm({ ...form, nome: e.target.value })}
+              fullWidth
+              required
+              sx={textFieldSx}
+            />
+
+            <TextField
+              label="Descrição"
+              name="descricao"
+              value={form.descricao}
+              onChange={(e) => setForm({ ...form, descricao: e.target.value })}
+              fullWidth
+              multiline
+              rows={3}
+              required
+              sx={textFieldSx}
+            />
+
+            <TextField
+              label="Pontuação mínima"
+              name="minScore"
+              type="number"
+              value={form.minScore}
+              onChange={(e) => setForm({ ...form, minScore: +e.target.value })}
+              fullWidth
+              required
+              sx={textFieldSx}
+            />
+
+            {form.fields.map((field, index) => (
+              <Stack spacing={2} key={index} sx={{ border: '1px solid var(--border)', p: 2, boxShadow: 3, borderRadius: 2, backgroundColor: 'var(--cardTertiary)' }}>
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
+                  <Typography variant="subtitle1" sx={{ color: 'var(--foreground)' }}>Campo {index + 1}</Typography>
+                  <IconButton onClick={() => handleRemoveField(index)} color="error">
+                    <Delete />
+                  </IconButton>
+                </Stack>
+
+                <TextField
+                  label="Label"
+                  value={field.label}
+                  onChange={(e) => handleFieldChange(index, 'label', e.target.value)}
+                  fullWidth
+                  required
+                  sx={textFieldSx}
+                />
+
+                <TextField
+                  select
+                  label="Tipo de campo"
+                  value={field.fieldType}
+                  onChange={(e) => handleFieldChange(index, 'fieldType', e.target.value)}
+                  sx={textFieldSx}
+                  SelectProps={{
+                    MenuProps: {
+                      PaperProps: {
+                        sx: {
+                          backgroundColor: 'var(--card)',
+                          color: 'var(--foreground)',
+                          '& .MuiMenuItem-root': {
+                            backgroundColor: 'var(--card)',
+                            color: 'var(--foreground)',
+                            '&.Mui-selected': {
+                              backgroundColor: 'var(--primary)',
+                              color: 'var(--card)',
+                            },
+                            '&:hover': {
+                              backgroundColor: 'var(--primary)',
+                              color: 'var(--card)',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem value="TEXT">Texto</MenuItem>
+                  <MenuItem value="NUMBER">Número</MenuItem>
+                  <MenuItem value="SELECT">Seleção</MenuItem>
+                </TextField>
+
+                <TextField
+                  select
+                  label="Categoria"
+                  value={field.category}
+                  onChange={(e) => handleFieldChange(index, 'category', e.target.value)}
+                  sx={textFieldSx}
+                  SelectProps={{
+                    MenuProps: {
+                      PaperProps: {
+                        sx: {
+                          backgroundColor: 'var(--card)',
+                          color: 'var(--foreground)',
+                          '& .MuiMenuItem-root': {
+                            backgroundColor: 'var(--card)',
+                            color: 'var(--foreground)',
+                            '&.Mui-selected': {
+                              backgroundColor: 'var(--primary)',
+                              color: 'var(--card)',
+                            },
+                            '&:hover': {
+                              backgroundColor: 'var(--primary)',
+                              color: 'var(--card)',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  }}
+                >
+                  <MenuItem value="SOFT_SKILL">Soft Skill</MenuItem>
+                  <MenuItem value="HARD_SKILL">Hard Skill</MenuItem>
+                  <MenuItem value="CULTURE">Cultura</MenuItem>
+                  <MenuItem value="PESQUISA">Pesquisa</MenuItem>
+                  <MenuItem value="OTHER">Outro</MenuItem>
+                </TextField>
+
+                <TextField
+                  label="Peso"
+                  type="number"
+                  value={field.weight}
+                  onChange={(e) => handleFieldChange(index, 'weight', +e.target.value)}
+                  fullWidth
+                  required
+                  sx={textFieldSx}
+                />
+
+                <FormControlLabel
+                  sx={{ color: 'var(--muted)' }}
+                  control={
+                    <Checkbox
+                      sx={{ color: 'var(--muted)', '&.Mui-checked': { color: 'var(--primary)' } }}
+                      checked={field.required}
+                      onChange={(e) => handleFieldChange(index, 'required', e.target.checked)}
+                    />
+                  }
+                  label="Campo obrigatório"
+                />
+
+                {field.fieldType === 'SELECT' && (
+                  <Stack spacing={2}>
+                    <Typography variant="subtitle2" sx={{ color: 'var(--foreground)' }}>Opções</Typography>
+                
+                    {(field.options ?? []).map((option, optIndex) => (
+                      <Stack key={optIndex} direction="row" spacing={2} alignItems="center">
+                        <TextField
+                          label="Label"
+                          value={option.label}
+                          onChange={(e) => {
+                            const updatedOptions = [...(field.options ?? [])];
+                            updatedOptions[optIndex].label = e.target.value;
+                            handleFieldChange(index, 'options', updatedOptions);
+                          }}
+                          sx={{ ...textFieldSx, flex: 1 }}
+                        />
+                        <TextField
+                          label="Valor"
+                          value={option.value}
+                          onChange={(e) => {
+                            const updatedOptions = [...(field.options ?? [])];
+                            updatedOptions[optIndex].value = e.target.value;
+                            handleFieldChange(index, 'options', updatedOptions);
+                          }}
+                          sx={{ ...textFieldSx, flex: 1 }}
+                        />
+                        <TextField
+                          label="Pontuação"
+                          type="number"
+                          value={option.score}
+                          onChange={(e) => {
+                            const updatedOptions = [...(field.options ?? [])];
+                            updatedOptions[optIndex].score = +e.target.value;
+                            handleFieldChange(index, 'options', updatedOptions);
+                          }}
+                          sx={{ ...textFieldSx, width: 100 }}
+                        />
+                        <IconButton onClick={() => {
+                          const updatedOptions = (field.options ?? []).filter((_, i) => i !== optIndex);
+                          handleFieldChange(index, 'options', updatedOptions);
+                        }} color="error">
+                          <Delete />
+                        </IconButton>
+                      </Stack>
+                    ))}
+                
+                    <Button
+                      onClick={() => {
+                        const newOption = { label: '', value: '', score: 0 };
+                        handleFieldChange(index, 'options', [...(field.options ?? []), newOption]);
+                      }}
+                      startIcon={<Add />}
+                      sx={{ color: 'var(--primary)', alignSelf: 'flex-start' }}
+                    >
+                      Adicionar opção
+                    </Button>
+                  </Stack>
+                )}
+                
+              </Stack>
+            ))}
+
+            <Button
+              variant="outlined"
+              onClick={handleAddField}
+              sx={{ color: 'var(--primary)', borderColor: 'var(--primary)' }}
+              startIcon={<Add />}
+            >
+              Adicionar Campo
+            </Button>
+
+            <Button
+              type="submit"
+              variant="contained"
+              disabled={isPending}
+              sx={{
+                backgroundColor: 'var(--primary)',
+                color: 'var(--primary-foreground)',
+                ':hover': { opacity: 0.8 },
+                fontWeight: 'bold',
+              }}
+            >
+              {isPending ? <CircularProgress size={24} /> : 'Criar Formulário'}
+            </Button>
+          </Stack>
+        </form>
+      </CardContent>
+    </Card>
+  );
+}
+
+const textFieldSx = {
+  backgroundColor: 'var(--card)',
+  border: 'none',
+  borderRadius: 2,
+  boxShadow: 3,
+  color: 'var(--foreground)',
+  '& label': {
+    color: 'var(--muted)',
+  },
+  '& label.Mui-focused': {
+    color: 'var(--primary)',
+  },
+  '& .MuiOutlinedInput-root': {
+    '& fieldset': {
+      borderColor: 'none',
+    },
+    '&:hover fieldset': {
+      borderColor: 'var(--primary)',
+    },
+    '&.Mui-focused fieldset': {
+      borderColor: 'var(--primary)',
+    },
+  },
+  '& .MuiInputBase-input': {
+    color: 'var(--foreground)',
+  },
+  '& .MuiSelect-icon': {
+    color: 'var(--muted)', // cor da seta do select
+  },
+};

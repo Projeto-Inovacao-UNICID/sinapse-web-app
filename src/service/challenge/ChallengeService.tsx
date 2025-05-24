@@ -1,18 +1,17 @@
 // services/ChallengeService.ts
 
-import axios from "axios";
-import { axiosInstance } from "../api";
 import {
+  ChallengeCountDto,
   ChallengeCreateDto,
   ChallengePatchDto,
   ChallengeResponseDto,
-  ChallengeCountDto,
+  ParticipantResponseDto,
   RecruitmentStageCreateDto,
   RecruitmentStageResponseDto,
-  StageApplicationDto,
-  ParticipantResponseDto,
-  UserChallengeCountDto,
+  UserChallengeCountDto
 } from "@/types";
+import axios from "axios";
+import { axiosInstance } from "../api";
 
 export const ChallengeService = {
   async getById(id: number): Promise<ChallengeResponseDto> {
@@ -35,10 +34,10 @@ export const ChallengeService = {
   },
   
   async list(params?: {
-    companyId?: string;
-    modality?: string;
+    empresaId?: string;
+    modalidade?: string;
     status?: string;
-    internal?: boolean;
+    interno?: boolean;
   }): Promise<ChallengeResponseDto[]> {
     const res = await axiosInstance.get("/desafios", { withCredentials: true, params: { ...params } });
     return res.data;
@@ -107,11 +106,11 @@ export const ChallengeService = {
     return res.data;
   },
 
-  async electWinner(challengeId: number, participantId: string): Promise<void> {
+  async electWinner(challengeId: number, participantId: number): Promise<void> {
     await axiosInstance.post(`/desafios/${challengeId}/vencedores/${participantId}`, { withCredentials: true });
   },
 
-  async removeParticipant(challengeId: number, participantId: string): Promise<void> {
+  async removeParticipant(challengeId: number, participantId: number): Promise<void> {
     await axiosInstance.delete(`/desafios/${challengeId}/participantes/${participantId}`, { withCredentials: true });
   },
 };

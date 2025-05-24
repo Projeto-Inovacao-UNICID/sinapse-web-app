@@ -92,13 +92,15 @@ export function useGetChallengeParticipants(stageId: number) {
 }
 
 // Mover participantes
-export function useBatchMoveParticipants(stageId: number) {
+export function useBatchMoveParticipants(onSuccessCallback?: () => void) {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, BatchMoveDto>({
-    mutationFn: (dto) =>
+
+  return useMutation<void, Error, { stageId: number; dto: BatchMoveDto }>({
+    mutationFn: ({ stageId, dto }) =>
       stagesChallengeService.batchMove(stageId, dto),
-    onSuccess: (_, dto) => {
-      queryClient.invalidateQueries({ queryKey: ["challengeParticipants"] });
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['challengeParticipants'] });
+      if (onSuccessCallback) onSuccessCallback(); // executa função extra, se fornecida
     },
   });
 }

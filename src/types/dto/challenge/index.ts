@@ -93,6 +93,7 @@ export interface RecruitmentStageCreateDto {
   status: string;
   anotacoes: string;
   ordem: number;
+  formDefinitionId?: string;
 }
 
 // Atualização parcial de uma etapa
@@ -110,13 +111,14 @@ export interface RecruitmentStageResponseDto {
   estagioAtual: string;
   status: string;
   anotacoes: string;
+  formDefinitionId: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
 // DTO para mover participantes de forma coletiva
 export interface BatchMoveDto {
-  participanteIds: number|string[];
+  participanteIds: number[]|string[];
   novoEstagioId: number;
   mensagem: string;
 }

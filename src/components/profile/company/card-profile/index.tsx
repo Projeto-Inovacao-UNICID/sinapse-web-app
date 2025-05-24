@@ -13,7 +13,6 @@ import {
   Divider,
   Tabs,
   Tab,
-  IconButton
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
@@ -22,6 +21,7 @@ import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import MessageIcon from '@mui/icons-material/Message';
 import EditIcon from '@mui/icons-material/Edit';
 import ShareIcon from '@mui/icons-material/Share';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { CompanyProfileImage } from '@/components/common/company-avatar';
 import { EditCompanyProfileModal } from '@/components/profile/company/profile-edit-modal';
 import { ShareDialog } from '@/components/profile/utils/shareDialog';
@@ -33,6 +33,8 @@ import {
 } from '@/hooks/company/useFollowers';
 import { useGetChallengeCounts } from '@/hooks/challenge/useChallenge';
 import { ChatService } from '@/service/chat/ChatService';
+import ButtonSecondary from '@/components/common/button-secondary';
+import IconButton from '@/components/common/icon-buttons';
 
 interface CompanyProfileCardProps {
   companyId: string;
@@ -95,7 +97,9 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
       console.error('Erro ao iniciar o chat:', err);
     }
   }
-  const handleEdit    = () => setOpenModal(true);
+  const handleEdit = () => setOpenModal(true);
+
+  const handleForms = () => router.push(`/empresa/formularios`);
 
   return (
     <>
@@ -149,29 +153,15 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
                 </Button>
               )}
 
-              <Button
-                startIcon={<MessageIcon />}
-                variant="outlined"
-                onClick={handleMessage}
-                sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
-              >
-                Mensagem
-              </Button>
+              <ButtonSecondary icon={<MessageIcon />} onClick={handleMessage} title="Mensagem" borderRadius={2} fontWeight={400} />
 
               {isOwner && isCompany && (
-                <Button
-                  startIcon={<EditIcon />}
-                  variant="outlined"
-                  onClick={handleEdit}
-                  sx={{ borderColor: 'var(--muted)', color: 'var(--foreground)', textTransform: 'none' }}
-                >
-                  Editar Perfil
-                </Button>
+                <ButtonSecondary icon={<EditIcon />} onClick={handleEdit} title="Editar Perfil" borderRadius={2} fontWeight={400} />
               )}
 
-              <IconButton onClick={() => setShareOpen(true)} sx={{ color: 'var(--foreground)' }}>
-                <ShareIcon />
-              </IconButton>
+              <ButtonSecondary icon={<AssignmentIcon />} onClick={handleForms} title="Formulários" borderRadius={2} fontWeight={400} />
+
+              <IconButton icon={<ShareIcon />} onClick={() => setShareOpen(true)} />
             </Box>
           </Grid>
 

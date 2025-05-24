@@ -24,6 +24,8 @@ import { BoxInfo } from "../../box-info";
 import { ShareDialog } from "../../utils/shareDialog";
 import { EditProfileModal } from "../profile-edit-modal";
 import { UsersList } from "../users-list";
+import ButtonPrimary from "@/components/common/button-primary";
+import ButtonSecondary from "@/components/common/button-secondary";
 
 interface UserProfileCardProps {
   userId: string;
@@ -108,7 +110,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const handleAddFriendship = async () => {
     try {
       const res = await sendFriendRequest(userId);
-      console.log('Pedido de amizade enviado com sucesso:', res);
+      alert(`Convite de amizade enviado para ${res.solicitante} com sucesso!`);
       await queryClient.invalidateQueries({ queryKey: ['friendship-invitations'] });
     } catch (err) {
       console.error('Erro ao adicionar amizade:', err);
@@ -118,14 +120,14 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const handleAcceptFriendshipRequest = async () => {
     if (!amizadeId) return;
     const res = await acceptFriendship();
-    console.log('Convite de amizade aceito com sucesso:', res);
+    alert(`Convite de amizade de ${res.solicitante} aceito com sucesso!`);
     await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
   }
   
   const handleDeleteFriendshipRequest = async () => {
     if (!amizadeId) return;
     const res = await deleteFriendship();
-    console.log('Convite de amizade recusado com sucesso:', res);
+    alert(`Amigo deletado com sucesso!`);
     await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
   }
   
@@ -224,49 +226,31 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
               )}
             </Button>
           )}
-
-          <Button
-            startIcon={<MessageIcon />}
-            variant="contained"
-            onClick={handleMessage}
-            sx={{ color: 'white', textTransform: 'none', backgroundColor: 'var(--primary)', ':hover': { opacity: 0.8 } }}
-          >
-            Mensagem
-          </Button>
-
-          <Button
-            startIcon={<ShareIcon />}
-            variant="outlined"
+          {!isProfileOwner && (
+            <ButtonPrimary
+              title="Mensagem"
+              icon={<MessageIcon/>}
+              onClick={handleMessage}
+            />
+          )}
+          <ButtonSecondary
+            title="Compartilhar"
+            icon={<ShareIcon />}
             onClick={() => setShareOpen(true)}
-            sx={{
-              borderColor: 'var(--secondary)',
-              color: 'var(--foreground)',
-              textTransform: 'none',
-              ':hover': { opacity: 0.8 }
-            }}
-          >
-            Compartilhar
-          </Button>
+          />
 
           {isUser && isProfileOwner && (
             <>
-              <Button
-                startIcon={<EditIcon />}
-                variant="outlined"
+              <ButtonSecondary 
+                title="Editar Perfil"
+                icon={<EditIcon />}
                 onClick={handleEdit}
-                sx={{ borderColor: 'var(--secondary)', color: 'var(--foreground)', textTransform: 'none' }}
-              >
-                Editar Perfil
-              </Button>
-
-              <Button
-                startIcon={<AddIcon />}
-                variant="outlined"
+              />
+              <ButtonSecondary 
+                title="Criar Grupo"
+                icon={<AddIcon />}
                 onClick={() => setOpenModalCreateGroup(true)}
-                sx={{ borderColor: 'var(--secondary)', color: 'var(--foreground)', textTransform: 'none' }}
-              >
-                Criar Grupo
-              </Button>
+              />  
             </>
           )}
         </Grid>

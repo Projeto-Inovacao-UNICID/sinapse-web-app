@@ -1,6 +1,7 @@
 import './globals.css';
 import ThemeProvider from '@/providers/theme-provider';
-import QueryProviders from '@/providers/query-provider'; 
+import QueryProviders from '@/providers/query-provider';
+import DndProviders from '@/providers/dnd-provider';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,7 +9,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="h-full antialiased" style={{ margin: 0 }}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <QueryProviders>
-            {children}
+            <DndProviders>
+              {children}
+            </DndProviders>
           </QueryProviders>
         </ThemeProvider>
       </body>
