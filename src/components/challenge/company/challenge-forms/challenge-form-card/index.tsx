@@ -18,6 +18,7 @@ export function ChallengeFormCard({ form, selected }: ChallengeFormCardProps) {
       transition={{ duration: 0.2 }}
       role="button"
       sx={{
+        width: "100%",
         display: "flex",
         flexDirection: "column",
         gap: 1,
@@ -34,9 +35,11 @@ export function ChallengeFormCard({ form, selected }: ChallengeFormCardProps) {
       <Typography variant="h6" sx={{ fontWeight: "bold" }}>
         {form.nome}
       </Typography>
-      <Typography variant="body1" sx={{ color: selected ? "white" : "var(--muted)" }}>
-        Pontuação mínima: {form.minScore}
-      </Typography>
+      {form.minScore > 0 && (
+        <Typography variant="body1" sx={{ color: selected ? "white" : "var(--muted)" }}>
+          Pontuação mínima: {form.minScore}
+        </Typography>
+      )}
       <Typography variant="body1" sx={{ color: selected ? "white" : "var(--muted)" }}>
         {form.descricao}
       </Typography>

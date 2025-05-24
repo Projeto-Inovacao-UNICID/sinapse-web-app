@@ -102,7 +102,16 @@ export function CreationStageModal({ companyId, challengeId, open, stageOrder, o
         </Typography>
       </DialogTitle>
 
-      <DialogContent dividers>
+      <DialogContent
+        dividers
+        sx={{
+          maxHeight: '80vh',
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+        }}
+      >
         <form onSubmit={handleSubmit}>
           <Stack spacing={3}>
             {isError && <Alert severity="error">Erro ao criar etapa.</Alert>}
@@ -197,11 +206,11 @@ export function CreationStageModal({ companyId, challengeId, open, stageOrder, o
               )}
             </Box>
 
-            <Collapse in={assignForm}>
+            <Collapse in={assignForm} sx={{ width: "100%" }}>
               <ChallengeFormsList
                 forms={forms}
                 value={form.formDefinitionId}
-                onChange={(id) => setForm((prev) => ({ ...prev, formDefinitionId: id }))}
+                onChange={(id) => setForm((prev) => ({ ...prev, formDefinitionId: id ?? undefined }))}
               />
             </Collapse>
 
