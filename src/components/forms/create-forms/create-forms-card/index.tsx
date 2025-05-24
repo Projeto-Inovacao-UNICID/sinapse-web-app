@@ -142,6 +142,28 @@ export function FormCreationCard({ empresaId }: Props) {
                   value={field.fieldType}
                   onChange={(e) => handleFieldChange(index, 'fieldType', e.target.value)}
                   sx={textFieldSx}
+                  SelectProps={{
+                    MenuProps: {
+                      PaperProps: {
+                        sx: {
+                          backgroundColor: 'var(--card)',
+                          color: 'var(--foreground)',
+                          '& .MuiMenuItem-root': {
+                            backgroundColor: 'var(--card)',
+                            color: 'var(--foreground)',
+                            '&.Mui-selected': {
+                              backgroundColor: 'var(--primary)',
+                              color: 'var(--card)',
+                            },
+                            '&:hover': {
+                              backgroundColor: 'var(--primary)',
+                              color: 'var(--card)',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  }}
                 >
                   <MenuItem value="TEXT">Texto</MenuItem>
                   <MenuItem value="NUMBER">Número</MenuItem>
@@ -154,6 +176,28 @@ export function FormCreationCard({ empresaId }: Props) {
                   value={field.category}
                   onChange={(e) => handleFieldChange(index, 'category', e.target.value)}
                   sx={textFieldSx}
+                  SelectProps={{
+                    MenuProps: {
+                      PaperProps: {
+                        sx: {
+                          backgroundColor: 'var(--card)',
+                          color: 'var(--foreground)',
+                          '& .MuiMenuItem-root': {
+                            backgroundColor: 'var(--card)',
+                            color: 'var(--foreground)',
+                            '&.Mui-selected': {
+                              backgroundColor: 'var(--primary)',
+                              color: 'var(--card)',
+                            },
+                            '&:hover': {
+                              backgroundColor: 'var(--primary)',
+                              color: 'var(--card)',
+                            },
+                          },
+                        },
+                      },
+                    },
+                  }}
                 >
                   <MenuItem value="SOFT_SKILL">Soft Skill</MenuItem>
                   <MenuItem value="HARD_SKILL">Hard Skill</MenuItem>
@@ -300,5 +344,8 @@ const textFieldSx = {
   },
   '& .MuiInputBase-input': {
     color: 'var(--foreground)',
+  },
+  '& .MuiSelect-icon': {
+    color: 'var(--muted)', // cor da seta do select
   },
 };
