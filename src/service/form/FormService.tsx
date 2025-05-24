@@ -1,13 +1,13 @@
-import { FormDto, FormResponseDto, PageableResponse } from "@/types";
+import { CreateFormDto, FormDto, FormResponseDto, PageableResponse, PublicFormDto } from "@/types";
 import { axiosInstance } from "../api";
 
 export const FormService = {
-  async createForms(formDto: FormDto, empresaId: string) {
+  async createForms(formDto: CreateFormDto, empresaId: string) {
     const res = await axiosInstance.post(`/forms/${empresaId}`, formDto , { withCredentials: true });
     return res.data;
   },
 
-  async postResponseForm(estagioId: number, participantId: number, dto: FormResponseDto) {
+  async postResponseForm(estagioId: number, participantId: string, dto: FormResponseDto) {
     const res = await axiosInstance.post(`/estagios-recrutamento/${estagioId}/submit?participanteId=${participantId}`, dto, { withCredentials: true });
     return res.data;
   },
@@ -18,7 +18,7 @@ export const FormService = {
   },
 
   async getPublicForms(formId: string) {
-    const res = await axiosInstance.get(`/forms/${formId}/public`, { withCredentials: true });
+    const res = await axiosInstance.get<PublicFormDto>(`/forms/${formId}/public`, { withCredentials: true });
     return res.data;
   },
 

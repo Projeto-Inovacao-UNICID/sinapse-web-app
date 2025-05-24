@@ -26,6 +26,8 @@ import { ChallengeParticipantsList } from "../challenge-stage-participants";
 import { StageCommentForm } from "../stage-comment-form";
 import ButtonSecondary from "@/components/common/button-secondary";
 import { MoveParticipantsModal } from "../move-participants-modal";
+import { useGetPublicForm } from "@/hooks/forms/useForms";
+import { ChallengeStageForm } from "../challenge-stage-form";
 
 const MotionBox = motion(Box);
 
@@ -57,6 +59,16 @@ export function ChallengeStageItem({
 
   const [isOpen, setIsOpen] = useState(false);
   const [isMoveModalOpen, setMoveModalOpen] = useState(false);
+
+  const formDefinitionId = stage.formDefinitionId;
+
+  const {
+    data: form,
+    isLoading: loadingForms,
+  } = useGetPublicForm(formDefinitionId ?? "", {
+    enabled: !!formDefinitionId && formDefinitionId.trim() !== "",
+  });
+
 
   const handleClick = () => {
     if (isChallengeOwner) {
@@ -245,9 +257,9 @@ export function ChallengeStageItem({
         </>
       )}
 
-      {(isCurrent && isStageInitial && !isChallengeOwner) && (
-        <StageCommentForm stageId={stage.id} participantId={participanteIdStr} />
-      )}
+      {(isCurrent && isStageInitial && !isChallengeOwner) && (form ? (
+        <ChallengeStageForm form={form} stageId={stage.id} participantId={participanteIdStr} />
+      ) : ( <StageCommentForm stageId={stage.id} participantId={participanteIdStr} />))}
 
       {isChallengeOwner && (
         <Collapse in={isOpen} style={{ width: '100%' }}>

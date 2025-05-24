@@ -1,5 +1,8 @@
 'use client';
 
+import { useCreateForm } from '@/hooks/forms/useForms';
+import { CreateFormDto, CreateFormFieldDto, FormFieldDto } from '@/types';
+import { Add, Delete } from '@mui/icons-material';
 import {
   Alert,
   Button,
@@ -14,16 +17,13 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormDto, FormFieldDto } from '@/types';
-import { useCreateForm } from '@/hooks/forms/useForms';
 
 type Props = {
   empresaId: string;
 };
 
-const emptyField: FormFieldDto = {
+const emptyField: CreateFormFieldDto = {
   label: '',
   fieldType: 'TEXT',
   category: 'SOFT_SKILL',
@@ -33,7 +33,7 @@ const emptyField: FormFieldDto = {
 };
 
 export function FormCreationCard({ empresaId }: Props) {
-  const [form, setForm] = useState<FormDto>({
+  const [form, setForm] = useState<CreateFormDto>({
     nome: '',
     descricao: '',
     minScore: 0,

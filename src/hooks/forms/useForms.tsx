@@ -1,12 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FormDto, FormResponseDto } from "@/types";
 import { FormService } from "@/service/form/FormService";
+import { CreateFormDto, FormResponseDto, PublicFormDto } from "@/types";
+import { useMutation, useQuery, useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
 // Criação de formulário
 export const useCreateForm = (empresaId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (dto: FormDto) => FormService.createForms(dto, empresaId),
+    mutationFn: (dto: CreateFormDto) => FormService.createForms(dto, empresaId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["forms", empresaId] });
     },
@@ -14,7 +14,7 @@ export const useCreateForm = (empresaId: string) => {
 };
 
 // Envio de respostas
-export const usePostResponseForm = (estagioId: number, participantId: number) =>
+export const usePostResponseForm = (estagioId: number, participantId: string) =>
   useMutation({
     mutationFn: (dto: FormResponseDto) =>
       FormService.postResponseForm(estagioId, participantId, dto),
@@ -28,10 +28,14 @@ export const useGetForm = (formId: string) =>
   });
 
 // Obter formulário público
-export const useGetPublicForm = (formId: string) =>
-  useQuery({
+export const useGetPublicForm = (
+  formId: string,
+  options?: Omit<UseQueryOptions<PublicFormDto, Error>, "queryKey" | "queryFn">
+) =>
+  useQuery<PublicFormDto, Error>({
     queryKey: ["publicForm", formId],
     queryFn: () => FormService.getPublicForms(formId),
+    ...options,
   });
 
 // Listar formulários inativos

@@ -111,6 +111,7 @@ export interface RecruitmentStageResponseDto {
   estagioAtual: string;
   status: string;
   anotacoes: string;
+  formDefinitionId: string | null;
   createdAt: string;
   updatedAt: string;
 }
