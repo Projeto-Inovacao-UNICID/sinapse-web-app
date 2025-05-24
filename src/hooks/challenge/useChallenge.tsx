@@ -13,12 +13,32 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 // QUERIES
 
-export function useGetChallenges(params?: {
-  companyId?: string;
-  modality?: string;
-  status?: string;
-  internal?: boolean;
-}) {
+export function useGetChallenges(
+  params?: {
+    empresaId?: string;
+    modalidade?: string;
+    status?: string;
+    interno?: boolean;
+  },
+  options?: {
+    enabled?: boolean;
+  }
+) {
+  return useQuery<ChallengeResponseDto[]>({
+    queryKey: ["challenges", params],
+    queryFn: () => ChallengeService.list(params),
+    enabled: options?.enabled ?? true,
+  });
+}
+
+export function useGetMyChallenges(
+  params: {
+    empresaId: string;
+    modalidade?: string;
+    status?: string;
+    interno?: boolean;
+  },
+) {
   return useQuery<ChallengeResponseDto[]>({
     queryKey: ["challenges", params],
     queryFn: () => ChallengeService.list(params),
@@ -131,7 +151,7 @@ export function usePostChallengeRegistrationSolo() {
 
 export function usePostChallengeWinner() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { challengeId: number; participantId: string }>({
+  return useMutation<void, Error, { challengeId: number; participantId: number }>({
     mutationFn: ({ challengeId, participantId }) =>
       ChallengeService.electWinner(challengeId, participantId),
     onSuccess: (_, { challengeId }) => {
@@ -142,7 +162,7 @@ export function usePostChallengeWinner() {
 
 export function useRemoveParticipant() {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { challengeId: number; participantId: string }>({
+  return useMutation<void, Error, { challengeId: number; participantId: number }>({
     mutationFn: ({ challengeId, participantId }) =>
       ChallengeService.removeParticipant(challengeId, participantId),
     onSuccess: (_, { challengeId }) => {

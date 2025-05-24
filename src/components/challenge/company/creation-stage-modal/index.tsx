@@ -4,8 +4,10 @@ import { usePostChallengeStage } from '@/hooks/challenge/useStageChallenge';
 import { RecruitmentStageCreateDto } from '@/types';
 import {
   Alert,
+  Box,
   Button,
   CircularProgress,
+  Collapse,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -18,8 +20,13 @@ import {
 } from '@mui/material';
 import { forwardRef, useState } from 'react';
 import { motion } from 'framer-motion';
+import { useGetActiveForms } from '@/hooks/forms/useForms';
+import { ChallengeFormsList } from '../challenge-forms/challenge-forms-list';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
 type Props = {
+  companyId: string;
   challengeId: number;
   stageOrder: number;
   open: boolean;
@@ -44,15 +51,22 @@ const MotionDialogPaper = forwardRef<HTMLDivElement, PaperProps>((props, ref) =>
   </motion.div>
 ));
 
-export function CreationStageModal({ challengeId, open, stageOrder, onClose }: Props) {
+export function CreationStageModal({ companyId, challengeId, open, stageOrder, onClose }: Props) {
   const [form, setForm] = useState<RecruitmentStageCreateDto>({
     estagio_atual: '',
     status: '',
     anotacoes: '',
     ordem: stageOrder,
+    formDefinitionId: '',
   });
 
   const { mutate: postStage, isPending, isError, isSuccess } = usePostChallengeStage();
+
+  const { data: formsData, isLoading: loadingForms } = useGetActiveForms(companyId);
+
+  const forms = formsData?.content || [];
+
+  const [assignForm, setAssignForm] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -88,7 +102,16 @@ export function CreationStageModal({ challengeId, open, stageOrder, onClose }: P
         </Typography>
       </DialogTitle>
 
-      <DialogContent dividers>
+      <DialogContent
+        dividers
+        sx={{
+          maxHeight: '80vh',
+          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 3,
+        }}
+      >
         <form onSubmit={handleSubmit}>
           <Stack spacing={3}>
             {isError && <Alert severity="error">Erro ao criar etapa.</Alert>}
@@ -159,18 +182,37 @@ export function CreationStageModal({ challengeId, open, stageOrder, onClose }: P
               fullWidth
               sx={textFieldSx}
             />
+            <Box
+              sx={{
+                display: 'flex',
+                gap: 1,
+                border: '1px solid var(--border)',
+                borderRadius: 2,
+                p: 1,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                cursor: 'pointer',
+                ':hover': { border: '1px solid var(--primary)' },
+              }}
+              onClick={() => setAssignForm((prev) => !prev)}
+            >
+              <Typography variant="body1" sx={{ color: 'var(--primary)', fontWeight: 400 }}>
+                Atribuir formulário
+              </Typography>
+              {assignForm ? (
+                <ArrowDropUpIcon sx={{ alignSelf: 'center', color: 'var(--muted)' }} />
+              ) : (
+                <ArrowDropDownIcon sx={{ alignSelf: 'center', color: 'var(--muted)' }} />
+              )}
+            </Box>
 
-            <TextField
-              label="Ordem"
-              name="ordem"
-              type="number"
-              value={form.ordem}
-              onChange={handleChange}
-              fullWidth
-              required
-              disabled
-              sx={textFieldSx}
-            />
+            <Collapse in={assignForm} sx={{ width: "100%" }}>
+              <ChallengeFormsList
+                forms={forms}
+                value={form.formDefinitionId}
+                onChange={(id) => setForm((prev) => ({ ...prev, formDefinitionId: id ?? undefined }))}
+              />
+            </Collapse>
 
             <Button
               type="submit"

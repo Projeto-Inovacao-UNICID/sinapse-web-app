@@ -38,6 +38,8 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
   const { data: company, isLoading } = useGetCompanyProfile(desafio.empresaId);
   const { data: inscricoes, isLoading: loadingInscricoes, isError: errorInscricoes } = useGetMyInscriptions(desafio.id);
 
+  const isChallengeOwner = session ? session.id === desafio.empresaId : false;
+
   const contStages = stages?.length ?? 0;
   const haveStages = contStages > 0;
 
@@ -182,7 +184,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
         <Divider sx={{ borderColor: 'var(--border)' }} />
 
         <CardActions sx={{ justifyContent: 'flex-end', p: 2, pt: 1 }}>
-          {isCompanyUser ? (
+          {isChallengeOwner ? (
             <Button
               size="small"
               variant="outlined"
@@ -199,7 +201,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
             >
               Editar
             </Button>
-          ) : (
+          ) : isCompanyUser ? (
             <Button
               size="small"
               variant="contained"
@@ -217,7 +219,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
             >
               Inscrever‑se
             </Button>
-          )}
+          ) : null}
         </CardActions>
       </Card>
 

@@ -1,9 +1,10 @@
 import { Box } from "@mui/material";
 import { motion } from "framer-motion";
+import React from "react";
 
 interface Props {
   icon: React.ReactNode;
-  onClick: () => void;
+  onClick: (e?: React.MouseEvent) => void;
   disable?: boolean;
   size?: 'small' | 'medium' | 'large';
 }

@@ -22,8 +22,12 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import { ChallengePrarticipantsList } from "../challenge-stage-participants";
+import { ChallengeParticipantsList } from "../challenge-stage-participants";
 import { StageCommentForm } from "../stage-comment-form";
+import ButtonSecondary from "@/components/common/button-secondary";
+import { MoveParticipantsModal } from "../move-participants-modal";
+import { useGetPublicForm } from "@/hooks/forms/useForms";
+import { ChallengeStageForm } from "../challenge-stage-form";
 
 const MotionBox = motion(Box);
 
@@ -54,6 +58,17 @@ export function ChallengeStageItem({
   const participanteIdStr = participantId ? participantId.toString() : "";
 
   const [isOpen, setIsOpen] = useState(false);
+  const [isMoveModalOpen, setMoveModalOpen] = useState(false);
+
+  const formDefinitionId = stage.formDefinitionId;
+
+  const {
+    data: form,
+    isLoading: loadingForms,
+  } = useGetPublicForm(formDefinitionId ?? "", {
+    enabled: !!formDefinitionId && formDefinitionId.trim() !== "",
+  });
+
 
   const handleClick = () => {
     if (isChallengeOwner) {
@@ -65,12 +80,6 @@ export function ChallengeStageItem({
 
   const handleSave = async () => {
     await patchStage({ stageId: stage.id, stage: { status, anotacoes } as RecruitmentStagePatchDto });
-    setIsEditing(false);
-  };
-
-  const handleCancel = () => {
-    setStatus(stage.status);
-    setAnotacoes(stage.anotacoes);
     setIsEditing(false);
   };
 
@@ -121,10 +130,13 @@ export function ChallengeStageItem({
         </Box>
         {isChallengeOwner && (
           <Box sx={{ display: "flex", gap: 1 }}>
+            {/* <ButtonSecondary title="Mover participantes" onClick={() => setMoveModalOpen(!isMoveModalOpen)} /> */}
             <EditButton size="small" isEditing={isEditing} onClick={() => setIsEditing(!isEditing)} />
           </Box>
         )}
       </Box>
+
+      {/* {isMoveModalOpen && <MoveParticipantsModal open={isMoveModalOpen} onClose={() => setMoveModalOpen(false)} stageId={stage.id} />} */}
 
       {isEditing ? (
         <>
@@ -245,13 +257,13 @@ export function ChallengeStageItem({
         </>
       )}
 
-      {(isCurrent && isStageInitial && !isChallengeOwner) && (
-        <StageCommentForm stageId={stage.id} participantId={participanteIdStr} />
-      )}
+      {(isCurrent && isStageInitial && !isChallengeOwner) && (form ? (
+        <ChallengeStageForm form={form} stageId={stage.id} participantId={participanteIdStr} />
+      ) : ( <StageCommentForm stageId={stage.id} participantId={participanteIdStr} />))}
 
       {isChallengeOwner && (
-        <Collapse in={isOpen}>
-          <ChallengePrarticipantsList stageId={stage.id} />
+        <Collapse in={isOpen} style={{ width: '100%' }}>
+          <ChallengeParticipantsList stageId={stage.id} challengeId={stage.desafioId} />
         </Collapse>
       )}
     </MotionBox>

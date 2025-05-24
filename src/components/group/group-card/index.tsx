@@ -1,7 +1,7 @@
 import IconButton from "@/components/common/icon-buttons";
 import DeleteButton from "@/components/common/icon-buttons/delete-button";
 import EditButton from "@/components/common/icon-buttons/edit-button";
-import { ConfirmationDialog } from "@/components/group/confirmation-dialog";
+import { ConfirmationDialog } from "@/components/common/confirmation-dialog";
 import { InviteMembersModal } from "@/components/group/invite-members-modal";
 import { UsersList } from "@/components/profile/user/users-list";
 import { useDeleteGroup, useGetGroupById, useGetGroupMembers, usePatchGroup, usePostQuitGroup } from "@/hooks/group/useGroup";
