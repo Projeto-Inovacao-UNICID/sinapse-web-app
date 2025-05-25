@@ -20,6 +20,7 @@ import { CreationChallengeModal } from '../../company/creation-challenge-modal';
 import { EditChallengeModal } from '../../company/edit-challenge-modal';
 import { ChallengeFilter } from '../challenge-filters';
 import { ChallengePostCard } from '../challenge-post-card';
+import { useListUserChallenges } from '@/hooks/profile/user/useUserProfile';
 
 export function ChallengeFeed() {
   const router = useRouter();
@@ -28,7 +29,10 @@ export function ChallengeFeed() {
   const isCompanyUser = session?.roles.includes('ROLE_COMPANY');
 
   const { data: all, isLoading } = useGetChallenges();
-  const { data: myChallenges, isLoading: loadingMyChallenges } = useGetMyChallenges({ empresaId: session?.id ?? '' });
+  const { data: myChallengesCompany, isLoading: loadingMyChallengesCompany } = useGetMyChallenges({ empresaId: session?.id ?? '' });
+  const { data: myChallengesUser, isLoading: loadingMyChallengesUser } = useListUserChallenges(session?.id ?? '');
+
+  const myChallenges = isCompanyUser ? myChallengesCompany : myChallengesUser;
   
 
   const { data: contacts = [] } = useChatContacts();

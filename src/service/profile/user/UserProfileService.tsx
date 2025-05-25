@@ -1,6 +1,7 @@
 // src/service/user/profile/UserProfileService.ts
 import { axiosInstance } from "@/service/api";
 import {
+  ChallengeResponseDto,
   UpdateUserProfileDto,
   UserProfileCommentsResponse,
   UserProfileResponse
@@ -73,4 +74,10 @@ export class UserProfileService {
     const imageBlob = response.data;
     return URL.createObjectURL(imageBlob);
   }
+
+  async listUserChallenges(userId: string) {
+    const response = await axiosInstance.get<ChallengeResponseDto[]>(`/profile/user/${userId}/participados`, {withCredentials: true});
+    return response.data;
+  }
+
 }
