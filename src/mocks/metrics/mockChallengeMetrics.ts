@@ -57,3 +57,60 @@ export const mockDesafioMetrics: DesafioMetricsDto = {
   percSolo: 0.6,
   percEquipe: 0.4,
 };
+
+export const mockDesafioMetrics2: DesafioMetricsDto = {
+  inscritosPorEtapa: [
+    { estagioRecrutamentoId: 1, totalInscritos: 150 },
+    { estagioRecrutamentoId: 2, totalInscritos: 130 },
+    { estagioRecrutamentoId: 3, totalInscritos: 100 },
+    { estagioRecrutamentoId: 4, totalInscritos: 85 },
+  ],
+  tempoMedioAprovacao: [
+    { estagioRecrutamentoId: 1, avgApprovalDays: 1.8 },
+    { estagioRecrutamentoId: 2, avgApprovalDays: 2.5 },
+    { estagioRecrutamentoId: 3, avgApprovalDays: 3.2 },
+    { estagioRecrutamentoId: 4, avgApprovalDays: 3.9 },
+  ],
+  taxaReprovacao: [
+    { estagioRecrutamentoId: 1, rejectionRate: 0.05 },
+    { estagioRecrutamentoId: 2, rejectionRate: 0.15 },
+    { estagioRecrutamentoId: 3, rejectionRate: 0.25 },
+    { estagioRecrutamentoId: 4, rejectionRate: 0.35 },
+  ],
+  totalInscritos: 250,
+  totalConcluidos: 150,
+  totalReprovados: 50,
+  taxaConclusao: 0.6,
+  mediaAvaliacao: 4.6,
+  inscritosSolo: 90,
+  inscritosEquipe: 160,
+  metricasPorLocalizacao: [
+    {
+      localizacao: "São Paulo",
+      totalInscritos: 100,
+      totalConcluidos: 60,
+      totalReprovados: 20,
+      taxaReprovacao: 0.2,
+      tempoMedioAprovacaoDays: 2.7,
+    },
+    {
+      localizacao: "Bahia",
+      totalInscritos: 80,
+      totalConcluidos: 55,
+      totalReprovados: 10,
+      taxaReprovacao: 0.125,
+      tempoMedioAprovacaoDays: 2.1,
+    },
+    {
+      localizacao: "Paraná",
+      totalInscritos: 70,
+      totalConcluidos: 35,
+      totalReprovados: 20,
+      taxaReprovacao: 0.29,
+      tempoMedioAprovacaoDays: 3.6,
+    },
+  ],
+  pipelineDropoff: 0.4,
+  percSolo: 0.36,
+  percEquipe: 0.64,
+};
