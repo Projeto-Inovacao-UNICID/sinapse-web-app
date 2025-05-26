@@ -1,0 +1,34 @@
+import React from "react";
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
+import { Card, CardContent, Grid, Typography } from "@mui/material";
+
+interface Props {
+  data: {
+    estagioRecrutamentoId: number;
+    avgApprovalDays: number;
+  }[];
+}
+
+const TempoMedioAprovacaoChart: React.FC<Props> = ({ data }) => {
+  return (
+    <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+      <Card style={{ backgroundColor: "var(--card)", borderRadius: "var(--radius)" }}>
+        <CardContent>
+          <Typography variant="subtitle1" gutterBottom>
+            Tempo Médio de Aprovação (dias)
+          </Typography>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={data}>
+              <XAxis dataKey="estagioRecrutamentoId" />
+              <YAxis />
+              <Tooltip />
+              <Line type="monotone" dataKey="avgApprovalDays" stroke="var(--primary)" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </CardContent>
+      </Card>
+    </Grid>
+  );
+};
+
+export default TempoMedioAprovacaoChart;
