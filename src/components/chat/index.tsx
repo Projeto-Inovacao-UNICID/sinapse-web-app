@@ -31,8 +31,8 @@ export function Chat({
       <Box
         sx={{
           overflowY: 'auto',
-          backgroundColor: 'var(--card)',
-          borderRadius: 2,
+          backgroundColor: 'var(--bgSecondary)',
+          borderRadius: '0 8px 0 0',
           p: 2,
           flex: 1
         }}
@@ -42,28 +42,29 @@ export function Chat({
           const justify = isOther ? 'flex-start' : 'flex-end';
           const bgcolor = isOther ? 'var(--cardSecondary)' : 'var(--primary)';
           const color  = isOther ? 'var(--foreground)' : 'white';
+          const borderRadius = isOther ? '99px 99px 99px 0' : '99px 99px  0 99px';
 
           return (
             <Box key={msg.id} sx={{ display: 'flex', justifyContent: justify, mb: 1 }}>
-              <Paper
-                elevation={1}
-                sx={{
-                  p: 1.5,
-                  bgcolor,
-                  color,
-                  maxWidth: '70%',
-                  borderRadius: 2
-                }}
-              >
-                <Typography variant="body2" sx={{ fontSize: '1rem', mb: 0.5 }}>{msg.conteudo}</Typography>
-                <Divider/>
+              <Box>
+                <Paper
+                  elevation={1}
+                  sx={{
+                    p: 2,
+                    bgcolor,
+                    color,
+                    borderRadius
+                  }}
+                >
+                  <Typography variant="body2" sx={{ fontSize: '1rem', mb: 0.5 }}>{msg.conteudo}</Typography>
+                </Paper>
                 <Typography
                   variant="caption"
                   sx={{ display: 'block', textAlign: 'right', fontSize: '0.5rem' }}
                 >
                   {new Date(msg.createdAt).toLocaleTimeString()}
                 </Typography>
-              </Paper>
+              </Box>
             </Box>
           );
         })}

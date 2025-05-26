@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, Divider, Typography } from '@mui/material';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 
@@ -84,14 +84,13 @@ export default function ConversasClient() {
   return (
     <Box
       display="grid"
-      gridTemplateColumns="2fr minmax(0, 8fr) 2fr"
+      gridTemplateColumns="1fr minmax(0, 10fr) 1fr"
       minHeight="calc(100vh - 65px - 1rem)"
     >
       <Box
         gridColumn={2}
         display="grid"
         gridTemplateColumns="3fr 9fr"
-        gap={1}
       >
         {/* Lista de contatos */}
         <Box>
