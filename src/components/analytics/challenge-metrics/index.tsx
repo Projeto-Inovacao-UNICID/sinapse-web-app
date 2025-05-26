@@ -2,62 +2,9 @@
 
 import { Box, Card, CardContent, Typography } from '@mui/material';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Funnel, FunnelChart, LabelList } from 'recharts';
+import { mockDesafioMetrics } from '@/mocks/metrics/mockChallengeMetrics';
 
-const dashboardData = {
-  inscritosPorEtapa: [
-    { estagioRecrutamentoId: 1, countApplicants: 100 },
-    { estagioRecrutamentoId: 2, countApplicants: 85 }
-  ],
-  tempoMedioAprovacao: [{ estagioRecrutamentoId: 1, avgApprovalDays: 5.0 }],
-  taxaReprovacao: [
-    { estagioRecrutamentoId: 1, rejectionRate: 0.0 },
-    { estagioRecrutamentoId: 2, rejectionRate: 0.0 }
-  ],
-  totalInscritos: 100,
-  totalConcluidos: 85,
-  totalReprovados: 0,
-  taxaConclusao: 0.85,
-  mediaAvaliacao: 0.0,
-  inscritosSolo: 90,
-  inscritosEquipe: 10,
-  metricasPorLocalizacao: [
-    {
-      localizacao: null,
-      totalInscritos: 10,
-      totalConcluidos: 10,
-      totalReprovados: 0,
-      taxaReprovacao: 0.0,
-      tempoMedioAprovacaoDays: 5.0
-    },
-    {
-      localizacao: 'sao paulo',
-      totalInscritos: 60,
-      totalConcluidos: 60,
-      totalReprovados: 0,
-      taxaReprovacao: 0.0,
-      tempoMedioAprovacaoDays: 5.0
-    },
-    {
-      localizacao: 'rio de janeiro',
-      totalInscritos: 30,
-      totalConcluidos: 15,
-      totalReprovados: 0,
-      taxaReprovacao: 0.0,
-      tempoMedioAprovacaoDays: 5.0
-    },
-    {
-      localizacao: 'minas gerais',
-      totalInscritos: 10,
-      totalConcluidos: 10,
-      totalReprovados: 0,
-      taxaReprovacao: 0.0,
-      tempoMedioAprovacaoDays: 5.0
-    }
-  ],
-  pipelineDropoff: 0.0,
-  percSolo: 1.0,
-  percEquipe: 0.0
-};
+const dashboardData = mockDesafioMetrics;
 
 const funilData = [
   { value: dashboardData.totalInscritos, name: 'Inscritos' },
@@ -104,7 +51,7 @@ export default function ChallengeMetrics() {
               <XAxis dataKey="estagioRecrutamentoId" stroke="#888" />
               <YAxis stroke="#888" />
               <Tooltip />
-              <Bar dataKey="countApplicants" fill="var(--primary)"/>
+              <Bar dataKey="totalInscritos" fill="var(--primary)"/>
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
