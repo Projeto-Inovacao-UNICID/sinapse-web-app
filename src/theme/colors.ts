@@ -1,3 +1,5 @@
+import { purple } from "@mui/material/colors"
+
 export const colors = {
     primary: '#ff6a00',
     primaryDark: '#783301',
@@ -11,6 +13,7 @@ export const colors = {
     blue: '#4fc3f7',
     darkGreen: '#1d4a26',
     green: '#4ec366',
+    purple: '#8b00ff',
 }
 export const dark = {
     bg: '#1b1b1b',
