@@ -38,8 +38,6 @@ export function SidebarMenu() {
     : `/profile/me/${userId}`;
 
   const commonTabs = [
-    // { label: 'Início',      tab: 'inicio',      Icon: HomeIcon     },
-    // { label: 'Sobre',       tab: 'sobre',       Icon: InfoIcon     },
     { label: 'Publicações', tab: 'publicacoes', Icon: ArticleIcon  },
     { label: 'Desafios',    tab: 'desafios',    Icon: WhatshotIcon },
   ];
