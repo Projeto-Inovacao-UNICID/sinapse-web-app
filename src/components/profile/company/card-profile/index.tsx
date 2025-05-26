@@ -53,10 +53,8 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
   const tabFromURL   = (searchParams.get('tab') ?? '').toLowerCase();
 
   const tabIndexMap = {
-    inicio:      0,
-    sobre:       1,
-    publicacoes: 2,
-    desafios:    3,
+    publicacoes: 0,
+    desafios:    1,
   } as const;
   const initialTab = tabIndexMap[tabFromURL as keyof typeof tabIndexMap] ?? 0;
   const [tabValue, setTabValue] = useState(initialTab);

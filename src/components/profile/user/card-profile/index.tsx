@@ -61,13 +61,11 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const tabFromURL   = (searchParams.get('tab') ?? '').toLowerCase();
 
   const tabIndexMap = {
-    inicio:       0,
-    sobre:        1,
-    publicacoes:  2,
-    desafios:     3,
-    amigos:       4,
-    grupos:       5,
-    convites:     6,
+    publicacoes:  0,
+    desafios:     1,
+    amigos:       2,
+    grupos:       3,
+    convites:     4,
   } as const;
 
   const initialTab = tabIndexMap[tabFromURL as keyof typeof tabIndexMap] ?? 0;
@@ -286,8 +284,6 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
             '& .Mui-selected': { color: 'var(--primary)' },
           }}
         >
-          {/* <Tab label="Início"       />
-          <Tab label="Sobre"        /> */}
           <Tab label="Publicações"  />
           <Tab label="Desafios"     />
           <Tab label="Amigos"       />
