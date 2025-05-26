@@ -8,7 +8,7 @@ import { axiosInstance } from "../api";
   
   export class FriendshipService {
     async postFriendship(destinatarioId: string): Promise<FriendshipInvitation> {
-      const response = await axiosInstance.post(`/amizades`, destinatarioId, {
+      const response = await axiosInstance.post(`/amizades`, { destinatarioId }, {
         withCredentials: true,
       });
       return response.data;
