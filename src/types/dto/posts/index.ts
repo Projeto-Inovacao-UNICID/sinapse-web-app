@@ -12,8 +12,11 @@ export interface BaseCommentDto {
   createdAt: string;
 }
 
+// Comentário em árvore (respostas aninhadas)
 export interface Comment extends BaseCommentDto {
-  respostas: Comment[];
+  postagemId:    number;
+  comentarioPaiId?: number;
+  filhos:        Comment[];
 }
 
 // Comentário em árvore (respostas aninhadas)

@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { useSession } from '@/hooks/session/useSession';
-import { useGetCompanyProfile } from '@/hooks/profile/company/useCompanyProfile';
-import { useGetFollowersCount } from '@/hooks/company/useFollowers';
+import { useSearchParams, useRouter } from 'next/navigation';
+
 import {
   Box,
   Button,
@@ -14,27 +13,30 @@ import {
   Tabs,
   Tab,
 } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+
+import LocationOnIcon    from '@mui/icons-material/LocationOn';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import MessageIcon from '@mui/icons-material/Message';
-import EditIcon from '@mui/icons-material/Edit';
-import ShareIcon from '@mui/icons-material/Share';
-import AssignmentIcon from '@mui/icons-material/Assignment';
-import { CompanyProfileImage } from '@/components/common/company-avatar';
-import { EditCompanyProfileModal } from '@/components/profile/company/profile-edit-modal';
-import { ShareDialog } from '@/components/profile/utils/shareDialog';
-import { BoxInfo } from '@/components/profile/company/box-info/box-info';
-import {
-  useCheckFollowing,
-  useFollowCompany,
-  useUnfollowCompany
-} from '@/hooks/company/useFollowers';
+import PersonAddIcon     from '@mui/icons-material/PersonAdd';
+import MessageIcon       from '@mui/icons-material/Message';
+import EditIcon          from '@mui/icons-material/Edit';
+import ShareIcon         from '@mui/icons-material/Share';
+import AssignmentIcon    from '@mui/icons-material/Assignment';
+
+import { useSession }            from '@/hooks/session/useSession';
+import { useGetCompanyProfile }  from '@/hooks/profile/company/useCompanyProfile';
+import { useGetFollowersCount,
+         useCheckFollowing,
+         useFollowCompany,
+         useUnfollowCompany }    from '@/hooks/company/useFollowers';
 import { useGetChallengeCounts } from '@/hooks/challenge/useChallenge';
-import { ChatService } from '@/service/chat/ChatService';
-import ButtonSecondary from '@/components/common/button-secondary';
-import IconButton from '@/components/common/icon-buttons';
+
+import { CompanyProfileImage }   from '@/components/common/company-avatar';
+import { EditCompanyProfileModal } from '@/components/profile/company/profile-edit-modal';
+import { ShareDialog }           from '@/components/profile/utils/shareDialog';
+import { BoxInfo }               from '@/components/profile/company/box-info/box-info';
+import ButtonSecondary           from '@/components/common/button-secondary';
+import IconButton                from '@/components/common/icon-buttons';
+import { ChatService }           from '@/service/chat/ChatService';
 
 interface CompanyProfileCardProps {
   companyId: string;
@@ -42,20 +44,31 @@ interface CompanyProfileCardProps {
 }
 
 export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyProfileCardProps) {
-  const { data: company, isLoading, isError } = useGetCompanyProfile(companyId);
-  const { data: counts, isLoading: loadingCounts } = useGetChallengeCounts(companyId);
+  const searchParams = useSearchParams();
+  const tabFromURL   = (searchParams.get('tab') ?? '').toLowerCase();
+
+  const tabIndexMap = {
+    inicio:      0,
+    sobre:       1,
+    publicacoes: 2,
+    desafios:    3,
+  } as const;
+  const initialTab = tabIndexMap[tabFromURL as keyof typeof tabIndexMap] ?? 0;
+  const [tabValue, setTabValue] = useState(initialTab);
+
+  const { data: company, isLoading, isError }        = useGetCompanyProfile(companyId);
+  const { data: counts, isLoading: loadingCounts }   = useGetChallengeCounts(companyId);
   const { data: followersCount, isLoading: loadingFollowers } = useGetFollowersCount(companyId);
   const { session } = useSession();
-  const router = useRouter();
-  const [openModal, setOpenModal] = useState(false);
-  const [shareOpen, setShareOpen] = useState(false);
-  const [tabValue, setTabValue] = useState(0);
+  const router      = useRouter();
+  const [openModal,  setOpenModal]  = useState(false);
+  const [shareOpen,  setShareOpen]  = useState(false);
 
   const chatService = new ChatService();
 
   const isOwner   = session?.id === companyId;
   const isCompany = session?.roles.includes('ROLE_COMPANY') ?? false;
-  const isUser    = session?.roles.includes('ROLE_USER') ?? false;
+  const isUser    = session?.roles.includes('ROLE_USER')    ?? false;
 
   const { data: isFollowing = false, isLoading: checkingFollow } =
     useCheckFollowing(companyId, isUser && !isCompany);
@@ -77,18 +90,15 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
     );
   }
 
-  // Desestruturando apenas os campos disponíveis em CompanyInfo
   const { nome, username, descricao, criadoEm, temImagem } = company;
-
   const loadingFollow =
-    checkingFollow ||
-    followMutation.status === 'pending' ||
-    unfollowMutation.status === 'pending';
+    checkingFollow || followMutation.status === 'pending' || unfollowMutation.status === 'pending';
 
   const handleFollow = () => {
     if (isFollowing) unfollowMutation.mutate(companyId);
     else followMutation.mutate(companyId);
   };
+
   const handleMessage = () => {
     try {
       chatService.postChat(companyId);
@@ -96,18 +106,16 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
     } catch (err) {
       console.error('Erro ao iniciar o chat:', err);
     }
-  }
-  const handleEdit = () => setOpenModal(true);
+  };
 
-  const handleForms = () => router.push(`/empresa/formularios`);
+  const handleForms = () => router.push('/empresa/formularios');
 
   return (
     <>
       <Box sx={{ backgroundColor: 'var(--card)', borderRadius: 2, p: 4, gridColumn: `${gridColumnNumber}` }}>
         <Grid container spacing={4}>
-
+          {/* cabeçalho */}
           <Grid size={8}>
-            {/* Cabeçalho com imagem, nome e ações */}
             <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
               <Box sx={{ width: 124, height: 124, flexShrink: 0 }}>
                 <CompanyProfileImage companyId={companyId} temImagem={temImagem} />
@@ -122,14 +130,14 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
               </Box>
             </Box>
 
-            {/* Descrição */}
+            {/* descrição */}
             <Box sx={{ mt: 3 }}>
               <Typography variant="body1" sx={{ color: 'var(--foreground)' }}>
                 {descricao}
               </Typography>
             </Box>
 
-            {/* Data de entrada */}
+            {/* criado em */}
             <Box sx={{ display: 'flex', gap: 4, mt: 2, color: 'var(--muted)' }}>
               <LocationOnIcon fontSize="small" />
               <CalendarTodayIcon fontSize="small" />
@@ -139,7 +147,7 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
               </Typography>
             </Box>
 
-            {/* Botões de ação */}
+            {/* botões */}
             <Box sx={{ display: 'flex', gap: 2, mt: 3 }}>
               {isUser && !isCompany && !isOwner && (
                 <Button
@@ -147,27 +155,55 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
                   variant="contained"
                   onClick={handleFollow}
                   disabled={loadingFollow}
-                  sx={{ textTransform: 'none', backgroundColor: isFollowing && !checkingFollow ? 'var(--muted)' : 'var(--primary)', ':hover': { opacity: 0.8 } }}
+                  sx={{
+                    textTransform: 'none',
+                    backgroundColor: isFollowing && !checkingFollow ? 'var(--muted)' : 'var(--primary)',
+                    ':hover': { opacity: 0.8 },
+                  }}
                 >
-                  {loadingFollow ? <CircularProgress size={20} sx={{ color: 'white' }} /> : (isFollowing ? 'Seguir' : '+ Seguir')}
+                  {loadingFollow ? (
+                    <CircularProgress size={20} sx={{ color: 'white' }} />
+                  ) : isFollowing ? (
+                    'Seguir'
+                  ) : (
+                    '+ Seguir'
+                  )}
                 </Button>
               )}
 
-              <ButtonSecondary icon={<MessageIcon />} onClick={handleMessage} title="Mensagem" borderRadius={2} fontWeight={400} />
+              <ButtonSecondary
+                icon={<MessageIcon />}
+                onClick={handleMessage}
+                title="Mensagem"
+                borderRadius={2}
+                fontWeight={400}
+              />
 
               {isOwner && isCompany && (
-                <ButtonSecondary icon={<EditIcon />} onClick={handleEdit} title="Editar Perfil" borderRadius={2} fontWeight={400} />
+                <ButtonSecondary
+                  icon={<EditIcon />}
+                  onClick={() => setOpenModal(true)}
+                  title="Editar Perfil"
+                  borderRadius={2}
+                  fontWeight={400}
+                />
               )}
 
-              <ButtonSecondary icon={<AssignmentIcon />} onClick={handleForms} title="Formulários" borderRadius={2} fontWeight={400} />
+              <ButtonSecondary
+                icon={<AssignmentIcon />}
+                onClick={handleForms}
+                title="Formulários"
+                borderRadius={2}
+                fontWeight={400}
+              />
 
               <IconButton icon={<ShareIcon />} onClick={() => setShareOpen(true)} />
             </Box>
           </Grid>
 
-          {/* Estatísticas */}
+          {/* estatísticas */}
           <Grid size={4}>
-            {(loadingCounts || loadingFollowers) ? (
+            {loadingCounts || loadingFollowers ? (
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
                 <CircularProgress sx={{ color: 'var(--muted)' }} />
               </Box>
@@ -188,10 +224,9 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
               </Grid>
             )}
           </Grid>
-
         </Grid>
 
-        {/* Separador e abas */}
+        {/* abas */}
         <Divider sx={{ my: 4, backgroundColor: 'var(--muted)' }} />
 
         <Tabs
@@ -199,25 +234,34 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
           onChange={(_, v) => setTabValue(v)}
           textColor="inherit"
           TabIndicatorProps={{ style: { backgroundColor: 'var(--primary)' } }}
-          sx={{ '& .MuiTab-root': { color: 'var(--muted)', textTransform: 'none' }, '& .Mui-selected': { color: 'var(--primary)' } }}
+          sx={{
+            '& .MuiTab-root': { color: 'var(--muted)', textTransform: 'none' },
+            '& .Mui-selected': { color: 'var(--primary)' },
+          }}
         >
-          <Tab label="Início" />
-          <Tab label="Sobre" />
-          <Tab label="Publicações" />
-          <Tab label="Desafios" />
+          <Tab label="Início"       />
+          <Tab label="Sobre"        />
+          <Tab label="Publicações"  />
+          <Tab label="Desafios"     />
         </Tabs>
 
-        {/* Modal de edição */}
+        {/* modal edição */}
         <EditCompanyProfileModal
           open={openModal}
           onClose={() => setOpenModal(false)}
           companyId={companyId}
-          defaultValues={{ nome: company.nome, username: company.username, email: company.email ?? '', descricao: company.descricao ?? '', website: company.website ?? '' }}
+          defaultValues={{
+            nome: company.nome,
+            username: company.username,
+            email: company.email ?? '',
+            descricao: company.descricao ?? '',
+            website: company.website ?? '',
+          }}
         />
       </Box>
 
-      {/* Dialog de compartilhamento */}
-      <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={window.location.href} />
+      {/* dialog share */}
+      <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={typeof window !== 'undefined' ? window.location.href : ''} />
     </>
   );
 }
