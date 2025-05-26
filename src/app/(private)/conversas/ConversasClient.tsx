@@ -91,6 +91,7 @@ export default function ConversasClient() {
         gridColumn={2}
         display="grid"
         gridTemplateColumns="3fr 9fr"
+        sx={{ boxShadow: 4, mb: 4 }}
       >
         {/* Lista de contatos */}
         <Box>
