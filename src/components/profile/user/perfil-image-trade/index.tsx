@@ -28,14 +28,14 @@ const modalStyle = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: { xs: '90%', sm: 400 },
-  bgcolor: 'background.paper',
-  borderRadius: '8px',
-  boxShadow: 24,
+  bgcolor: 'var(--background)', 
+  color: 'var(--foreground)',  
+  borderRadius: 'var(--radius, 8px)', 
+  boxShadow: 24, 
   p: { xs: 2, sm: 3, md: 4 },
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
-  gap: 2,
+  alignItems: 'center'
 };
 
 export function ProfileImageUploader({
@@ -76,14 +76,14 @@ export function ProfileImageUploader({
         setUploadError("O arquivo é muito grande (limite: 5MB).");
         setSelectedFile(null);
         setPreviewUrl(null);
-        if(e.target) e.target.value = "";
+        if (e.target) e.target.value = "";
         return;
       }
       if (!file.type.startsWith("image/")) {
         setUploadError("Por favor, selecione um arquivo de imagem válido.");
         setSelectedFile(null);
         setPreviewUrl(null);
-        if(e.target) e.target.value = "";
+        if (e.target) e.target.value = "";
         return;
       }
       setSelectedFile(file);
@@ -97,7 +97,7 @@ export function ProfileImageUploader({
       setSelectedFile(null);
       setPreviewUrl(null);
     }
-    if(e.target) e.target.value = "";
+    if (e.target) e.target.value = "";
   };
 
   const handleUploadImage = () => {
@@ -108,7 +108,7 @@ export function ProfileImageUploader({
         // If not, or for additional component-specific success logic:
         onSuccess: (data) => { // data here would be PerfilPrivadoDto
           console.log("Upload successful, data:", data);
-        
+
           queryClient.invalidateQueries({ queryKey: ["user-profile-image", session.id] });
           queryClient.invalidateQueries({ queryKey: ["profile-image", session.id] });
           handleCloseModal();
@@ -145,12 +145,12 @@ export function ProfileImageUploader({
                 onClick={handleOpenModal}
                 sx={{
                   position: "absolute", bottom: 0, right: 0,
-                  backgroundColor: "var(--background, #fff)",
+                  backgroundColor: "var(--muted, #fff)",
                   border: "2px solid var(--primary, #1976d2)",
                   width: 36, height: 36,
-                  "&:hover": { backgroundColor: "var(--primary, #1976d2)", color: "var(--primary-contrast, #fff)" },
+                  "&:hover": { backgroundColor: "var(--primary, #1976d2)", color: "var(--background, #fff)", fill: "var(--background, #fff)" },
                 }}
-                aria-label="Alterar foto de perfil"
+                aria-label="Alterar foto de perfil da empresa"
                 disabled={isOuterButtonDisabled}
               >
                 {loadingSession ? <CircularProgress size={20} sx={{ color: "var(--primary, #1976d2)" }} /> : <EditIcon fontSize="small" />}
@@ -177,10 +177,11 @@ export function ProfileImageUploader({
                 onChange={handleFileSelectChange} id="modal-upload-profile-image"
                 disabled={isModalInteractionDisabled}
               />
-              <Stack direction="column" spacing={2} sx={{width: '100%'}}>
+              <Stack direction="column" spacing={2} sx={{ width: '100%' }}>
                 <Button
                   variant="outlined" component="label" htmlFor="modal-upload-profile-image"
                   startIcon={<PhotoCameraIcon />} disabled={isModalInteractionDisabled} fullWidth
+                  sx={{ color: 'var(--primary, #ff6a00)', borderColor: 'var(--muted)' }}
                 >
                   Escolher Nova Imagem
                 </Button>
@@ -196,15 +197,15 @@ export function ProfileImageUploader({
                 )}
               </Stack>
               {uploadError && (
-                 <Typography color="error" variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
-                   {uploadError}
-                 </Typography>
+                <Typography color="error" variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
+                  {uploadError}
+                </Typography>
               )}
               {/* Display error from the hook if not already set in uploadError */}
               {uploadMutation.isError && !uploadError && (
-                 <Typography color="error" variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
-                   Erro ao enviar: {(uploadMutation.error as Error)?.message || "Tente novamente."}
-                 </Typography>
+                <Typography color="error" variant="body2" sx={{ mt: 2, textAlign: 'center' }}>
+                  Erro ao enviar: {(uploadMutation.error as Error)?.message || "Tente novamente."}
+                </Typography>
               )}
             </Box>
           </Modal>

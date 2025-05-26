@@ -33,14 +33,14 @@ const modalStyle = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: { xs: '90%', sm: 400 },
-  bgcolor: 'background.paper',
-  borderRadius: '8px',
-  boxShadow: 24,
+  bgcolor: 'var(--background)', 
+  color: 'var(--foreground)',  
+  borderRadius: 'var(--radius, 8px)', 
+  boxShadow: 24, 
   p: { xs: 2, sm: 3, md: 4 },
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
-  gap: 2,
+  alignItems: 'center'
 };
 
 export function CompanyImageUploader({
@@ -155,15 +155,15 @@ export function CompanyImageUploader({
             onClick={handleOpenModal}
             sx={{
               position: "absolute", bottom: 0, right: 0,
-              backgroundColor: "var(--background, #fff)",
-              border: "2px solid var(--primary, #1976d2)",
+              backgroundColor: "var(--muted, #fff)",
+              border: "2px solid var(--primary, #ff6a00)",
               width: 36, height: 36,
-              "&:hover": { backgroundColor: "var(--primary, #1976d2)", color: "var(--primary-contrast, #fff)" },
+              "&:hover": { backgroundColor: "var(--primary, #ff6a00)", color: "var(--background, #fff)", fill: "var(--background, #fff)"},
             }}
             aria-label="Alterar foto de perfil da empresa"
             disabled={isOuterButtonDisabled}
           >
-            {loadingSession ? <CircularProgress size={20} sx={{ color: "var(--primary, #1976d2)" }} /> : <EditIcon fontSize="small" />}
+            {loadingSession ? <CircularProgress size={20} sx={{ color: "var(--primary, #ff6a00)" }} /> : <EditIcon fontSize="small" />}
           </IconButton>
         </span>
       </Tooltip>
@@ -173,7 +173,7 @@ export function CompanyImageUploader({
           <IconButton aria-label="Fechar modal" onClick={handleCloseModal} sx={{ position: 'absolute', top: 8, right: 8, color: 'grey.700' }}>
             <CloseIcon />
           </IconButton>
-          <Typography id="company-image-modal-title" variant="h6" component="h2" gutterBottom>
+          <Typography id="company-image-modal-title" variant="h6" component="h2" gutterBottom sx={{ textAlign: 'center', color: 'var(--foreground, #111)' }}>
             Editar Foto da Empresa
           </Typography>
           <Avatar
@@ -191,6 +191,7 @@ export function CompanyImageUploader({
             <Button
               variant="outlined" component="label" htmlFor="modal-upload-company-image"
               startIcon={<PhotoCameraIcon />} disabled={isModalInteractionDisabled} fullWidth
+              sx={{ color: 'var(--primary, #ff6a00)', borderColor: 'var(--muted)' }}
             >
               Escolher Nova Imagem
             </Button>

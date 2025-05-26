@@ -63,12 +63,12 @@ export function EditProfileModal({ open, onClose, userId, defaultValues }: EditP
         <DialogTitle className="flex justify-between items-center text-[var(--foreground)]">
           Editar Perfil
           <IconButton onClick={onClose} className="text-[var(--muted-foreground)]">
-            <CloseIcon sx={{ color: "var(--muted-foreground)", ":hover": { scale: 1.1 } }} />
+            <CloseIcon sx={{fill: "var(--foreground)", color: "var(--muted-foreground)", ":hover": { scale: 1.1 } }} />
           </IconButton>
         </DialogTitle>
 
         <form onSubmit={handleSubmit}>
-          <DialogContent style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <DialogContent style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <TextField
               name="nome"
               label="Nome"
