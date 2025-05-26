@@ -3,7 +3,7 @@ import { CandidateFormScoreDto } from "@/types";
 export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   {
     submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000001",
-    usuarioId: "user-1111-aaaa-0001",
+    usuarioId: "user-001",
     grupoId: 101,
     totalScore: 88,
     categoryScores: {
@@ -15,7 +15,7 @@ export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   },
   {
     submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000002",
-    usuarioId: "user-2222-bbbb-0002",
+    usuarioId: "user-002",
     grupoId: 101,
     totalScore: 67,
     categoryScores: {
@@ -27,7 +27,7 @@ export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   },
   {
     submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000003",
-    usuarioId: "user-3333-cccc-0003",
+    usuarioId: "user-003",
     grupoId: 102,
     totalScore: 93,
     categoryScores: {
@@ -39,7 +39,7 @@ export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   },
   {
     submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000004",
-    usuarioId: "user-4444-dddd-0004",
+    usuarioId: "user-004",
     grupoId: 101,
     totalScore: 75,
     categoryScores: {
@@ -51,7 +51,7 @@ export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   },
   {
     submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000005",
-    usuarioId: "user-5555-eeee-0005",
+    usuarioId: "user-005",
     grupoId: 103,
     totalScore: 59,
     categoryScores: {
@@ -63,7 +63,7 @@ export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   },
   {
     submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000006",
-    usuarioId: "user-6666-ffff-0006",
+    usuarioId: "user-006",
     grupoId: 102,
     totalScore: 81,
     categoryScores: {
@@ -75,7 +75,7 @@ export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   },
   {
     submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000007",
-    usuarioId: "user-7777-gggg-0007",
+    usuarioId: "user-007",
     grupoId: 103,
     totalScore: 91,
     categoryScores: {
@@ -87,7 +87,7 @@ export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   },
   {
     submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000008",
-    usuarioId: "user-8888-hhhh-0008",
+    usuarioId: "user-008",
     grupoId: 101,
     totalScore: 72,
     categoryScores: {
@@ -99,7 +99,7 @@ export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   },
   {
     submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000009",
-    usuarioId: "user-9999-iiii-0009",
+    usuarioId: "user-009",
     grupoId: 102,
     totalScore: 86,
     categoryScores: {
@@ -111,7 +111,7 @@ export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   },
   {
     submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000010",
-    usuarioId: "user-0000-jjjj-0010",
+    usuarioId: "user-010",
     grupoId: 103,
     totalScore: 64,
     categoryScores: {

@@ -1,14 +1,14 @@
-import { Grid, Typography, Container, SelectChangeEvent, Box, FormControl, Select, MenuItem, InputLabel } from "@mui/material";
 import { hardSkillsFormMetricsMock, softSkillsFormMetricsMock } from "@/mocks/metrics/mockFullFormMetrics";
-import { ScoreDistributionChart, StatusPieChart, GroupAvgScoreChart, LeadTimeChart, SelectFieldRadarChart } from "./charts";
-import { useState } from "react";
 import { mockForms } from "@/mocks/mockForms";
-import ContentPasteIcon from '@mui/icons-material/ContentPaste';
 import { FormFieldMetricsDto } from "@/types";
+import ContentPasteIcon from '@mui/icons-material/ContentPaste';
+import { Box, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent, Typography } from "@mui/material";
+import { useState } from "react";
+import { GroupAvgScoreChart, LeadTimeChart, ScoreDistributionChart, SelectFieldRadarChart, StatusPieChart } from "./charts";
 
 export default function Dashboard() {
   const forms = mockForms;
-  const [form, setForm] = useState(forms[1]);
+  const [form, setForm] = useState(forms[0]);
   const [metrics, setMetrics] = useState(softSkillsFormMetricsMock);
   const selectFields = metrics.fieldMetrics.filter(f => f.fieldType === "SELECT");
 

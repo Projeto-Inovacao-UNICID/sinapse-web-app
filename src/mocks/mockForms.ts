@@ -3,6 +3,89 @@ import { FormDto } from "@/types";
 export const mockForms: FormDto[] = [
     {
         "id": "1",
+        "nome": "Autoavaliação de Soft Skills",
+        "descricao": "Responda às perguntas abaixo para avaliarmos suas competências comportamentais. Seja sincero e reflita sobre suas experiências.",
+        "minScore": 70.0,
+        "empresaId": "b072860d-c92b-4635-9f0c-e4cd777b0153",
+        "fields": [
+            {
+                "id": "589534ad-4e24-4540-9dc8-277dd7af99d4",
+                "label": "Qual das opções melhor descreve seu estilo de liderança?",
+                "fieldType": "SELECT",
+                "weight": 3.0,
+                "required": false,
+                "category": "SOFT_SKILL",
+                "options": [
+                    {
+                        "id": "074d1c2b-aa27-4f66-8b6f-72f2a0e42486",
+                        "label": "Tomo decisões firmes e centralizadas quando necessário",
+                        "value": "authoritative",
+                        "score": 50.0
+                    },
+                    {
+                        "id": "198c308c-66ab-4367-b17e-7a0728beb170",
+                        "label": "Prefiro liderar de forma colaborativa, ouvindo e envolvendo o time",
+                        "value": "collaborative",
+                        "score": 90.0
+                    },
+                    {
+                        "id": "1c973edd-5987-4279-af14-9a3b046c8549",
+                        "label": "Evito assumir o papel de liderança",
+                        "value": "avoidant",
+                        "score": 30.0
+                    }
+                ]
+            },
+            {
+                "id": "67100293-db35-46fd-8b78-6952b7041cdb",
+                "label": "Descreva uma situação em que você precisou lidar com um conflito em equipe. Como agiu?",
+                "fieldType": "TEXT",
+                "weight": 2.0,
+                "required": true,
+                "category": "SOFT_SKILL",
+                "options": []
+            },
+            {
+                "id": "a21d2da8-e542-4b82-bf8c-b8da86072121",
+                "label": "De 0 a 10, como você avalia sua capacidade de se comunicar com clareza?",
+                "fieldType": "NUMBER",
+                "weight": 2.0,
+                "required": true,
+                "category": "SOFT_SKILL",
+                "options": []
+            },
+            {
+                "id": "ed5f849a-60fd-4191-bdc4-d32058e2ed0c",
+                "label": "Como você avalia sua empatia ao lidar com colegas de trabalho?",
+                "fieldType": "SELECT",
+                "weight": 3.0,
+                "required": true,
+                "category": "SOFT_SKILL",
+                "options": [
+                    {
+                        "id": "99d5f7ce-9d1a-4e7c-94ec-afe417fa407e",
+                        "label": "Tenho alta empatia, sempre busco entender o outro",
+                        "value": "high",
+                        "score": 100.0
+                    },
+                    {
+                        "id": "9d509af6-57cc-425b-b284-9d782df9250a",
+                        "label": "Tenho empatia moderada, tento entender o outro na maioria das vezes",
+                        "value": "medium",
+                        "score": 70.0
+                    },
+                    {
+                        "id": "b3098cd6-8149-431f-8a13-751cbb999827",
+                        "label": "Tenho dificuldade em me colocar no lugar dos outros",
+                        "value": "low",
+                        "score": 40.0
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": "2",
         "nome": "Autoavaliação de Hard Skills em Programação",
         "descricao": "Este formulário tem como objetivo entender seu nível de conhecimento técnico em áreas essenciais da programação.",
         "minScore": 75.0,
@@ -93,87 +176,4 @@ export const mockForms: FormDto[] = [
             }
         ]
     },  
-    {
-        "id": "2",
-        "nome": "Autoavaliação de Soft Skills",
-        "descricao": "Responda às perguntas abaixo para avaliarmos suas competências comportamentais. Seja sincero e reflita sobre suas experiências.",
-        "minScore": 70.0,
-        "empresaId": "b072860d-c92b-4635-9f0c-e4cd777b0153",
-        "fields": [
-            {
-                "id": "589534ad-4e24-4540-9dc8-277dd7af99d4",
-                "label": "Qual das opções melhor descreve seu estilo de liderança?",
-                "fieldType": "SELECT",
-                "weight": 3.0,
-                "required": false,
-                "category": "SOFT_SKILL",
-                "options": [
-                    {
-                        "id": "074d1c2b-aa27-4f66-8b6f-72f2a0e42486",
-                        "label": "Tomo decisões firmes e centralizadas quando necessário",
-                        "value": "authoritative",
-                        "score": 50.0
-                    },
-                    {
-                        "id": "198c308c-66ab-4367-b17e-7a0728beb170",
-                        "label": "Prefiro liderar de forma colaborativa, ouvindo e envolvendo o time",
-                        "value": "collaborative",
-                        "score": 90.0
-                    },
-                    {
-                        "id": "1c973edd-5987-4279-af14-9a3b046c8549",
-                        "label": "Evito assumir o papel de liderança",
-                        "value": "avoidant",
-                        "score": 30.0
-                    }
-                ]
-            },
-            {
-                "id": "67100293-db35-46fd-8b78-6952b7041cdb",
-                "label": "Descreva uma situação em que você precisou lidar com um conflito em equipe. Como agiu?",
-                "fieldType": "TEXT",
-                "weight": 2.0,
-                "required": true,
-                "category": "SOFT_SKILL",
-                "options": []
-            },
-            {
-                "id": "a21d2da8-e542-4b82-bf8c-b8da86072121",
-                "label": "De 0 a 10, como você avalia sua capacidade de se comunicar com clareza?",
-                "fieldType": "NUMBER",
-                "weight": 2.0,
-                "required": true,
-                "category": "SOFT_SKILL",
-                "options": []
-            },
-            {
-                "id": "ed5f849a-60fd-4191-bdc4-d32058e2ed0c",
-                "label": "Como você avalia sua empatia ao lidar com colegas de trabalho?",
-                "fieldType": "SELECT",
-                "weight": 3.0,
-                "required": true,
-                "category": "SOFT_SKILL",
-                "options": [
-                    {
-                        "id": "99d5f7ce-9d1a-4e7c-94ec-afe417fa407e",
-                        "label": "Tenho alta empatia, sempre busco entender o outro",
-                        "value": "high",
-                        "score": 100.0
-                    },
-                    {
-                        "id": "9d509af6-57cc-425b-b284-9d782df9250a",
-                        "label": "Tenho empatia moderada, tento entender o outro na maioria das vezes",
-                        "value": "medium",
-                        "score": 70.0
-                    },
-                    {
-                        "id": "b3098cd6-8149-431f-8a13-751cbb999827",
-                        "label": "Tenho dificuldade em me colocar no lugar dos outros",
-                        "value": "low",
-                        "score": 40.0
-                    }
-                ]
-            }
-        ]
-    }
 ]
