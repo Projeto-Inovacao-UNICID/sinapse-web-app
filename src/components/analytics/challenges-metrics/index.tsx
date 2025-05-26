@@ -6,6 +6,7 @@ import InscritosPorEstagioChart from "./InscritosPorEstagioChart";
 import TempoMedioAprovacaoChart from "./TempoMedioAprovacaoChart";
 import DistribuicaoSoloEquipeChart from "./DistribuicaoSoloEquipeChart";
 import TaxaReprovacaoChart from "./TaxaReprovacao";
+import MetricasLocalizacaoChart from "./MetricasLocalizacaoChart";
 import TrackChangesIcon from '@mui/icons-material/TrackChanges';
 
 const ChallengesDashboard = () => {
@@ -25,6 +26,7 @@ const ChallengesDashboard = () => {
         />
         <TempoMedioAprovacaoChart data={mockDesafioMetrics.tempoMedioAprovacao} />
         <TaxaReprovacaoChart data={mockDesafioMetrics.taxaReprovacao} />
+        <MetricasLocalizacaoChart data={mockDesafioMetrics.metricasPorLocalizacao} />
       </Grid>
     </Box>
   );
