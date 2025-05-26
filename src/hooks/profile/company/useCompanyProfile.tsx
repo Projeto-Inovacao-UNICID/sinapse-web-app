@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { CompanyProfileService } from "@/service/profile/company/CompanyProfileService";
 import {
   CompanyPrivateProfileDto,
@@ -41,15 +41,20 @@ export const usePatchCompanyProfile = () => {
 };
 
 // Enviar imagem de perfil da empresa
-export const usePostCompanyProfileImage = () => {
-  return useMutation({
-    mutationFn: ({
-      companyId,
-      image,
-    }: {
-      companyId: string;
-      image: File;
-    }) => companyProfileService.postCompanyProfileImage(companyId, image),
+export const usePostCompanyProfileImage = (companyId: string) => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    CompanyPrivateProfileDto, // Ou o tipo que seu backend retorna
+    Error,
+    File // <-- Importante: mutationFn espera File diretamente
+  >({
+    mutationFn: (imageFile: File) => // imageFile é o arquivo
+      companyProfileService.postCompanyProfileImage(companyId, imageFile),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["company-profile", companyId] });
+      queryClient.invalidateQueries({ queryKey: ["company-profile-image", companyId] });
+    },
+    // ... (onError opcional etc.)
   });
 };
 

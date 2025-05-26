@@ -62,12 +62,20 @@ export function EditCompanyProfileModal({ open, onClose, companyId, defaultValue
         <DialogTitle className="flex justify-between items-center text-[var(--foreground)]">
           Editar Perfil da Empresa
           <IconButton onClick={onClose} className="text-[var(--muted-foreground)]">
-            <CloseIcon sx={{ color: "var(--muted-foreground)", ":hover": { scale: 1.1 } }} />
+            <CloseIcon sx={{ fill: "var(--foreground)",color: "var(--muted-foreground)", ":hover": { scale: 1.1 } }} />
           </IconButton>
         </DialogTitle>
 
         <form onSubmit={handleSubmit}>
-          <DialogContent style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+          <DialogContent style={{ display: "flex", flexDirection: "column", gap: 16 }}
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              padding: 2,
+              gap: (theme) => theme.spacing(3), // Espaçamento entre os TextFields (ex: 20px)s
+              overflowY: 'auto', // Para rolagem se o conteúdo for grande
+            }}
+          >
             <TextField
               name="nome"
               label="Nome da Empresa"
@@ -80,6 +88,7 @@ export function EditCompanyProfileModal({ open, onClose, companyId, defaultValue
                   backgroundColor: "var(--input)",
                   color: "var(--foreground)",
                   borderRadius: "var(--radius)",
+                  
                 },
               }}
               InputLabelProps={{

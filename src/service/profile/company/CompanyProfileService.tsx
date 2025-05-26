@@ -22,7 +22,7 @@ export class CompanyProfileService {
 
   async postCompanyProfileImage(companyId: string, image: File): Promise<number> {
     const formData = new FormData();
-    formData.append("image", image);
+    formData.append("arquivo", image);
 
     const response = await axiosInstance.post(
       `/profile/company/${companyId}/imagem`,

@@ -48,6 +48,9 @@ import { UsersList }        from '../users-list';
 
 import ButtonPrimary   from '@/components/common/button-primary';
 import ButtonSecondary from '@/components/common/button-secondary';
+import { UserChallenges } from '@/components/challenge/common/challenge-profile';
+import { UserPosts } from '../user-posts-profile';
+import { ProfileImageUploader } from '../perfil-image-trade';
 
 interface UserProfileCardProps {
   userId: string;
@@ -172,8 +175,16 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
       <Grid container spacing={2}>
         {/* avatar + nome */}
         <Grid size={8}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <Avatar src={imagemSrc} alt={nome} sx={{ width: 100, height: 100 }} />
+          <Box sx={{ display: "flex", alignItems: "flex-start", flexDirection: "column", gap: 2 }}>
+
+
+            <ProfileImageUploader
+              userId={userId}
+              imagemSrc={imagemSrc}
+              isProfileOwner={isProfileOwner}
+            />
+
+
             <Box sx={{ ml: 2 }}>
               <Typography variant="h5" color="var(--foreground)" fontWeight="bold">
                 {nome}
@@ -309,6 +320,8 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
 
         {/* conteúdo das abas dinâmicas */}
         <Grid size={12}>
+          {tabValue === 2 && <UserPosts />}
+          {tabValue === 3 && <UserChallenges userId={userId} />}
           {tabValue === 4 && (
             <UsersList ids={friendshipIds ?? []} type={isProfileOwner ? 'friend' : undefined} />
           )}
