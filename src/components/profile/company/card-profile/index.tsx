@@ -111,6 +111,8 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
 
   const handleForms = () => router.push(`/empresa/formularios`);
 
+  const handleMetrics = () => router.push(`/empresa/dashboards`);
+
   return (
     <>
       <Box sx={{ backgroundColor: 'var(--card)', borderRadius: 2, p: 4, gridColumn: `${gridColumnNumber}` }}>
@@ -191,6 +193,8 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
               )}
 
               <ButtonSecondary icon={<AssignmentIcon />} onClick={handleForms} title="Formulários" borderRadius={2} fontWeight={400} />
+
+              <ButtonSecondary icon={<AreaChartIcon />} onClick={handleMetrics} title="Métricas" borderRadius={2} fontWeight={400} />
 
               <IconButton icon={<ShareIcon />} onClick={() => setShareOpen(true)} />
             </Box>
