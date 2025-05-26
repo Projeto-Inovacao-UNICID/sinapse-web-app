@@ -1,135 +1,124 @@
 import { CandidateFormScoreDto } from "@/types";
 
-export const mockCandidateFormScores: CandidateFormScoreDto[] = [
+export const candidateFormScoresMock: CandidateFormScoreDto[] = [
   {
-    submissionId: "sub-001",
-    usuarioId: "user-001",
+    submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000001",
+    usuarioId: "user-1111-aaaa-0001",
     grupoId: 101,
-    totalScore: 85.6,
+    totalScore: 88,
     categoryScores: {
-      "Conhecimento Técnico": 90,
-      "Habilidades Interpessoais": 82,
-      "Experiência Profissional": 85,
+      SOFT_SKILL: 90,
+      HARD_SKILL: 85
     },
     approved: true,
-    submittedAt: "2025-05-15T14:23:00",
+    submittedAt: "2025-05-25T14:30:00"
   },
   {
-    submissionId: "sub-002",
-    usuarioId: "user-002",
-    grupoId: 102,
-    totalScore: 59.4,
+    submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000002",
+    usuarioId: "user-2222-bbbb-0002",
+    grupoId: 101,
+    totalScore: 67,
     categoryScores: {
-      "Conhecimento Técnico": 60,
-      "Habilidades Interpessoais": 55,
-      "Experiência Profissional": 63,
+      SOFT_SKILL: 70,
+      HARD_SKILL: 64
     },
     approved: false,
-    submittedAt: "2025-05-14T10:05:00",
+    submittedAt: "2025-05-25T15:45:00"
   },
   {
-    submissionId: "sub-003",
-    usuarioId: "user-003",
+    submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000003",
+    usuarioId: "user-3333-cccc-0003",
+    grupoId: 102,
+    totalScore: 93,
+    categoryScores: {
+      SOFT_SKILL: 95,
+      HARD_SKILL: 91
+    },
+    approved: true,
+    submittedAt: "2025-05-26T09:20:00"
+  },
+  {
+    submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000004",
+    usuarioId: "user-4444-dddd-0004",
+    grupoId: 101,
+    totalScore: 75,
+    categoryScores: {
+      SOFT_SKILL: 78,
+      HARD_SKILL: 72
+    },
+    approved: true,
+    submittedAt: "2025-05-26T10:15:00"
+  },
+  {
+    submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000005",
+    usuarioId: "user-5555-eeee-0005",
     grupoId: 103,
-    totalScore: 72.1,
+    totalScore: 59,
     categoryScores: {
-      "Conhecimento Técnico": 75,
-      "Habilidades Interpessoais": 70,
-      "Experiência Profissional": 71,
-    },
-    approved: true,
-    submittedAt: "2025-05-13T09:45:00",
-  },
-  {
-    submissionId: "sub-004",
-    usuarioId: "user-004",
-    grupoId: 101,
-    totalScore: 91.3,
-    categoryScores: {
-      "Conhecimento Técnico": 95,
-      "Habilidades Interpessoais": 90,
-      "Experiência Profissional": 89,
-    },
-    approved: true,
-    submittedAt: "2025-05-12T16:12:00",
-  },
-  {
-    submissionId: "sub-005",
-    usuarioId: "user-005",
-    grupoId: 104,
-    totalScore: 47.8,
-    categoryScores: {
-      "Conhecimento Técnico": 50,
-      "Habilidades Interpessoais": 45,
-      "Experiência Profissional": 48,
+      SOFT_SKILL: 60,
+      HARD_SKILL: 58
     },
     approved: false,
-    submittedAt: "2025-05-11T11:35:00",
+    submittedAt: "2025-05-26T11:30:00"
   },
   {
-    submissionId: "sub-006",
-    usuarioId: "user-006",
+    submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000006",
+    usuarioId: "user-6666-ffff-0006",
     grupoId: 102,
-    totalScore: 67.2,
+    totalScore: 81,
     categoryScores: {
-      "Conhecimento Técnico": 70,
-      "Habilidades Interpessoais": 65,
-      "Experiência Profissional": 67,
+      SOFT_SKILL: 83,
+      HARD_SKILL: 79
     },
     approved: true,
-    submittedAt: "2025-05-10T15:20:00",
+    submittedAt: "2025-05-26T12:00:00"
   },
   {
-    submissionId: "sub-007",
-    usuarioId: "user-007",
+    submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000007",
+    usuarioId: "user-7777-gggg-0007",
     grupoId: 103,
-    totalScore: 38.5,
+    totalScore: 91,
     categoryScores: {
-      "Conhecimento Técnico": 40,
-      "Habilidades Interpessoais": 35,
-      "Experiência Profissional": 40,
+      SOFT_SKILL: 89,
+      HARD_SKILL: 93
+    },
+    approved: true,
+    submittedAt: "2025-05-26T13:45:00"
+  },
+  {
+    submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000008",
+    usuarioId: "user-8888-hhhh-0008",
+    grupoId: 101,
+    totalScore: 72,
+    categoryScores: {
+      SOFT_SKILL: 74,
+      HARD_SKILL: 70
     },
     approved: false,
-    submittedAt: "2025-05-09T13:50:00",
+    submittedAt: "2025-05-26T14:10:00"
   },
   {
-    submissionId: "sub-008",
-    usuarioId: "user-008",
-    grupoId: 101,
-    totalScore: 79.9,
-    categoryScores: {
-      "Conhecimento Técnico": 82,
-      "Habilidades Interpessoais": 78,
-      "Experiência Profissional": 80,
-    },
-    approved: true,
-    submittedAt: "2025-05-08T17:00:00",
-  },
-  {
-    submissionId: "sub-009",
-    usuarioId: "user-009",
-    grupoId: 104,
-    totalScore: 66.6,
-    categoryScores: {
-      "Conhecimento Técnico": 70,
-      "Habilidades Interpessoais": 60,
-      "Experiência Profissional": 70,
-    },
-    approved: true,
-    submittedAt: "2025-05-07T14:10:00",
-  },
-  {
-    submissionId: "sub-010",
-    usuarioId: "user-010",
+    submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000009",
+    usuarioId: "user-9999-iiii-0009",
     grupoId: 102,
-    totalScore: 92.4,
+    totalScore: 86,
     categoryScores: {
-      "Conhecimento Técnico": 95,
-      "Habilidades Interpessoais": 91,
-      "Experiência Profissional": 91,
+      SOFT_SKILL: 87,
+      HARD_SKILL: 85
     },
     approved: true,
-    submittedAt: "2025-05-06T12:45:00",
+    submittedAt: "2025-05-26T15:00:00"
   },
+  {
+    submissionId: "a1b2c3d4-e5f6-7890-abcd-000000000010",
+    usuarioId: "user-0000-jjjj-0010",
+    grupoId: 103,
+    totalScore: 64,
+    categoryScores: {
+      SOFT_SKILL: 65,
+      HARD_SKILL: 63
+    },
+    approved: false,
+    submittedAt: "2025-05-26T16:20:00"
+  }
 ];
-

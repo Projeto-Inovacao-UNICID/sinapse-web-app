@@ -1,19 +1,17 @@
 import { FormMetricsDto } from "@/types";
 
-export const mockFormMetrics: FormMetricsDto = {
-  formDefinitionId: "11111111-1111-1111-1111-111111111111",
-  submissionCount: 120,
-  avgTotalScore: 76.4,
+export const formMetricsMock: FormMetricsDto = {
+  formDefinitionId: "form-soft-hard-001",
+  submissionCount: 3,
+  avgTotalScore: 82.7,
   avgScoreByCategory: {
-    "Conhecimento Técnico": 80.5,
-    "Habilidades Interpessoais": 72.3,
-    "Experiência Profissional": 76.8,
+    SOFT_SKILL: 85.0,
+    HARD_SKILL: 80.0
   },
-  passRate: 0.65,
+  passRate: 0.6667,
   scoreDistribution: {
-    "0-50": 15,
-    "51-70": 40,
-    "71-85": 45,
-    "86-100": 20,
-  },
+    "60-69": 1,
+    "80-89": 1,
+    "90-100": 1
+  }
 };
