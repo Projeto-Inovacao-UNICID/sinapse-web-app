@@ -24,7 +24,7 @@ export class UserProfileService {
 
   async uploadUserProfileImage(userId: string, image: File): Promise<void> {
     const formData = new FormData();
-    formData.append("file", image);
+    formData.append("arquivo", image);
 
     await axiosInstance.post(`/profile/user/${userId}/imagem`, formData, {
       withCredentials: true,

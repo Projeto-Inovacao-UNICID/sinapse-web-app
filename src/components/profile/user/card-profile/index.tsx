@@ -10,7 +10,7 @@ import { useGetPosts } from "@/hooks/posts/usePosts";
 import { useSession } from "@/hooks/session/useSession";
 import { useUserProfile, useUserProfileImage } from "@/hooks/profile/user/useUserProfile";
 import { ChatService } from "@/service/chat/ChatService";
-import {  Group, GroupResponseDto } from "@/types";
+import { Group, GroupResponseDto } from "@/types";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
@@ -26,6 +26,9 @@ import { EditProfileModal } from "../profile-edit-modal";
 import { UsersList } from "../users-list";
 import ButtonPrimary from "@/components/common/button-primary";
 import ButtonSecondary from "@/components/common/button-secondary";
+import { UserPosts } from "../user-posts-profile";
+import { UserChallenges } from "@/components/challenge/common/challenge-profile";
+import { ProfileImageUploader } from "../../perfil-image-trade";
 
 interface UserProfileCardProps {
   userId: string;
@@ -51,7 +54,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const { data: groups, isLoading: loadingGroups } = useGetMyGroups();
 
   const groupsIds = groups ? groups.content.map((group: Group) => group.id) : [];
-  
+
   const chatService = new ChatService();
 
   const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
@@ -104,7 +107,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
   const friendshipIds = friends?.map((friend) =>
     'usuarioId' in friend ? friend.usuarioId : friend.id
   );
-  
+
   const imagemSrc = temImagem ? userProfileImage ?? "" : "";
 
   const handleAddFriendship = async () => {
@@ -123,14 +126,14 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
     alert(`Convite de amizade de ${res.solicitante} aceito com sucesso!`);
     await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
   }
-  
+
   const handleDeleteFriendshipRequest = async () => {
     if (!amizadeId) return;
     const res = await deleteFriendship();
     alert(`Amigo deletado com sucesso!`);
     await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
   }
-  
+
 
   if (isLoading) {
     return (
@@ -154,7 +157,15 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
       <Grid container spacing={2}>
         <Grid size={8}>
           <Box sx={{ display: "flex", alignItems: "flex-start", flexDirection: "column", gap: 2 }}>
-            <Avatar src={imagemSrc} alt={nome} sx={{ width: 100, height: 100 }} />
+
+
+            <ProfileImageUploader
+              userId={userId}
+              imagemSrc={imagemSrc}
+              isProfileOwner={isProfileOwner}
+            />
+
+
             <Box sx={{ ml: 2 }}>
               <Typography variant="h5" color="var(--foreground)" className="font-bold">{nome}</Typography>
               <Typography variant="body1" color="var(--muted)">{username}</Typography>
@@ -192,8 +203,8 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
                 podeAdicionarAmigo && !isActiveFriendshipInvitation
                   ? handleAddFriendship
                   : isActiveFriendshipRequest
-                  ? handleAcceptFriendshipRequest
-                  : undefined
+                    ? handleAcceptFriendshipRequest
+                    : undefined
               }
               variant="contained"
               sx={{
@@ -201,8 +212,8 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
                   isActiveFriendshipRequest && isHovering
                     ? 'var(--primary)'
                     : podeAdicionarAmigo && !isActiveFriendshipInvitation
-                    ? 'var(--primary)'
-                    : 'var(--muted)',
+                      ? 'var(--primary)'
+                      : 'var(--muted)',
                 ':hover': {
                   opacity: 0.9,
                 },
@@ -229,7 +240,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
           {!isProfileOwner && (
             <ButtonPrimary
               title="Mensagem"
-              icon={<MessageIcon/>}
+              icon={<MessageIcon />}
               onClick={handleMessage}
             />
           )}
@@ -241,16 +252,16 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
 
           {isUser && isProfileOwner && (
             <>
-              <ButtonSecondary 
+              <ButtonSecondary
                 title="Editar Perfil"
                 icon={<EditIcon />}
                 onClick={handleEdit}
               />
-              <ButtonSecondary 
+              <ButtonSecondary
                 title="Criar Grupo"
                 icon={<AddIcon />}
                 onClick={() => setOpenModalCreateGroup(true)}
-              />  
+              />
             </>
           )}
         </Grid>
@@ -302,7 +313,9 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
         </Tabs>
 
         <Grid size={12}>
-          {tabValue === 4 && <UsersList ids={friendshipIds ?? []} type= {isProfileOwner ? "friend" : undefined} />}
+          {tabValue === 2 && <UserPosts />}
+          {tabValue === 3 && <UserChallenges userId={userId} />}
+          {tabValue === 4 && <UsersList ids={friendshipIds ?? []} type={isProfileOwner ? "friend" : undefined} />}
           {tabValue === 5 && <GroupList groupIds={groupsIds ?? []} viewDescription={true} />}
           {tabValue === 6 && <InviteList groupInvites={groupInvites ?? []} friendshipInvitations={friendshipRequestsContent ?? []} />}
         </Grid>

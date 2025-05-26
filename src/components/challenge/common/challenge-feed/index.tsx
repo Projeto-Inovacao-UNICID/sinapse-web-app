@@ -32,6 +32,11 @@ export function ChallengeFeed() {
   const { data: myChallengesCompany, isLoading: loadingMyChallengesCompany } = useGetMyChallenges({ empresaId: session?.id ?? '' });
   const { data: myChallengesUser, isLoading: loadingMyChallengesUser } = useListUserChallenges(session?.id ?? '');
 
+  console.log("session:", session);
+  console.log("all:", all);
+
+
+
   const myChallenges = isCompanyUser ? myChallengesCompany : myChallengesUser;
   
 
