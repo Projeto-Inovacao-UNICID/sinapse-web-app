@@ -16,6 +16,7 @@ export default function ChallengeMetrics() {
   return (
     <div className="grid gap-4 p-6 md:grid-cols-2 xl:grid-cols-3 bg-[var(--background)] text-white min-h-screen">
       {/* Métricas principais */}
+      <Typography variant="h6" sx={{ color: 'var(--foreground)', fontWeight: 'bold', mb: 2}}>Métricas de Desafios</Typography>
       <Card sx={{ backgroundColor: 'var(--background)', color: 'var(--foreground)', mb: 1, border: 'none', boxShadow: 0 }}>
         <CardContent sx={{ display: 'flex', justifyContent: 'space-between', gap: 1 }}>
           <Box sx={{ display: 'flex', flexDirection: 'column', alignContent: 'center', justifyContent: 'center', color: 'var(--muted)', backgroundColor: 'var(--card)', p: 2, borderRadius: 2}}><Typography variant="subtitle1">Total Inscritos</Typography><Typography variant="h5" sx={{ color: 'var(--foreground)', fontWeight: 'bold', alignSelf: 'center' }}>{dashboardData.totalInscritos}</Typography></Box>
