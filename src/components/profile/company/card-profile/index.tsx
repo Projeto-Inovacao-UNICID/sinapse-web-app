@@ -39,6 +39,7 @@ import ButtonSecondary           from '@/components/common/button-secondary';
 import IconButton                from '@/components/common/icon-buttons';
 import { ChatService }           from '@/service/chat/ChatService';
 import { CompanyImageUploader } from '../perfil-image-trade-company';
+import { UserPosts } from '../../user/user-posts-profile';
 
 interface CompanyProfileCardProps {
   companyId: string;
@@ -248,6 +249,10 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
           <Tab label="Publicações"  />
           <Tab label="Desafios"     />
         </Tabs>
+
+        <Grid size={12}>
+            {tabValue === 2 && <UserPosts />}        
+        </Grid>
 
         {/* modal edição */}
         <EditCompanyProfileModal
