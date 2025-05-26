@@ -17,53 +17,63 @@ export function Feed() {
   const { data: contacts = [] } = useChatContacts();
 
   return (
-    <Box
-      sx={{
+    <div
+      style={{  
         display: 'grid',
-        gridTemplateColumns: '260px minmax(0, 1fr) 300px',
-        alignItems: 'start',
-        gap: 2,
+        gridTemplateColumns: '1fr minmax(0, 10fr) 1fr',
         minHeight: '100vh',
-        p: 2,
       }}
     >
-      {/* menu lateral */}
-      <SidebarMenu />
+      <div style={{ gridColumn: 2 }}>
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: '260px minmax(0, 1fr) 300px',
+          alignItems: 'start',
+          gap: 2,
+          minHeight: '100vh',
+          p: 2,
+        }}
+      >
+        {/* menu lateral */}
+        <SidebarMenu />
 
-      {/* coluna do meio: criador + lista de posts */}
-      <Box>
-        <PostCreator />
+        {/* coluna do meio: criador + lista de posts */}
+        <Box>
+          <PostCreator />
 
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
-          {posts
-            .slice() // cria uma cópia para evitar mutar o array original
-            .reverse() // inverte a ordem
-            .map((p: Post) => (
-              <PostCard
-                key={p.id}
-                post={{
-                  id:             p.id,
-                  autorId:        p.autorId,
-                  autorNome:      p.autorNome,
-                  autorAvatarUrl: p.autorAvatarUrl,
-                  localizacao:    '',
-                  texto:          p.conteudo,
-                  createdAt:      p.createdAt,
-                  imagemUrl:      p.imagemUrl,
-                  isCompany:      p.isCompany,
-                  comentarios:    0,
-                }}
-              />
-            ))}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3, mt: 3 }}>
+            {posts
+              .slice() // cria uma cópia para evitar mutar o array original
+              .reverse() // inverte a ordem
+              .map((p: Post) => (
+                <PostCard
+                  key={p.id}
+                  post={{
+                    id:             p.id,
+                    autorId:        p.autorId,
+                    autorNome:      p.autorNome,
+                    autorAvatarUrl: p.autorAvatarUrl,
+                    localizacao:    '',
+                    texto:          p.conteudo,
+                    createdAt:      p.createdAt,
+                    imagemUrl:      p.imagemUrl,
+                    isCompany:      p.isCompany,
+                    comentarios:    0,
+                  }}
+                />
+              ))}
+          </Box>
+
         </Box>
 
+        {/* anúncios + chat */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <AdsPanel />
+          <ChatSidebar contacts={contacts} onSelect={() => {}} />
+        </Box>
       </Box>
-
-      {/* anúncios + chat */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-        <AdsPanel />
-        <ChatSidebar contacts={contacts} onSelect={() => {}} />
-      </Box>
-    </Box>
+    </div>
+  </div>
   );
 }

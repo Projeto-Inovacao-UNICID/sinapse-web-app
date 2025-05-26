@@ -19,6 +19,7 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import PersonAddIcon     from '@mui/icons-material/PersonAdd';
 import MessageIcon       from '@mui/icons-material/Message';
 import EditIcon          from '@mui/icons-material/Edit';
+import AreaChartIcon from '@mui/icons-material/AreaChart';
 import ShareIcon         from '@mui/icons-material/Share';
 import AssignmentIcon    from '@mui/icons-material/Assignment';
 
@@ -108,7 +109,9 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
     }
   };
 
-  const handleForms = () => router.push('/empresa/formularios');
+  const handleForms = () => router.push(`/empresa/formularios`);
+
+  const handleMetrics = () => router.push(`/empresa/dashboards`);
 
   return (
     <>
@@ -183,19 +186,15 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
                 <ButtonSecondary
                   icon={<EditIcon />}
                   onClick={() => setOpenModal(true)}
-                  title="Editar Perfil"
+                  title="Editar"
                   borderRadius={2}
                   fontWeight={400}
                 />
               )}
 
-              <ButtonSecondary
-                icon={<AssignmentIcon />}
-                onClick={handleForms}
-                title="Formulários"
-                borderRadius={2}
-                fontWeight={400}
-              />
+              <ButtonSecondary icon={<AssignmentIcon />} onClick={handleForms} title="Formulários" borderRadius={2} fontWeight={400} />
+
+              <ButtonSecondary icon={<AreaChartIcon />} onClick={handleMetrics} title="Métricas" borderRadius={2} fontWeight={400} />
 
               <IconButton icon={<ShareIcon />} onClick={() => setShareOpen(true)} />
             </Box>
