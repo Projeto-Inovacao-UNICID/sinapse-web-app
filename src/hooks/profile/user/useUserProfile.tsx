@@ -14,6 +14,7 @@ export function useUserProfile(userId: string) {
     queryFn: () => userProfileService.getUserProfile(userId),
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
+    enabled: !!userId,
   });
 }
 
