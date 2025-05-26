@@ -1,31 +1,53 @@
 'use client';
 
-import { CreateGroupModal } from "@/components/group/create-group-card";
-import { GroupList } from "@/components/group/group-list";
-import { InviteList } from "@/components/invites";
-import { useGetChallengeCountsUser } from "@/hooks/challenge/useChallenge";
-import { useAcceptFriendshipRequest, useDeleteFriendshipRequest, useFriendship, useGetFriendshipInvitations, usePostFriendship } from "@/hooks/friendship/useFriendship";
-import { useGetGroupInvites, useGetMyGroups } from "@/hooks/group/useGroup";
-import { useGetPosts } from "@/hooks/posts/usePosts";
-import { useSession } from "@/hooks/session/useSession";
-import { useUserProfile, useUserProfileImage } from "@/hooks/profile/user/useUserProfile";
-import { ChatService } from "@/service/chat/ChatService";
-import {  Group, GroupResponseDto } from "@/types";
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
+import { useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
+
+import {
+  Avatar,
+  Badge,
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  Grid,
+  Tab,
+  Tabs,
+  Typography,
+} from '@mui/material';
+
+import AddIcon    from '@mui/icons-material/Add';
+import CloseIcon  from '@mui/icons-material/Close';
+import EditIcon   from '@mui/icons-material/Edit';
 import MessageIcon from '@mui/icons-material/Message';
-import ShareIcon from '@mui/icons-material/Share';
-import { Avatar, Badge, Box, Button, CircularProgress, Divider, Grid, Tab, Tabs, Typography } from "@mui/material";
-import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from 'next/navigation';
-import { useState } from "react";
-import { BoxInfo } from "../../box-info";
-import { ShareDialog } from "../../utils/shareDialog";
-import { EditProfileModal } from "../profile-edit-modal";
-import { UsersList } from "../users-list";
-import ButtonPrimary from "@/components/common/button-primary";
-import ButtonSecondary from "@/components/common/button-secondary";
+import ShareIcon  from '@mui/icons-material/Share';
+
+import { CreateGroupModal }  from '@/components/group/create-group-card';
+import { GroupList }         from '@/components/group/group-list';
+import { InviteList }        from '@/components/invites';
+import { useGetChallengeCountsUser } from '@/hooks/challenge/useChallenge';
+import {
+  useAcceptFriendshipRequest,
+  useDeleteFriendshipRequest,
+  useFriendship,
+  useGetFriendshipInvitations,
+  usePostFriendship,
+} from '@/hooks/friendship/useFriendship';
+import { useGetGroupInvites, useGetMyGroups } from '@/hooks/group/useGroup';
+import { useGetPosts }      from '@/hooks/posts/usePosts';
+import { useSession }       from '@/hooks/session/useSession';
+import { useUserProfile, useUserProfileImage } from '@/hooks/profile/user/useUserProfile';
+import { ChatService }      from '@/service/chat/ChatService';
+import { Group }            from '@/types';
+
+import { BoxInfo }          from '../../box-info';
+import { ShareDialog }      from '../../utils/shareDialog';
+import { EditProfileModal } from '../profile-edit-modal';
+import { UsersList }        from '../users-list';
+
+import ButtonPrimary   from '@/components/common/button-primary';
+import ButtonSecondary from '@/components/common/button-secondary';
 
 interface UserProfileCardProps {
   userId: string;
@@ -33,191 +55,188 @@ interface UserProfileCardProps {
 }
 
 export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCardProps) {
-  const [tabValue, setTabValue] = useState(0);
-  const [shareOpen, setShareOpen] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
-  const [openModalCreateGroup, setOpenModalCreateGroup] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
+  const searchParams = useSearchParams();
+  const tabFromURL   = (searchParams.get('tab') ?? '').toLowerCase();
+
+  const tabIndexMap = {
+    inicio:       0,
+    sobre:        1,
+    publicacoes:  2,
+    desafios:     3,
+    amigos:       4,
+    grupos:       5,
+    convites:     6,
+  } as const;
+
+  const initialTab = tabIndexMap[tabFromURL as keyof typeof tabIndexMap] ?? 0;
+  const [tabValue, setTabValue] = useState(initialTab);
+
+  const [shareOpen, setShareOpen]           = useState(false);
+  const [openModal, setOpenModal]           = useState(false);
+  const [openCreateGroup, setOpenCreateGroup] = useState(false);
+  const [isHovering, setIsHovering]         = useState(false);
 
   const { data: userProfile, isLoading, isError, error } = useUserProfile(userId);
-  const { session } = useSession();
-  const router = useRouter();
+  const { session }          = useSession();
+  const router               = useRouter();
+  const queryClient          = useQueryClient();
+
   const { data: friendship } = useFriendship();
-  const { mutateAsync: sendFriendRequest, isPending: isPostFriendshipLoading } = usePostFriendship();
-  const { data: friendshipInvitations } = useGetFriendshipInvitations("enviados");
-  const { data: friendshipRequests } = useGetFriendshipInvitations("recebidos");
-  const { data: posts } = useGetPosts();
-  const { data: challenge } = useGetChallengeCountsUser(userId);
+  const { mutateAsync: sendFriendRequest, isPending: postingFriend } = usePostFriendship();
+  const { data: invitations } = useGetFriendshipInvitations('enviados');
+  const { data: requests }    = useGetFriendshipInvitations('recebidos');
+
+  const { data: posts }      = useGetPosts();
+  const { data: challenges } = useGetChallengeCountsUser(userId);
+
   const { data: groups, isLoading: loadingGroups } = useGetMyGroups();
+  const { data: groupInvites } = useGetGroupInvites();
 
-  const groupsIds = groups ? groups.content.map((group: Group) => group.id) : [];
-  
-  const chatService = new ChatService();
+  const groupsIds = groups ? groups.content.map((g: Group) => g.id) : [];
 
-  const amizadeId = friendshipRequests?.content.find(r => r.usuarioId === userId)?.amizadeId;
+  const temImagem                = userProfile?.temImagem ?? false;
+  const { data: userProfileImage } = useUserProfileImage(userId, temImagem);
+  const imagemSrc = temImagem ? userProfileImage ?? '' : '';
 
+  const isProfileOwner = session?.id === userId;
+  const isUser         = session ? session.roles.includes('ROLE_USER') : false;
+
+  const isInvitationActive = !isProfileOwner && invitations?.content.some(i => i.usuarioId === userId);
+  const isRequestActive    = !isProfileOwner && requests?.content.some(r => r.usuarioId === userId);
+
+  const amizadeId = requests?.content.find(r => r.usuarioId === userId)?.amizadeId;
   const { mutateAsync: deleteFriendship } = useDeleteFriendshipRequest(amizadeId);
   const { mutateAsync: acceptFriendship } = useAcceptFriendshipRequest(amizadeId);
 
+  const reqCount   = requests?.content.length   ?? 0;
+  const inviteCount= groupInvites?.length       ?? 0;
+  const invitesSum = reqCount + inviteCount;
+  const hasUnread  = invitesSum > 0;
 
-  const temImagem = userProfile?.temImagem ?? false;
-  const { data: userProfileImage } = useUserProfileImage(userId, temImagem);
-
-  const queryClient = useQueryClient();
-  const isProfileOwner = session?.id === userId;
-  const isUser = session ? session.roles.includes('ROLE_USER') : false;
-
-  const isActiveFriendshipInvitation = !isProfileOwner && friendshipInvitations?.content.some(
-    (invitation) => invitation.usuarioId === userId
-  );
-
-  const isActiveFriendshipRequest = !isProfileOwner && friendshipRequests?.content.some(
-    (request) => request.usuarioId === userId
-  );
-
-  const { data: groupInvites } = useGetGroupInvites();
-
-  const friendshipRequestsContent = friendshipRequests ? friendshipRequests.content : null;
-  const contFriendshipRequests = friendshipRequestsContent ? friendshipRequestsContent.length : 0;
-  const contGroupInvites = groupInvites ? groupInvites.length : 0;
-  const invitesCount = contGroupInvites + contFriendshipRequests;
-  const hasUnreadInvites = invitesCount > 0;
+  const chatService = new ChatService();
 
   const handleMessage = () => {
     try {
       chatService.postChat(userId);
       router.push(`/conversas?participanteId=${userId}`);
     } catch (err) {
-      console.error('Erro ao iniciar o chat:', err);
-    }
-  }
-  const handleEdit = () => setOpenModal(true);
-
-  const {
-    nome,
-    username,
-    amigos,
-    podeAdicionarAmigo,
-  } = userProfile ?? {};
-
-  const friends = isProfileOwner ? friendship : amigos;
-  const friendshipIds = friends?.map((friend) =>
-    'usuarioId' in friend ? friend.usuarioId : friend.id
-  );
-  
-  const imagemSrc = temImagem ? userProfileImage ?? "" : "";
-
-  const handleAddFriendship = async () => {
-    try {
-      const res = await sendFriendRequest(userId);
-      alert(`Convite de amizade enviado para ${res.solicitante} com sucesso!`);
-      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations'] });
-    } catch (err) {
-      console.error('Erro ao adicionar amizade:', err);
+      console.error('Erro ao iniciar chat', err);
     }
   };
 
-  const handleAcceptFriendshipRequest = async () => {
+  const handleAddFriend = async () => {
+    try {
+      const res = await sendFriendRequest(userId);
+      alert(`Convite enviado para ${res.solicitante}!`);
+      await queryClient.invalidateQueries({ queryKey: ['friendship-invitations'] });
+    } catch (err) {
+      console.error('Erro ao adicionar amizade', err);
+    }
+  };
+
+  const handleAcceptRequest = async () => {
     if (!amizadeId) return;
-    const res = await acceptFriendship();
-    alert(`Convite de amizade de ${res.solicitante} aceito com sucesso!`);
+    await acceptFriendship();
     await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
-  }
-  
-  const handleDeleteFriendshipRequest = async () => {
+  };
+
+  const handleDeleteRequest = async () => {
     if (!amizadeId) return;
-    const res = await deleteFriendship();
-    alert(`Amigo deletado com sucesso!`);
+    await deleteFriendship();
     await queryClient.invalidateQueries({ queryKey: ['friendship-invitations', 'recebidos'] });
-  }
-  
+  };
 
   if (isLoading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
-        <CircularProgress sx={{ color: "var(--muted)" }} />
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+        <CircularProgress sx={{ color: 'var(--muted)' }} />
       </Box>
     );
   }
 
-  if (isError) {
-    console.log(error);
+  if (isError || !userProfile) {
+    console.error(error);
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
         <Typography color="error">Erro ao carregar perfil</Typography>
       </Box>
     );
   }
 
+  const { nome, username, amigos, podeAdicionarAmigo } = userProfile;
+  const friends        = isProfileOwner ? friendship : amigos;
+  const friendshipIds  = friends?.map(f => ('usuarioId' in f ? f.usuarioId : f.id));
+
   return (
-    <Box className="flex flex-col gap-2 p-4" sx={{ backgroundColor: "var(--card)", borderRadius: 2, padding: 4, gridColumn: `${gridColumnNumber}` }}>
+    <Box sx={{ backgroundColor: 'var(--card)', borderRadius: 2, p: 4, gridColumn: `${gridColumnNumber}` }}>
       <Grid container spacing={2}>
+        {/* avatar + nome */}
         <Grid size={8}>
-          <Box sx={{ display: "flex", alignItems: "flex-start", flexDirection: "column", gap: 2 }}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Avatar src={imagemSrc} alt={nome} sx={{ width: 100, height: 100 }} />
             <Box sx={{ ml: 2 }}>
-              <Typography variant="h5" color="var(--foreground)" className="font-bold">{nome}</Typography>
-              <Typography variant="body1" color="var(--muted)">{username}</Typography>
+              <Typography variant="h5" color="var(--foreground)" fontWeight="bold">
+                {nome}
+              </Typography>
+              <Typography variant="body1" color="var(--muted)">
+                {username}
+              </Typography>
             </Box>
           </Box>
         </Grid>
-        <Grid size={4} sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2 }}>
-          <Box sx={{ display: "flex", flexDirection: "row", gap: 2, width: "100%" }}>
+
+        {/* contadores */}
+        <Grid size={4} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ display: 'flex', gap: 2, width: '100%' }}>
             <BoxInfo data={friends ? friends.length : 0} title="Amigos" />
-            <BoxInfo data={posts ? posts.length : 0} title="Postagens" />
+            <BoxInfo data={posts ? posts.length : 0}   title="Postagens" />
           </Box>
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2, width: "100%" }}>
-            <BoxInfo data={challenge ? challenge.participados : 0} title="Desafios" />
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
+            <BoxInfo data={challenges ? challenges.participados : 0} title="Desafios" />
           </Box>
         </Grid>
 
-        <Grid size={12} sx={{ display: "flex", flexDirection: "row", gap: 2 }}>
+        {/* botões */}
+        <Grid size={12} sx={{ display: 'flex', gap: 2 }}>
           {!isProfileOwner && isUser && (
             <Button
               onMouseEnter={() => setIsHovering(true)}
               onMouseLeave={() => setIsHovering(false)}
               startIcon={
-                isActiveFriendshipRequest && isHovering ? (
-                  <CloseIcon
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteFriendshipRequest();
-                    }}
-                  />
+                isRequestActive && isHovering ? (
+                  <CloseIcon onClick={(e) => { e.stopPropagation(); handleDeleteRequest(); }} />
                 ) : (
                   <AddIcon />
                 )
               }
               onClick={
-                podeAdicionarAmigo && !isActiveFriendshipInvitation
-                  ? handleAddFriendship
-                  : isActiveFriendshipRequest
-                  ? handleAcceptFriendshipRequest
+                podeAdicionarAmigo && !isInvitationActive
+                  ? handleAddFriend
+                  : isRequestActive
+                  ? handleAcceptRequest
                   : undefined
               }
               variant="contained"
+              disabled={postingFriend}
               sx={{
                 backgroundColor:
-                  isActiveFriendshipRequest && isHovering
+                  isRequestActive && isHovering
                     ? 'var(--primary)'
-                    : podeAdicionarAmigo && !isActiveFriendshipInvitation
+                    : podeAdicionarAmigo && !isInvitationActive
                     ? 'var(--primary)'
                     : 'var(--muted)',
-                ':hover': {
-                  opacity: 0.9,
-                },
+                ':hover': { opacity: 0.9 },
                 color: 'white',
                 textTransform: 'none',
               }}
-              disabled={isPostFriendshipLoading}
             >
-              {isPostFriendshipLoading ? (
+              {postingFriend ? (
                 <CircularProgress size={20} sx={{ color: 'white' }} />
-              ) : isActiveFriendshipRequest && isHovering ? (
+              ) : isRequestActive && isHovering ? (
                 'Adicionar amigo'
-              ) : isActiveFriendshipInvitation ? (
+              ) : isInvitationActive ? (
                 'Convite enviado'
-              ) : isActiveFriendshipRequest ? (
+              ) : isRequestActive ? (
                 'Convite recebido'
               ) : podeAdicionarAmigo ? (
                 'Adicionar amigo'
@@ -226,13 +245,11 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
               )}
             </Button>
           )}
+
           {!isProfileOwner && (
-            <ButtonPrimary
-              title="Mensagem"
-              icon={<MessageIcon/>}
-              onClick={handleMessage}
-            />
+            <ButtonPrimary title="Mensagem" icon={<MessageIcon />} onClick={handleMessage} />
           )}
+
           <ButtonSecondary
             title="Compartilhar"
             icon={<ShareIcon />}
@@ -241,20 +258,13 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
 
           {isUser && isProfileOwner && (
             <>
-              <ButtonSecondary 
-                title="Editar Perfil"
-                icon={<EditIcon />}
-                onClick={handleEdit}
-              />
-              <ButtonSecondary 
-                title="Criar Grupo"
-                icon={<AddIcon />}
-                onClick={() => setOpenModalCreateGroup(true)}
-              />  
+              <ButtonSecondary title="Editar Perfil" icon={<EditIcon />} onClick={() => setOpenModal(true)} />
+              <ButtonSecondary title="Criar Grupo"  icon={<AddIcon />}  onClick={() => setOpenCreateGroup(true)} />
             </>
           )}
         </Grid>
 
+        {/* abas */}
         <Divider sx={{ my: 0.3, borderBottom: '1px solid var(--secondary)', width: '100%' }} />
 
         <Tabs
@@ -263,27 +273,23 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
           textColor="inherit"
           TabIndicatorProps={{ style: { backgroundColor: 'var(--primary)' } }}
           sx={{
-            '& .MuiTab-root': {
-              color: 'var(--muted)',
-              textTransform: 'none',
-            },
+            '& .MuiTab-root': { color: 'var(--muted)', textTransform: 'none' },
             '& .Mui-selected': { color: 'var(--primary)' },
           }}
         >
-          <Tab label="Início" />
-          <Tab label="Sobre" />
-          <Tab label="Publicações" />
-          <Tab label="Desafios" />
-          <Tab label="Amigos" />
-          <Tab label="Grupos" />
-          {
-            isProfileOwner &&
+          <Tab label="Início"       />
+          <Tab label="Sobre"        />
+          <Tab label="Publicações"  />
+          <Tab label="Desafios"     />
+          <Tab label="Amigos"       />
+          <Tab label="Grupos"       />
+          {isProfileOwner && (
             <Tab
               icon={
                 <Badge
-                  badgeContent={invitesCount}
+                  badgeContent={invitesSum}
                   color="error"
-                  invisible={!hasUnreadInvites}
+                  invisible={!hasUnread}
                   sx={{
                     '& .MuiBadge-badge': {
                       top: -10,
@@ -298,27 +304,28 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
               iconPosition="end"
               label="Convites"
             />
-          }
+          )}
         </Tabs>
 
+        {/* conteúdo das abas dinâmicas */}
         <Grid size={12}>
-          {tabValue === 4 && <UsersList ids={friendshipIds ?? []} type= {isProfileOwner ? "friend" : undefined} />}
-          {tabValue === 5 && <GroupList groupIds={groupsIds ?? []} viewDescription={true} />}
-          {tabValue === 6 && <InviteList groupInvites={groupInvites ?? []} friendshipInvitations={friendshipRequestsContent ?? []} />}
+          {tabValue === 4 && (
+            <UsersList ids={friendshipIds ?? []} type={isProfileOwner ? 'friend' : undefined} />
+          )}
+          {tabValue === 5 && <GroupList groupIds={groupsIds ?? []} viewDescription />}
+          {tabValue === 6 && <InviteList groupInvites={groupInvites ?? []} friendshipInvitations={requests?.content ?? []} />}
         </Grid>
       </Grid>
 
+      {/* modais & dialogs */}
       <EditProfileModal
         open={openModal}
         onClose={() => setOpenModal(false)}
         userId={userId}
-        defaultValues={{ nome: userProfile?.nome || '', username: userProfile?.username || '', email: '' }}
+        defaultValues={{ nome: userProfile.nome, username: userProfile.username, email: '' }}
       />
 
-      <CreateGroupModal
-        open={openModalCreateGroup}
-        onClose={() => setOpenModalCreateGroup(false)}
-      />
+      <CreateGroupModal open={openCreateGroup} onClose={() => setOpenCreateGroup(false)} />
 
       <ShareDialog open={shareOpen} onClose={() => setShareOpen(false)} url={typeof window !== 'undefined' ? window.location.href : ''} />
     </Box>
