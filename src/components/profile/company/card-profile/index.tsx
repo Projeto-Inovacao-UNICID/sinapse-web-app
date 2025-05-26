@@ -35,6 +35,7 @@ import { useGetChallengeCounts } from '@/hooks/challenge/useChallenge';
 import { ChatService } from '@/service/chat/ChatService';
 import ButtonSecondary from '@/components/common/button-secondary';
 import IconButton from '@/components/common/icon-buttons';
+import { CompanyImageUploader } from '../perfil-image-trade-company';
 
 interface CompanyProfileCardProps {
   companyId: string;
@@ -110,7 +111,11 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
             {/* Cabeçalho com imagem, nome e ações */}
             <Box sx={{ display: 'flex', gap: 3, alignItems: 'center' }}>
               <Box sx={{ width: 124, height: 124, flexShrink: 0 }}>
-                <CompanyProfileImage companyId={companyId} temImagem={temImagem} />
+                <CompanyImageUploader
+                  companyId={companyId}
+                  imagemSrc={company.temImagem ? `/api/profile/company/${companyId}/imagem?${new Date().getTime()}` : undefined}
+                  isCompanyOwner={isOwner} // Use a prop com nome específico
+                />
               </Box>
               <Box>
                 <Typography variant="h4" sx={{ color: 'var(--foreground)', fontWeight: 'bold' }}>

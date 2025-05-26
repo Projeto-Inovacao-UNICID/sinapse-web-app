@@ -28,7 +28,7 @@ import ButtonPrimary from "@/components/common/button-primary";
 import ButtonSecondary from "@/components/common/button-secondary";
 import { UserPosts } from "../user-posts-profile";
 import { UserChallenges } from "@/components/challenge/common/challenge-profile";
-import { ProfileImageUploader } from "../../perfil-image-trade";
+import { ProfileImageUploader } from "../perfil-image-trade";
 
 interface UserProfileCardProps {
   userId: string;
@@ -240,7 +240,7 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
           {!isProfileOwner && (
             <ButtonPrimary
               title="Mensagem"
-              icon={<MessageIcon />}
+              icon={<MessageIcon/>}
               onClick={handleMessage}
             />
           )}
