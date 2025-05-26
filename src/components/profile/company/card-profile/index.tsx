@@ -186,7 +186,7 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
                 <ButtonSecondary
                   icon={<EditIcon />}
                   onClick={() => setOpenModal(true)}
-                  title="Editar Perfil"
+                  title="Editar"
                   borderRadius={2}
                   fontWeight={400}
                 />
