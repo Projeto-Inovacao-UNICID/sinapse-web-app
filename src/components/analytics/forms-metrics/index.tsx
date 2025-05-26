@@ -20,9 +20,9 @@ export default function Dashboard() {
     setForm(selectedForm);
 
     if (selectedId === '1') {
-      setMetrics(hardSkillsFormMetricsMock);
-    } else if (selectedId === '2') {
       setMetrics(softSkillsFormMetricsMock);
+    } else if (selectedId === '2') {
+      setMetrics(hardSkillsFormMetricsMock);
     }
   };
 
