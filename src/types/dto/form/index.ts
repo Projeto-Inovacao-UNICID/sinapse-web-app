@@ -13,6 +13,7 @@ export interface PublicFormDto {
 }
 
 export interface FormDto extends PublicFormDto {
+  empresaId: string;
   minScore: number;
 }
 
@@ -30,6 +31,7 @@ export interface FormFieldDto extends CreateFormFieldDto {
 }
 
 export interface FormFieldOptionDto {
+  id?: string;
   label: string;
   value: string;
   score: number;

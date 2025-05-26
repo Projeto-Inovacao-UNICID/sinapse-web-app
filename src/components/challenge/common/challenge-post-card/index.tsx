@@ -201,7 +201,7 @@ export function ChallengePostCard({ desafio, onEdit }: ChallengePostCardProps) {
             >
               Editar
             </Button>
-          ) : isCompanyUser ? (
+          ) : !isCompanyUser ? (
             <Button
               size="small"
               variant="contained"

@@ -6,6 +6,7 @@ export * from "@/types/dto/company";
 export * from "@/types/dto/form";
 export * from "@/types/dto/friendship";
 export * from "@/types/dto/group";
+export * from "@/types/dto/metrics";
 export * from "@/types/dto/notification";
 export * from "@/types/dto/posts";
 export * from "@/types/dto/profile";

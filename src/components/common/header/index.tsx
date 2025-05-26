@@ -1,45 +1,41 @@
 'use client';
 
-import ChatIcon from '@mui/icons-material/Chat';
-import ChatIconOutlined from '@mui/icons-material/ChatOutlined';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import EmojiEventsIconOutlined from '@mui/icons-material/EmojiEventsOutlined';
-import HomeIcon from '@mui/icons-material/Home';
-import HomeIconOutlined from '@mui/icons-material/HomeOutlined';
-import PersonIcon from '@mui/icons-material/Person';
-import PersonIconOutlined from '@mui/icons-material/PersonOutlined';
-import SearchIcon from '@mui/icons-material/Search';
+import React from 'react';
 import {
-  Autocomplete,
-  Avatar,
-  CircularProgress,
-  InputAdornment,
-  ListItemAvatar,
-  ListItemButton,
-  ListItemText,
-  TextField
+  AppBar,
+  Toolbar,
+  IconButton,
+  useMediaQuery,
+  useTheme,
+  Box,
+  Dialog,
+  DialogContent,
+  Menu,
+  MenuItem,
+  Divider
 } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import SearchIcon from '@mui/icons-material/Search';
+import MenuIcon from '@mui/icons-material/Menu';
+import HomeIcon from '@mui/icons-material/Home';
+import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import EmojiEventsOutlinedIcon from '@mui/icons-material/EmojiEventsOutlined';
+import ChatIcon from '@mui/icons-material/Chat';
+import ChatOutlinedIcon from '@mui/icons-material/ChatOutlined';
+import PersonIcon from '@mui/icons-material/Person';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { motion } from 'framer-motion';
 import { usePathname, useRouter } from 'next/navigation';
 
-import { useSearch } from '@/hooks/header/useSearch';
 import { useSession } from '@/hooks/session/useSession';
 import { NotificationButton } from './notification-button';
 import { SettingsButton } from './settings-button';
+import { SearchBar } from './search-bar';
 
 const iconStyles = {
   color: 'var(--primary)',
   fontSize: '2rem'
-};
-
-const iconButtonStyles = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  padding: 0,
-  border: 'none',
-  backgroundColor: 'transparent',
-  cursor: 'pointer'
 };
 
 export function Header() {
@@ -49,202 +45,184 @@ export function Header() {
   const userId = session?.id!;
   const roles = session?.roles;
 
-  const { open, setOpen, options, loading, inputValue, setInputValue } = useSearch();
-
-  const profileRoute = roles?.includes("ROLE_USER")
+  const profileRoute = roles?.includes('ROLE_USER')
     ? `/profile/me/${userId}`
     : `/empresa/me/${userId}`;
 
   const navClick = (route: string) => {
     router.push(route);
+    handleMenuClose();
   };
 
   const navItems = [
     {
+      label: 'Início',
       filled: <HomeIcon sx={iconStyles} />,
-      outlined: <HomeIconOutlined sx={iconStyles} />,
-      route: '/',
+      outlined: <HomeOutlinedIcon sx={iconStyles} />,
+      route: '/'
     },
     {
+      label: 'Desafios',
       filled: <EmojiEventsIcon sx={iconStyles} />,
-      outlined: <EmojiEventsIconOutlined sx={iconStyles} />,
-      route: '/desafios',
+      outlined: <EmojiEventsOutlinedIcon sx={iconStyles} />,
+      route: '/desafios'
     },
     {
+      label: 'Conversas',
       filled: <ChatIcon sx={iconStyles} />,
-      outlined: <ChatIconOutlined sx={iconStyles} />,
-      route: '/conversas',
+      outlined: <ChatOutlinedIcon sx={iconStyles} />,
+      route: '/conversas'
     },
     {
+      label: 'Perfil',
       filled: <PersonIcon sx={iconStyles} />,
-      outlined: <PersonIconOutlined sx={iconStyles} />,
-      route: profileRoute,
-    },
+      outlined: <PersonOutlinedIcon sx={iconStyles} />,
+      route: profileRoute
+    }
   ];
 
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [searchOpen, setSearchOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <header
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '65px',
-        zIndex: 1000,
-        backgroundColor: 'var(--bgSecondary)',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
-        display: 'grid',
-        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
-        alignItems: 'center'
-      }}
-    >
-      <div style={{ gridColumn: '2', display: 'flex', alignItems: 'center', gap: 16 }}>
-        <motion.img
-          src="/assets/logo.png"
-          alt="Logo"
-          style={{ height: '2.5rem', cursor: 'pointer' }}
-          onClick={() => navClick('/')}
-          whileHover={{
-            scale: 1.3,
-            rotate: 360,
-            transition: { repeat: Infinity, repeatType: 'loop', duration: 3, ease: 'linear' }
-          }}
-          whileTap={{ scale: 0.95 }}
-        />
-
-        <motion.div
-          style={{ flexGrow: 1, margin: '0 1rem' }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: 'spring', stiffness: 300 }}
-        >
-          <Autocomplete
-            freeSolo
-            open={open}
-            onOpen={() => setOpen(true)}
-            onClose={() => setOpen(false)}
-            options={options}
-            getOptionLabel={opt => (typeof opt === 'string' ? opt : opt.nome)}
-            loading={loading}
-            loadingText={<span style={{ color: 'var(--foreground)' }}>Procurando...</span>}
-            inputValue={inputValue}
+    <>
+      <AppBar
+        position="fixed"
+        sx={{ backgroundColor: 'var(--bgSecondary)', boxShadow: '0 2px 4px rgba(0,0,0,0.2)' }}
+      >
+        <Toolbar disableGutters sx={{ height: 65 }}>
+          <Box
             sx={{
-              color: 'var(--foreground)',
-              backgroundColor: 'var(--card)',
-              width: '75%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%',
+              px: { xs: 2, md: '16.6667%' } // margem lateral de 2 colunas no desktop
             }}
-            onInputChange={(_, v) => setInputValue(v)}
-            onChange={(_, val) => {
-              if (typeof val === 'string' || !val) return;
-              const path =
-                val.type === 'empresa'
-                  ? `/empresa/me/${val.id}`
-                  : `/profile/me/${val.id}`;
-              navClick(path);
-            }}
-            slotProps={{
-              popper: {
-                modifiers: [{ name: 'offset', options: { offset: [0, 8] } }],
-              },
-              paper: {
-                sx: {
-                  backgroundColor: 'var(--card)',
-                  color: 'var(--foreground)',
-                  borderRadius: 2,
-                  boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-                },
-              },
-              listbox: {
-                sx: {
-                  backgroundColor: 'var(--card)',
-                  color: 'var(--foreground)',
-                },
-              },
-            }}
-            renderOption={(props, opt) => (
-              <li {...props} key={typeof opt === 'string' ? opt : `${opt.type}-${opt.id}`}>
-                <ListItemButton
-                  sx={{
-                    backgroundColor: 'var(--card)',
-                    color: 'var(--foreground)',
-                    '&:hover': {
-                      backgroundColor: 'var(--muted)',
-                    }
-                  }}
-                >
-                  {typeof opt !== 'string' && (
-                    <>
-                      <ListItemAvatar>
-                        <Avatar src={opt.imageUrl} />
-                      </ListItemAvatar>
-                      <ListItemText primary={opt.nome} />
-                    </>
-                  )}
-                </ListItemButton>
-              </li>
-            )}
-            renderInput={params => (
-              <TextField
-                {...params}
-                fullWidth
-                variant="outlined"
-                placeholder="Buscar..."
-                size="small"
-                sx={{
-                  backgroundColor: 'var(--card)',
-                  borderRadius:2,
-                  input: { color: 'var(--foreground)' },
-                  '& .MuiOutlinedInput-root': {
-                    backgroundColor: 'var(--card)',
-                    color: 'var(--foreground)',
-                    '& fieldset': { borderColor: 'transparent' },
-                    '&:hover fieldset': { borderColor: 'var(--primary)' },
-                    '&.Mui-focused fieldset': { borderColor: 'var(--primary)' },
-                  },
-                }}
-                InputProps={{
-                  ...params.InputProps,
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SearchIcon sx={{ color: 'var(--muted-search)' }} />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <>
-                      {loading && (
-                        <CircularProgress size={20} sx={{ color: 'var(--foreground)' }} />
-                      )}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
-                }}
-              />
-            )}
-          />
-        </motion.div>
+          >
+            {/* Logo */}
+            <motion.img
+              src="/assets/logo.png"
+              alt="Logo"
+              style={{ height: '2.5rem', cursor: 'pointer' }}
+              onClick={() => navClick('/')}
+              whileHover={{
+                scale: 1.3,
+                rotate: 360,
+                transition: { repeat: Infinity, repeatType: 'loop', duration: 3, ease: 'linear' }
+              }}
+              whileTap={{ scale: 0.95 }}
+            />
 
-        <div style={{ display: 'flex', gap: 16 }}>
-          {navItems.map(({ filled, outlined, route }, index) => {
-            const isActive =
-              pathname === route ||
-              (route.includes('/me/') && pathname.startsWith(route.split('/me/')[0]));
-            return (
-              <motion.button
-                key={index}
-                style={iconButtonStyles}
-                whileHover={{ scale: 1.3 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ type: 'spring', stiffness: 300 }}
-                onClick={() => navClick(route)}
-              >
-                {isActive ? filled : outlined}
-              </motion.button>
-            );
-          })}
-          <NotificationButton />
-          <SettingsButton />
-        </div>
-      </div>
-    </header>
+            {/* Search */}
+            {isMobile ? (
+              <IconButton onClick={() => setSearchOpen(true)}>
+                <SearchIcon sx={{ color: 'var(--foreground)' }} />
+              </IconButton>
+            ) : (
+              <Box sx={{ flexGrow: 1, mx: 2 }}>
+                <SearchBar />
+              </Box>
+            )}
+
+            {/* Navegação ou menu hambúrguer */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              {isMobile ? (
+                <>
+                  <IconButton onClick={handleMenuOpen}>
+                    <MenuIcon sx={{ color: 'var(--foreground)' }} />
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={handleMenuClose}
+                    PaperProps={{
+                      sx: {
+                        backgroundColor: 'var(--card)',
+                        color: 'var(--foreground)',
+                        borderRadius: 2,
+                        mt: 1
+                      }
+                    }}
+                  >
+                    {navItems.map(({ label, route, filled, outlined }) => {
+                      const isActive =
+                        pathname === route ||
+                        (route.includes('/me/') && pathname.startsWith(route.split('/me/')[0]));
+                      return (
+                        <MenuItem key={route} onClick={() => navClick(route)}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            {isActive ? filled : outlined}
+                            {label}
+                          </Box>
+                        </MenuItem>
+                      );
+                    })}
+                    <Divider />
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', px: 2, py: 1 }}>
+                      <NotificationButton />
+                      <SettingsButton />
+                    </Box>
+                  </Menu>
+                </>
+              ) : (
+                <>
+                  {navItems.map(({ filled, outlined, route }, index) => {
+                    const isActive =
+                      pathname === route ||
+                      (route.includes('/me/') && pathname.startsWith(route.split('/me/')[0]));
+                    return (
+                      <motion.button
+                        key={index}
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: 0,
+                          border: 'none',
+                          backgroundColor: 'transparent',
+                          cursor: 'pointer'
+                        }}
+                        whileHover={{ scale: 1.3 }}
+                        whileTap={{ scale: 0.9 }}
+                        onClick={() => navClick(route)}
+                      >
+                        {isActive ? filled : outlined}
+                      </motion.button>
+                    );
+                  })}
+                  <NotificationButton />
+                  <SettingsButton />
+                </>
+              )}
+            </Box>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      {/* Modal de busca para mobile */}
+      <Dialog open={searchOpen} onClose={() => setSearchOpen(false)} fullScreen>
+        <DialogContent sx={{ backgroundColor: 'var(--bgSecondary)', padding: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <IconButton onClick={() => setSearchOpen(false)}>
+              <CloseIcon sx={{ color: 'var(--foreground)' }} />
+            </IconButton>
+            <Box sx={{ flexGrow: 1, ml: 1 }}>
+              <SearchBar onSelect={() => setSearchOpen(false)} />
+            </Box>
+          </Box>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

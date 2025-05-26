@@ -14,6 +14,7 @@ export function useUserProfile(userId: string) {
     queryFn: () => userProfileService.getUserProfile(userId),
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
+    enabled: !!userId,
   });
 }
 
@@ -48,5 +49,14 @@ export function usePatchUserProfile() {
       userId: string;
       payload: UpdateUserProfileDto;
     }) => userProfileService.patchUserProfile(userId, payload),
+  });
+}
+
+export function useListUserChallenges(userId: string) {
+  return useQuery({
+    queryKey: ["user-challenges", userId],
+    queryFn: () => userProfileService.listUserChallenges(userId),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
   });
 }
