@@ -72,7 +72,7 @@ export function SidebarMenu() {
       }}
     >
       {isCompany && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, '&hover': { cursor: 'pointer' } }} onClick={() => router.push(`/empresa/me/${userId}`)}>
           <Box sx={{ width: 48, height: 48, flexShrink: 0 }}>
             <CompanyProfileImage temImagem={companyProfile?.temImagem ?? false} companyId={userId ?? ''} />
           </Box>
@@ -82,7 +82,7 @@ export function SidebarMenu() {
         </Box>
       )}
       {isUser && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, '&hover': { cursor: 'pointer' } }} onClick={() => router.push(`/profile/me/${userId}`)}>
           <Box sx={{ width: 48, height: 48, flexShrink: 0 }}>
             <UserProfileImage temImagem={userProfile?.temImagem ?? false} userId={userId ?? ''} />
           </Box>
