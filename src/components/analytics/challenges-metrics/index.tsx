@@ -13,12 +13,12 @@ import {
   mockDesafioMetrics,
   mockDesafioMetrics2,
 } from "@/mocks/metrics/mockChallengeMetrics";
-import TotalCards from "./TotalCards";
-import InscritosPorEstagioChart from "./InscritosPorEstagioChart";
-import TempoMedioAprovacaoChart from "./TempoMedioAprovacaoChart";
-import DistribuicaoSoloEquipeChart from "./DistribuicaoSoloEquipeChart";
-import TaxaReprovacaoChart from "./TaxaReprovacao";
-import MetricasLocalizacaoChart from "./MetricasLocalizacaoChart";
+import TotalCards from "./charts/TotalCards";
+import InscritosPorEstagioChart from "./charts/InscritosPorEstagioChart";
+import TempoMedioAprovacaoChart from "./charts/TempoMedioAprovacaoChart";
+import DistribuicaoSoloEquipeChart from "./charts/DistribuicaoSoloEquipeChart";
+import TaxaReprovacaoChart from "./charts/TaxaReprovacao";
+import MetricasLocalizacaoChart from "./charts/MetricasLocalizacaoChart";
 import TrackChangesIcon from "@mui/icons-material/TrackChanges";
 import { mockChallenge1, mockChallenge2 } from "@/mocks/mockChallenges";
 
