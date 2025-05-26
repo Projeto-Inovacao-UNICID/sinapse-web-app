@@ -1,5 +1,4 @@
 'use client';
-
 import React, { useState } from 'react';
 import {
   Box,
@@ -29,6 +28,7 @@ export function CommentItem({
 }: CommentItemProps) {
   const theme = useTheme();
   const [replying, setReplying] = useState(false);
+  const replies = comment.filhos ?? [];
 
   return (
     <Box sx={{ ml: depth * 4, mt: 2 }}>
@@ -42,7 +42,9 @@ export function CommentItem({
         </Avatar>
         <Box sx={{ flexGrow: 1 }}>
           <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-            <Typography variant="subtitle2">{comment.autorNome}</Typography>
+            <Typography variant="subtitle2" sx={{ color: 'var(--foreground)' }}>
+              {comment.autorNome}
+            </Typography>
             <Typography variant="caption" sx={{ color: 'var(--muted)' }}>
               {new Date(comment.createdAt).toLocaleString()}
             </Typography>
@@ -60,7 +62,7 @@ export function CommentItem({
             </IconButton>
             <Typography
               variant="caption"
-              sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' } }}
+              sx={{ cursor: 'pointer', '&:hover': { textDecoration: 'underline' }, color: 'var(--foreground)' }}
               onClick={() => setReplying(prev => !prev)}
             >
               Responder
@@ -78,9 +80,10 @@ export function CommentItem({
           </Collapse>
         </Box>
       </Box>
-      {comment.respostas.length > 0 && (
+
+      {replies.length > 0 && (
         <Box>
-          {comment.respostas.map(child => (
+          {replies.map(child => (
             <CommentItem
               key={child.id}
               comment={child}
@@ -91,6 +94,7 @@ export function CommentItem({
           ))}
         </Box>
       )}
+
       <Divider sx={{ mt: 2 }} />
     </Box>
   );
