@@ -17,6 +17,10 @@ import PeopleIcon   from '@mui/icons-material/People';
 import GroupsIcon   from '@mui/icons-material/Groups';
 import { useRouter }  from 'next/navigation';
 import { useSession } from '@/hooks/session/useSession';
+import { useGetCompanyProfile } from '@/hooks/profile/company/useCompanyProfile';
+import { useUserProfile } from '@/hooks/profile/user/useUserProfile';
+import { CompanyProfileImage } from '../company-avatar';
+import { UserProfileImage } from '../user-avatar';
 
 export function SidebarMenu() {
   const router      = useRouter();
@@ -25,13 +29,17 @@ export function SidebarMenu() {
   const isUser      = session?.roles.includes('ROLE_USER');
   const isCompany   = session?.roles.includes('ROLE_COMPANY');
 
+ const { data: companyProfile } = useGetCompanyProfile((isCompany && userId) ? userId : '');
+ const { data: userProfile } = useUserProfile((isUser && userId) ? userId : '');
+
+
   const basePath = isCompany
     ? `/empresa/me/${userId}`
     : `/profile/me/${userId}`;
 
   const commonTabs = [
-    { label: 'Início',      tab: 'inicio',      Icon: HomeIcon     },
-    { label: 'Sobre',       tab: 'sobre',       Icon: InfoIcon     },
+    // { label: 'Início',      tab: 'inicio',      Icon: HomeIcon     },
+    // { label: 'Sobre',       tab: 'sobre',       Icon: InfoIcon     },
     { label: 'Publicações', tab: 'publicacoes', Icon: ArticleIcon  },
     { label: 'Desafios',    tab: 'desafios',    Icon: WhatshotIcon },
   ];
@@ -63,15 +71,26 @@ export function SidebarMenu() {
         alignSelf: 'start',
       }}
     >
-      <Typography
-        variant="h4"
-        sx={{ color: 'var(--foreground)', fontWeight: 'bold', mb: 4, lineHeight: 1 }}
-      >
-        Connect
-        <Box component="span" sx={{ color: 'var(--primary)' }}>
-          Z
+      {isCompany && (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ width: 48, height: 48, flexShrink: 0 }}>
+            <CompanyProfileImage temImagem={companyProfile?.temImagem ?? false} companyId={userId ?? ''} />
+          </Box>
+          <Typography variant="h6" sx={{ color: 'var(--foreground)', fontWeight: 'bold' }}>
+            {companyProfile?.nome}
+          </Typography>
         </Box>
-      </Typography>
+      )}
+      {isUser && (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ width: 48, height: 48, flexShrink: 0 }}>
+            <UserProfileImage temImagem={userProfile?.temImagem ?? false} userId={userId ?? ''} />
+          </Box>
+          <Typography variant="h6" sx={{ color: 'var(--foreground)', fontWeight: 'bold' }}>
+            {userProfile?.nome}
+          </Typography>
+        </Box>
+      )}
 
       <List sx={{ flex: 1 }}>
         {menuItems.map(({ label, tab, Icon }) => (
@@ -97,6 +116,15 @@ export function SidebarMenu() {
           </ListItemButton>
         ))}
       </List>
+      <Typography
+        variant="h6"
+        sx={{ color: 'var(--foreground)', fontWeight: 'bold', mt: 4, lineHeight: 1 }}
+      >
+        Connect
+        <Box component="span" sx={{ color: 'var(--primary)' }}>
+          Z
+        </Box>
+      </Typography>
     </Box>
   );
 }
