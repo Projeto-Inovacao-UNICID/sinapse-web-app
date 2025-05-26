@@ -1,7 +1,6 @@
 'use client';
 
 import DashboardPage from "@/components/analytics";
-import ChallengeMetrics from "@/components/analytics/challenge-metrics";
 import { useSession } from "@/hooks/session/useSession";
 
 export default function Forms() {
@@ -11,18 +10,7 @@ export default function Forms() {
 
   if (isCompany && id) {
     return (
-      <div
-      style={{  
-        display: 'grid',
-        gridTemplateColumns: '2fr minmax(0, 8fr) 2fr',
-        minHeight: '100vh',
-      }}
-    >
-      <div style={{ gridColumn: 2 }}>
-        {/* <ChallengeMetrics /> */}
-        <DashboardPage />
-      </div>
-    </div>
+      <DashboardPage />
     );
   }
 

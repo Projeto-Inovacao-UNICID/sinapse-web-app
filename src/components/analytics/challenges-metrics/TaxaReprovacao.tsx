@@ -4,15 +4,18 @@ import { Card, CardContent, Grid, Typography } from "@mui/material";
 import { RejectionRateDto } from "@/types";
 
 interface Props {
-  data: RejectionRateDto[];
+  data: {
+    estagioRecrutamentoId: number;
+    rejectionRate: number;
+  }[];
 }
 
 const TaxaReprovacaoChart: React.FC<Props> = ({ data }) => {
   return (
-    <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-      <Card style={{ backgroundColor: "var(--card)", borderRadius: "var(--radius)" }}>
+    <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+      <Card style={{ backgroundColor: "var(--bgCardMetrics)", borderRadius: "var(--radius)" }}>
         <CardContent>
-          <Typography variant="subtitle1" gutterBottom>
+          <Typography variant="h6" sx={{ color: 'var(--foreground)', fontWeight: 'bold', mb: 2 }}>
             Taxa de Reprovação (%) por Estágio
           </Typography>
           <ResponsiveContainer width="100%" height={250}>
@@ -22,7 +25,7 @@ const TaxaReprovacaoChart: React.FC<Props> = ({ data }) => {
               <Tooltip formatter={(value: number) => `${(value * 100).toFixed(1)}%`} />
               <Area
                 type="monotone"
-                dataKey="taxaReprovacao"
+                dataKey="rejectionRate"
                 stroke="var(--primary)"
                 fill="var(--primary)"
                 fillOpacity={0.2}

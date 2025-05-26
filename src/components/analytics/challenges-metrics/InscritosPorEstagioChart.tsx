@@ -11,10 +11,10 @@ interface Props {
 
 const InscritosPorEstagioChart: React.FC<Props> = ({ data }) => {
   return (
-    <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-      <Card style={{ backgroundColor: "var(--card)", borderRadius: "var(--radius)" }}>
+    <Grid size={{ xs: 12, sm: 6, md: 6 }}>
+      <Card sx={{ backgroundColor: "var(--bgCardMetrics)", borderRadius: "var(--radius)" }}>
         <CardContent>
-          <Typography variant="subtitle1" gutterBottom>
+          <Typography variant="h6" sx={{ color: 'var(--foreground)', fontWeight: 'bold', mb: 2 }}>
             Inscritos por Estágio
           </Typography>
           <ResponsiveContainer width="100%" height={250}>
@@ -22,7 +22,7 @@ const InscritosPorEstagioChart: React.FC<Props> = ({ data }) => {
               <XAxis dataKey="estagioRecrutamentoId" />
               <YAxis />
               <Tooltip />
-              <Bar dataKey="totalInscritos" fill="var(--primary)" radius={[8, 8, 0, 0]} />
+              <Bar dataKey="totalInscritos" fill="var(--primary)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>

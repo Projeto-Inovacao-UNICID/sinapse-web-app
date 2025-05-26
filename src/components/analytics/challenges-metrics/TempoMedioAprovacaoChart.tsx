@@ -11,10 +11,10 @@ interface Props {
 
 const TempoMedioAprovacaoChart: React.FC<Props> = ({ data }) => {
   return (
-    <Grid size={{ xs: 12, sm: 6, md: 3 }}>
-      <Card style={{ backgroundColor: "var(--card)", borderRadius: "var(--radius)" }}>
+    <Grid size={{ xs: 12, sm: 6, md: 6}}>
+      <Card style={{ backgroundColor: "var(--bgCardMetrics)", borderRadius: "var(--radius)" }}>
         <CardContent>
-          <Typography variant="subtitle1" gutterBottom>
+          <Typography variant="h6" sx={{ color: 'var(--foreground)', fontWeight: 'bold', mb: 2 }}>
             Tempo Médio de Aprovação (dias)
           </Typography>
           <ResponsiveContainer width="100%" height={250}>
