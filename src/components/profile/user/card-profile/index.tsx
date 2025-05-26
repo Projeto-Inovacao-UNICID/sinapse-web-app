@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useState } from 'react';
 
 import {
-  Avatar,
   Badge,
   Box,
   Button,
@@ -14,18 +13,18 @@ import {
   Grid,
   Tab,
   Tabs,
-  Typography,
+  Typography
 } from '@mui/material';
 
-import AddIcon    from '@mui/icons-material/Add';
-import CloseIcon  from '@mui/icons-material/Close';
-import EditIcon   from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import MessageIcon from '@mui/icons-material/Message';
-import ShareIcon  from '@mui/icons-material/Share';
+import ShareIcon from '@mui/icons-material/Share';
 
-import { CreateGroupModal }  from '@/components/group/create-group-card';
-import { GroupList }         from '@/components/group/group-list';
-import { InviteList }        from '@/components/invites';
+import { CreateGroupModal } from '@/components/group/create-group-card';
+import { GroupList } from '@/components/group/group-list';
+import { InviteList } from '@/components/invites';
 import { useGetChallengeCountsUser } from '@/hooks/challenge/useChallenge';
 import {
   useAcceptFriendshipRequest,
@@ -35,22 +34,22 @@ import {
   usePostFriendship,
 } from '@/hooks/friendship/useFriendship';
 import { useGetGroupInvites, useGetMyGroups } from '@/hooks/group/useGroup';
-import { useGetPosts }      from '@/hooks/posts/usePosts';
-import { useSession }       from '@/hooks/session/useSession';
+import { useGetPosts } from '@/hooks/posts/usePosts';
 import { useUserProfile, useUserProfileImage } from '@/hooks/profile/user/useUserProfile';
-import { ChatService }      from '@/service/chat/ChatService';
-import { Group }            from '@/types';
+import { useSession } from '@/hooks/session/useSession';
+import { ChatService } from '@/service/chat/ChatService';
+import { Group } from '@/types';
 
-import { BoxInfo }          from '../../box-info';
-import { ShareDialog }      from '../../utils/shareDialog';
+import { BoxInfo } from '../../box-info';
+import { ShareDialog } from '../../utils/shareDialog';
 import { EditProfileModal } from '../profile-edit-modal';
-import { UsersList }        from '../users-list';
+import { UsersList } from '../users-list';
 
-import ButtonPrimary   from '@/components/common/button-primary';
+import ButtonPrimary from '@/components/common/button-primary';
 import ButtonSecondary from '@/components/common/button-secondary';
-import { UserChallenges } from '@/components/challenge/common/challenge-profile';
-import { UserPosts } from '../user-posts-profile';
 import { ProfileImageUploader } from '../perfil-image-trade';
+import { UserPosts } from '../user-posts-profile';
+import { UserChallenges } from '../user-challeges-profile';
 
 interface UserProfileCardProps {
   userId: string;
@@ -179,7 +178,6 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
 
 
             <ProfileImageUploader
-              userId={userId}
               imagemSrc={imagemSrc}
               isProfileOwner={isProfileOwner}
             />
@@ -288,8 +286,8 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
             '& .Mui-selected': { color: 'var(--primary)' },
           }}
         >
-          <Tab label="Início"       />
-          <Tab label="Sobre"        />
+          {/* <Tab label="Início"       />
+          <Tab label="Sobre"        /> */}
           <Tab label="Publicações"  />
           <Tab label="Desafios"     />
           <Tab label="Amigos"       />
@@ -320,13 +318,13 @@ export function UserProfileCard({ userId, gridColumnNumber = 2 }: UserProfileCar
 
         {/* conteúdo das abas dinâmicas */}
         <Grid size={12}>
-          {tabValue === 2 && <UserPosts />}
-          {tabValue === 3 && <UserChallenges userId={userId} />}
-          {tabValue === 4 && (
+          {tabValue === 0 && <UserPosts />}
+          {tabValue === 1 && <UserChallenges />}
+          {tabValue === 2 && (
             <UsersList ids={friendshipIds ?? []} type={isProfileOwner ? 'friend' : undefined} />
           )}
-          {tabValue === 5 && <GroupList groupIds={groupsIds ?? []} viewDescription />}
-          {tabValue === 6 && <InviteList groupInvites={groupInvites ?? []} friendshipInvitations={requests?.content ?? []} />}
+          {tabValue === 3 && <GroupList groupIds={groupsIds ?? []} viewDescription />}
+          {tabValue === 4 && <InviteList groupInvites={groupInvites ?? []} friendshipInvitations={requests?.content ?? []} />}
         </Grid>
       </Grid>
 
