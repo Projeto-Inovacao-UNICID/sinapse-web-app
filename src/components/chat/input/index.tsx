@@ -47,8 +47,8 @@ export function ChatInput({
         handleSend();
       }}
       sx={{
-        display: 'flex', alignItems: 'center', p: 1, mt: 1,
-        borderRadius: 'var(--radius)', backgroundColor: 'var(--input)',
+        display: 'flex', alignItems: 'center', p: 2,
+        borderRadius: '0 0 8px 0', backgroundColor: 'var(--bgSecondary)',
         position: 'sticky', bottom: 0, zIndex: 10,
       }}
       elevation={0}
@@ -62,9 +62,11 @@ export function ChatInput({
         inputRef={inputRef}
         sx={{
           input: { color: 'var(--foreground)' },
-          '& .MuiInput-underline:before': { borderBottom: `2px solid var(--border)` },
-          '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: `2px solid var(--primary)` },
-          '& .MuiInput-underline:after': { borderBottom: `2px solid var(--primary)` },
+          backgroundColor: 'var(--card)',
+          pl: 1,
+          '& .MuiInput-underline:before': { borderBottom: `none` },
+          '& .MuiInput-underline:hover:not(.Mui-disabled):before': { borderBottom: `none` },
+          '& .MuiInput-underline:after': { borderBottom: `none` },
         }}
         disabled={isSending || disabled}
       />
