@@ -1,45 +1,47 @@
 'use client';
 
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
 
 import {
   Box,
   Button,
   CircularProgress,
-  Grid,
-  Typography,
   Divider,
-  Tabs,
+  Grid,
   Tab,
+  Tabs,
+  Typography,
 } from '@mui/material';
 
-import LocationOnIcon    from '@mui/icons-material/LocationOn';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import PersonAddIcon     from '@mui/icons-material/PersonAdd';
-import MessageIcon       from '@mui/icons-material/Message';
-import EditIcon          from '@mui/icons-material/Edit';
 import AreaChartIcon from '@mui/icons-material/AreaChart';
-import ShareIcon         from '@mui/icons-material/Share';
-import AssignmentIcon    from '@mui/icons-material/Assignment';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import EditIcon from '@mui/icons-material/Edit';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import MessageIcon from '@mui/icons-material/Message';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import ShareIcon from '@mui/icons-material/Share';
 
-import { useSession }            from '@/hooks/session/useSession';
-import { useGetCompanyProfile }  from '@/hooks/profile/company/useCompanyProfile';
-import { useGetFollowersCount,
-         useCheckFollowing,
-         useFollowCompany,
-         useUnfollowCompany }    from '@/hooks/company/useFollowers';
 import { useGetChallengeCounts } from '@/hooks/challenge/useChallenge';
+import {
+  useCheckFollowing,
+  useFollowCompany,
+  useGetFollowersCount,
+  useUnfollowCompany
+} from '@/hooks/company/useFollowers';
+import { useGetCompanyProfile } from '@/hooks/profile/company/useCompanyProfile';
+import { useSession } from '@/hooks/session/useSession';
 
-import { CompanyProfileImage }   from '@/components/common/company-avatar';
+import ButtonSecondary from '@/components/common/button-secondary';
+import IconButton from '@/components/common/icon-buttons';
+import { BoxInfo } from '@/components/profile/company/box-info/box-info';
 import { EditCompanyProfileModal } from '@/components/profile/company/profile-edit-modal';
-import { ShareDialog }           from '@/components/profile/utils/shareDialog';
-import { BoxInfo }               from '@/components/profile/company/box-info/box-info';
-import ButtonSecondary           from '@/components/common/button-secondary';
-import IconButton                from '@/components/common/icon-buttons';
-import { ChatService }           from '@/service/chat/ChatService';
-import { CompanyImageUploader } from '../perfil-image-trade-company';
+import { ShareDialog } from '@/components/profile/utils/shareDialog';
+import { ChatService } from '@/service/chat/ChatService';
 import { UserPosts } from '../../user/user-posts-profile';
+import { CompanyChallenges } from '../company-profile-challenges';
+import { CompanyImageUploader } from '../perfil-image-trade-company';
 
 interface CompanyProfileCardProps {
   companyId: string;
@@ -244,14 +246,15 @@ export function CompanyProfileCard({ companyId, gridColumnNumber = 2 }: CompanyP
             '& .Mui-selected': { color: 'var(--primary)' },
           }}
         >
-          <Tab label="Início"       />
-          <Tab label="Sobre"        />
+          {/* <Tab label="Início"       />
+          <Tab label="Sobre"        /> */}
           <Tab label="Publicações"  />
           <Tab label="Desafios"     />
         </Tabs>
 
         <Grid size={12}>
-            {tabValue === 2 && <UserPosts />}        
+            {tabValue === 0 && <UserPosts />}
+            {tabValue === 1 && <CompanyChallenges />}
         </Grid>
 
         {/* modal edição */}
