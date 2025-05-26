@@ -4,103 +4,107 @@ import { candidateFormScoresMock } from "./mockCandidateFormScores";
 export const softSkillsFormMetricsMock: FormFullMetricsDto = {
   formDefinitionId: "form-softskills-0001",
   submissionCount: 35,
-  avgTotalScore: 78.4,
+  avgTotalScore: 79.2,
   medianTotalScore: 80,
-  p25TotalScore: 72,
-  p75TotalScore: 85,
-  stdDevTotalScore: 6.2,
-  minTotalScore: 60,
-  maxTotalScore: 92,
+  p25TotalScore: 74,
+  p75TotalScore: 86,
+  stdDevTotalScore: 5.8,
+  minTotalScore: 62,
+  maxTotalScore: 91,
 
   avgScoreByCategory: {
-    SOFT_SKILL: 78.4
+    SOFT_SKILL: 79.2
   },
   stdDevByCategory: {
-    SOFT_SKILL: 6.1
+    SOFT_SKILL: 5.8
   },
   categoryFillRate: {
-    SOFT_SKILL: 0.97
+    SOFT_SKILL: 0.96
   },
 
-  passRate: 0.74,
+  passRate: 0.77,
   statusDistribution: {
-    approved: 26,
-    rejected: 9
+    approved: 27,
+    rejected: 8
   },
   scoreDistribution: {
-    "60-69": 5,
-    "70-79": 14,
-    "80-89": 11,
-    "90-100": 5
+    "60-69": 6,
+    "70-79": 12,
+    "80-89": 13,
+    "90-100": 4
   },
 
   groupMetrics: [
     {
-      grupoId: 101,
-      submissions: 20,
-      avgScore: 76,
-      passRate: 0.7,
-      share: 0.57
+      grupoId: 201,
+      submissions: 18,
+      avgScore: 77,
+      passRate: 0.72,
+      share: 0.51
     },
     {
-      grupoId: 102,
-      submissions: 15,
-      avgScore: 81,
-      passRate: 0.8,
-      share: 0.43
+      grupoId: 202,
+      submissions: 17,
+      avgScore: 81.5,
+      passRate: 0.82,
+      share: 0.49
     }
   ],
 
   time: {
-    avgLeadTime: "PT1H10M",
+    avgLeadTime: "PT1H5M",
     medianLeadTime: "PT1H",
     leadTimeBuckets: {
-      "0-30min": 4,
-      "30min-1h": 10,
-      "1h-2h": 15,
-      "2h+": 6
+      "0-30min": 5,
+      "30min-1h": 9,
+      "1h-2h": 16,
+      "2h+": 5
     }
   },
 
   fieldMetrics: [
     {
-      fieldId: "field-001",
-      label: "Você se considera uma pessoa colaborativa? Dê um exemplo.",
-      fieldType: "TEXT",
+      fieldId: "589534ad-4e24-4540-9dc8-277dd7af99d4",
+      label: "Qual das opções melhor descreve seu estilo de liderança?",
+      fieldType: "SELECT",
       fillRate: 0.97,
-      optionDistribution: {}
+      optionDistribution: {
+        authoritative: 10,
+        collaborative: 20,
+        avoidant: 5
+      }
     },
     {
-      fieldId: "field-002",
-      label: "Como você lida com feedbacks negativos?",
+      fieldId: "67100293-db35-46fd-8b78-6952b7041cdb",
+      label: "Descreva uma situação em que você precisou lidar com um conflito em equipe. Como agiu?",
       fieldType: "TEXT",
       fillRate: 0.94,
       optionDistribution: {}
     },
     {
-      fieldId: "field-003",
-      label: "Você prefere trabalhar sozinho ou em equipe?",
-      fieldType: "SELECT",
-      fillRate: 1.0,
-      optionDistribution: {
-        team: 20,
-        depends: 10,
-        alone: 5
-      }
+      fieldId: "a21d2da8-e542-4b82-bf8c-b8da86072121",
+      label: "De 0 a 10, como você avalia sua capacidade de se comunicar com clareza?",
+      fieldType: "NUMBER",
+      fillRate: 0.89,
+      avgNumericAnswer: 8.1,
+      stdDevNumericAnswer: 1.2,
+      optionDistribution: {}
     },
     {
-      fieldId: "field-004",
-      label: "De 0 a 10, qual seu nível de resiliência em ambientes de pressão?",
-      fieldType: "NUMBER",
-      fillRate: 0.91,
-      avgNumericAnswer: 8.2,
-      stdDevNumericAnswer: 1.1,
-      optionDistribution: {}
+      fieldId: "ed5f849a-60fd-4191-bdc4-d32058e2ed0c",
+      label: "Como você avalia sua empatia ao lidar com colegas de trabalho?",
+      fieldType: "SELECT",
+      fillRate: 0.95,
+      optionDistribution: {
+        high: 18,
+        medium: 12,
+        low: 5
+      }
     }
   ],
 
-  topN: [candidateFormScoresMock[4]],
-  bottomN: [candidateFormScoresMock[1]],
+  topN: [candidateFormScoresMock[0]],
+  bottomN: [candidateFormScoresMock[1]]
 };
 
 export const hardSkillsFormMetricsMock: FormFullMetricsDto = {
@@ -121,7 +125,7 @@ export const hardSkillsFormMetricsMock: FormFullMetricsDto = {
     HARD_SKILL: 4.5
   },
   categoryFillRate: {
-    HARD_SKILL: 0.95
+    HARD_SKILL: 0.97
   },
 
   passRate: 0.82,
@@ -164,46 +168,52 @@ export const hardSkillsFormMetricsMock: FormFullMetricsDto = {
 
   fieldMetrics: [
     {
-      fieldId: "field-005",
-      label: "Qual linguagem você domina mais?",
-      fieldType: "SELECT",
-      fillRate: 1.0,
-      optionDistribution: {
-        js: 10,
-        python: 8,
-        java: 6,
-        other: 4
-      }
+      fieldId: "31bb1900-9ca2-4a06-bf32-ea69182242eb",
+      label: "Com qual linguagem de programação você tem mais familiaridade? Explique sua experiência com ela.",
+      fieldType: "TEXT",
+      fillRate: 0.96,
+      optionDistribution: {}
     },
     {
-      fieldId: "field-006",
-      label: "Descreva um projeto técnico que você desenvolveu e se orgulha.",
+      fieldId: "3b59d891-9895-49d6-a200-bcc5e59d5ae7",
+      label: "Descreva um desafio técnico que você enfrentou recentemente e como resolveu.",
       fieldType: "TEXT",
       fillRate: 0.93,
       optionDistribution: {}
     },
     {
-      fieldId: "field-007",
-      label: "Quantos anos de experiência você tem com desenvolvimento web?",
+      fieldId: "454f3210-b341-45f7-abcd-4cead32d05b9",
+      label: "Como você classificaria seu conhecimento sobre estruturas de dados (listas, árvores, grafos, etc)?",
+      fieldType: "SELECT",
+      fillRate: 1.0,
+      optionDistribution: {
+        advanced: 12,
+        intermediate: 10,
+        basic: 6
+      }
+    },
+    {
+      fieldId: "7eefc7a6-42b7-4231-a253-51bc846052ae",
+      label: "De 0 a 10, como você avalia sua habilidade de resolver problemas com lógica de programação?",
       fieldType: "NUMBER",
       fillRate: 0.96,
-      avgNumericAnswer: 3.8,
-      stdDevNumericAnswer: 1.2,
+      avgNumericAnswer: 8.4,
+      stdDevNumericAnswer: 1.1,
       optionDistribution: {}
     },
     {
-      fieldId: "field-008",
-      label: "Você sabe utilizar sistemas de controle de versão (ex: Git)?",
+      fieldId: "c199abac-0258-4b11-bf82-92568a4f5af5",
+      label: "Qual seu nível de experiência com controle de versão (ex: Git)?",
       fieldType: "SELECT",
       fillRate: 0.98,
       optionDistribution: {
-        expert: 20,
-        basic: 6,
-        no: 2
+        advanced: 16,
+        intermediate: 8,
+        basic: 4
       }
     }
   ],
 
-  topN: [candidateFormScoresMock[6]],
-  bottomN: [candidateFormScoresMock[7]]
+  topN: [candidateFormScoresMock[6], candidateFormScoresMock[7]],
+  bottomN: [candidateFormScoresMock[8], candidateFormScoresMock[9]]
 };
